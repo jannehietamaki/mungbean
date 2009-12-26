@@ -1,5 +1,7 @@
 package mungbean;
 
+import java.util.Map;
+
 public class Database {
 	private final String dbName;
 	private final DbOperationExecutor executor;
@@ -9,8 +11,12 @@ public class Database {
 		this.executor = executor;
 	}
 
-	public DBCollection openCollection(String name) {
-		return new DBCollection(executor, dbName, name);
+	public DBCollection<Map<String, Object>> openCollection(String name) {
+		return new MapDBCollection(executor, dbName, name);
+	}
+
+	public <T> DBCollection<T> openCollection(String name, Class<T> type) {
+		return new PojoDBCollection<T>(openCollection(name), type);
 	}
 
 }

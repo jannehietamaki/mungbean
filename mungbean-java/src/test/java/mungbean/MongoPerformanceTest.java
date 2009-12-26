@@ -1,6 +1,7 @@
 package mungbean;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -11,12 +12,12 @@ import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class MongoPerformanceTest extends Specification<DBCollection> {
+public class MongoPerformanceTest extends Specification<DBCollection<Map<String, Object>>> {
 	public class WithDatabase {
-		Mongo db;
+		Mungbean db;
 
-		public DBCollection create() {
-			db = new Mongo("localhost", 27017);
+		public DBCollection<Map<String, Object>> create() {
+			db = new Mungbean("localhost", 27017);
 			return db.openDatabase("foobar").openCollection("foo");
 		}
 

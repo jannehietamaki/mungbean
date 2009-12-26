@@ -10,10 +10,10 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 @RunWith(JDaveRunner.class)
-public class MongoIntegrationTest extends Specification<DBCollection> {
+public class MongoIntegrationTest extends Specification<DBCollection<Map<String, Object>>> {
 	public class WithDatabase {
-		public DBCollection create() {
-			return new Mongo("localhost", 27017).openDatabase("foobar").openCollection("foo");
+		public DBCollection<Map<String, Object>> create() {
+			return new Mungbean("localhost", 27017).openDatabase("foobar").openCollection("foo");
 		}
 
 		public void databaseCanBeAccessed() {
