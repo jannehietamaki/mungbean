@@ -11,9 +11,9 @@ public interface DBCollection<T> {
 
 	void update(Map<String, Object> query, T doc, boolean upsert);
 
-	List<T> query(Map<String, Object> rules, final int first, final int items);
+	List<T> query(Map<String, Object> rules, int first, int items);
 
-	T find(final ObjectId id);
+	T find(ObjectId id);
 
 	void delete(ObjectId id);
 }
