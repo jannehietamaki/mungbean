@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib_managed/test/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jdave-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jdave-junit4-1.1.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jmock-2.4.0.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/jmock-legacy-2.4.0.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/junit-4.7.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/junit-dep-4.4.jar"/>
+	<classpathentry kind="lib" path="lib_managed/test/objenesis-1.0.jar"/>
+	<classpathentry kind="output" path="build/test"/>
+</classpath>
