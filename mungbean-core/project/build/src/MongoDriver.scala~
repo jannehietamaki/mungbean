@@ -1,0 +1,10 @@
+import sbt._
+
+class MongoDriver(info: ProjectInfo) extends DefaultProject(info) {
+      val junit = "junit" % "junit" % "4.7" %  "test->default"       
+  
+      val scalaToolsRepo = "Scala tools repository" at "http://scala-tools.org/repo-releases/"
+      val lagNetRepo = "lag.net repository" at "http://www.lag.net/repo"
+      val jettyRepo = "Jetty repository" at "http://oss.sonatype.org/content/groups/jetty/"
+}
+

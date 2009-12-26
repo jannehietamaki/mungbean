@@ -1,0 +1,16 @@
+#Source Hashes
+#Sat Dec 26 15:08:35 EET 2009
+src/test/java/com/mongodb/protocol/message/UpdateRequestSpec.java=b64ea735d375f46cf6966c1c7599f7132ce98342
+src/test/java/com/mongodb/protocol/bson/BSONMapSpec.java=2bb1cc31c7959c0b867f4a1e10ff7080d441f9a6
+src/test/java/com/mongodb/DBConnectionIntegrationTest.java=d73f17fd1973d38d5bb20fcd5cb7efbb6b554d98
+src/test/java/com/mongodb/protocol/message/InsertRequestSpec.java=ee46151379fa74a75d02ec82caec84925616e283
+src/test/java/com/mongodb/protocol/message/KillCursorsRequestSpec.java=6825cbcc37487bab01068b9cae5c87c41d4206fa
+src/test/java/com/mongodb/protocol/bson/BSONBooleanSpec.java=d4918d7cec2da8af4c7b8e33a0202ee836251ed2
+src/test/java/com/mongodb/protocol/message/QueryOptionsBuilderSpec.java=a0dc20da949ba88c5aa8698c53c658890948cc01
+src/test/java/com/mongodb/protocol/message/DeleteRequestSpec.java=996ce48cce46471bb009aab5792a6ad6e02d722d
+src/test/java/com/mongodb/protocol/message/GetMoreRequestSpec.java=4d557c3013c8fde633050fc3117edcf9432da6f1
+src/test/java/com/mongodb/protocol/bson/BSONStringSpec.java=803b172e652bd48615d70a2cb40974e7dcdb061e
+src/test/java/com/mongodb/protocol/message/QueryRequestSpec.java=3e19f6a0ea4d2c9c08633ef8586a09deb5656e1c
+src/test/java/com/mongodb/ObjectIdSpec.java=61fd186f744e8edd752804fcb3e89cb1a0291d32
+src/test/java/com/mongodb/protocol/bson/BSONArraySpec.java=b3a2fe084cbf41bf506e1e61d5955fb49509c532
+src/test/java/com/mongodb/protocol/bson/BSONNumberSpec.java=1ad1756955c873841b989c177115ba5b59fdc679

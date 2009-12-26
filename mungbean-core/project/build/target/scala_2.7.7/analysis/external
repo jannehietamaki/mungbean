@@ -1,0 +1,4 @@
+#External Dependencies
+#Sat Dec 26 22:21:03 EET 2009
+/Users/janne/Projekti/sparkbe/deps/mongo-java-driver-ng/project/boot/scala-2.7.7/sbt-0.5.6/sbt_2.7.7-0.5.6.jar=src/MongoDriver.scala
+/Users/janne/Projekti/sparkbe/deps/mongo-java-driver-ng/project/boot/scala-2.7.7/lib/scala-library.jar=src/MongoDriver.scala
