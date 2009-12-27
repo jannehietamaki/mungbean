@@ -7,7 +7,7 @@ Language support so far
 
 *Java*
 - Mongo documents can be mapped to generic java.util.collections (Maps + Lists) or to POJOs
-- Missing features: GridFS, cursors, administration API, aggregation, conditional operators
+- Missing features: Failover, GridFS, cursors, administration API, aggregation, conditional operators
 - Implemented features insert + update + remove + basic query
 
 *Clojure*
@@ -17,6 +17,10 @@ Initial proof-of-concept done.
 
 *Scala*
 Coming up next.
+
+Building
+--------
+Right now the Java part is built with sbt (doesn't automaticly run tests yet) and Clojure with Leiningen, so far there is nothing to get everything simply built.
 
 License
 -------
