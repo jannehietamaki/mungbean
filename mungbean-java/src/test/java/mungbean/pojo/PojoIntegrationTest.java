@@ -13,22 +13,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.message;
+package mungbean.pojo;
 
-import mungbean.protocol.LittleEndianDataWriter;
+import jdave.Specification;
+import jdave.junit4.JDaveRunner;
 
-public abstract class CollectionRequest<ReturnType> implements MongoRequest<ReturnType> {
-	private final String collectionName;
+import mungbean.DBCollection;
+import mungbean.Mungbean;
+import mungbean.TestObject;
 
-	public CollectionRequest(String collectionName) {
-		this.collectionName = collectionName;
-	}
+import org.junit.runner.RunWith;
 
-	protected int collectionNameLength() {
-		return 1 + collectionName.getBytes(UTF8).length;
-	}
+@RunWith(JDaveRunner.class)
+public class PojoIntegrationTest extends Specification<DBCollection<TestObject>> {
+	public class WithDatabase {
+		public DBCollection<TestObject> create() {
+			return new Mungbean("localhost", 27017).openDatabase("foobar").openCollection("foo", TestObject.class);
+		}
 
-	protected void writeCollectionName(LittleEndianDataWriter writer) {
-		writer.writeCString(collectionName);
+		public void objectWithoutIdCanBeStored() {
+			context.insert(new TestObject("foo", 123));
+		}
+
 	}
 }

@@ -22,17 +22,17 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONDate extends BSONCoder<Date> {
 
-	protected BSONDate() {
+	public BSONDate() {
 		super(9, Date.class);
 	}
 
 	@Override
-	protected Date decode(BSONCoders bson, LittleEndianDataReader reader) {
+	protected Date decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
 		return new Date(reader.readLong());
 	}
 
 	@Override
-	protected void encode(BSONCoders bson, Date date, LittleEndianDataWriter writer) {
+	protected void encode(AbstractBSONCoders bson, Date date, LittleEndianDataWriter writer) {
 		writer.writeLong(date.getTime());
 	}
 }

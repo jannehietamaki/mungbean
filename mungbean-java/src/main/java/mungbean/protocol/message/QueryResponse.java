@@ -17,28 +17,28 @@ package mungbean.protocol.message;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
+import mungbean.protocol.bson.AbstractBSONCoders;
+import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.BSONCoders;
-import mungbean.protocol.bson.BSONMap;
 
-public class QueryResponse extends MongoResponse {
-	private static final BSONCoders BSON = new BSONCoders();
+public class QueryResponse<ResponseType> extends MongoResponse {
+	private static final AbstractBSONCoders BSON = new BSONCoders();
 	private final int responseFlag;
 	private final long cursorId;
 	private final int startingFrom;
 	private final int numberReturned;
-	private final List<Map<String, Object>> values = new ArrayList<Map<String, Object>>();
+	private final List<ResponseType> values = new ArrayList<ResponseType>();
 
-	public QueryResponse(LittleEndianDataReader reader) {
-		super(reader);
+	public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder) {
+		super(reader);		
 		responseFlag = reader.readInt();
 		cursorId = reader.readLong();
 		startingFrom = reader.readInt();
 		numberReturned = reader.readInt();
 		for (int i = 0; i < numberReturned; i++) {
-			values.add(new BSONMap().read(BSON, reader));
+			values.add(coder.read(BSON, reader));
 		}
 	}
 
@@ -58,7 +58,7 @@ public class QueryResponse extends MongoResponse {
 		return numberReturned;
 	}
 
-	public List<Map<String, Object>> values() {
+	public List<ResponseType> values() {
 		return values;
 	}
 }

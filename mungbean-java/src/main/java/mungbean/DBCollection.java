@@ -20,9 +20,11 @@ import java.util.Map;
 
 public interface DBCollection<T> {
 
-	void insert(T doc);
+	T insert(T doc);
 
 	void delete(Map<String, Object> query);
+
+	T update(ObjectId id, T doc);
 
 	void update(Map<String, Object> query, T doc, boolean upsert);
 
@@ -32,5 +34,5 @@ public interface DBCollection<T> {
 
 	void delete(ObjectId id);
 
-	Map<String, Object> command(String string);
+	Map<String, Object> command(String command);
 }

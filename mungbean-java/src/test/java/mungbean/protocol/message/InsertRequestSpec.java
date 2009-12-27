@@ -17,6 +17,7 @@ package mungbean.protocol.message;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
@@ -24,13 +25,14 @@ import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
 import mungbean.protocol.DBTransaction;
+import mungbean.protocol.bson.BSONCoders;
 
 @RunWith(JDaveRunner.class)
-public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest>> {
+public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest<Map<String, Object>>>> {
 	public class WithValidRequest {
 		@SuppressWarnings("unchecked")
 		public DBTransaction<Void> create() {
-			InsertRequest message = new InsertRequest("foozbar.foo", new HashMap<String, Object>() {
+			InsertRequest<Map<String, Object>> message = new InsertRequest<Map<String, Object>>("foozbar.foo", new BSONCoders(), new HashMap<String, Object>() {
 				{
 					put("foo", "bar");
 				}

@@ -13,22 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.message;
 
-import mungbean.protocol.LittleEndianDataWriter;
+package mungbean.clojure;
 
-public abstract class CollectionRequest<ReturnType> implements MongoRequest<ReturnType> {
-	private final String collectionName;
+import mungbean.DbOperationExecutor;
 
-	public CollectionRequest(String collectionName) {
-		this.collectionName = collectionName;
+public class ClojureMungbean {
+	private final DbOperationExecutor executor;
+
+	public ClojureMungbean(String host, int port) {
+		executor = new DbOperationExecutor(host, port);
 	}
 
-	protected int collectionNameLength() {
-		return 1 + collectionName.getBytes(UTF8).length;
+	public ClojureDatabase openDatabase(String name) {
+		return new ClojureDatabase(executor, name);
 	}
 
-	protected void writeCollectionName(LittleEndianDataWriter writer) {
-		writer.writeCString(collectionName);
+	public void close() {
+		executor.close();
 	}
 }

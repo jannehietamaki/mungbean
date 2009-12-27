@@ -19,14 +19,15 @@ import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
+import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 
 public class DeleteRequest extends CollectionRequest<Void> {
 	private final BSON query;
 
-	public DeleteRequest(String collectionName, Map<String, Object> query) {
+	public DeleteRequest(String collectionName, AbstractBSONCoders coders, Map<String, Object> query) {
 		super(collectionName);
-		this.query = toBson(query);
+		this.query = coders.forValue(query).write(coders, query);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class DeleteRequest extends CollectionRequest<Void> {
 	@Override
 	public void send(LittleEndianDataWriter writer) {
 		writer.writeInt(0); // RESERVED
-		writer.writeCString(collectionName());
+		writeCollectionName(writer);
 		writer.writeInt(0); // RESERVED
 		writer.write(query.bytes());
 	}

@@ -25,12 +25,13 @@ import org.junit.runner.RunWith;
 
 import mungbean.ObjectId;
 import mungbean.protocol.DBTransaction;
+import mungbean.protocol.bson.BSONCoders;
 
 @RunWith(JDaveRunner.class)
 public class DeleteRequestSpec extends Specification<DBTransaction<Void>> {
 	public class WithAny {
 		public DBTransaction<Void> create() {
-			return new DBTransaction<Void>(new DeleteRequest("foozbar.foo", new HashMap<String, Object>() {
+			return new DBTransaction<Void>(new DeleteRequest("foozbar.foo", new BSONCoders(), new HashMap<String, Object>() {
 				{
 					put("_id", new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }));
 				}

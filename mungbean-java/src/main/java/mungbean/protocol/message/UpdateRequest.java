@@ -19,18 +19,19 @@ import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
+import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 
-public class UpdateRequest extends CollectionRequest<Void> {
+public class UpdateRequest<Type> extends CollectionRequest<Void> {
 	private final UpdateOptionsBuilder flags;
 	private final BSON selector;
 	private final BSON document;
 
-	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Map<String, Object> document) {
+	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Type document, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
 		super(collectionName);
 		this.flags = flags;
-		this.selector = toBson(selector);
-		this.document = toBson(document);
+		this.selector = selectorCoders.forValue(selector).write(coders, selector);
+		this.document = coders.forValue(document).write(coders, document);
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class UpdateRequest extends CollectionRequest<Void> {
 	@Override
 	public void send(LittleEndianDataWriter writer) {
 		writer.writeInt(0); // RESERVED
-		writer.writeCString(collectionName());
+		writeCollectionName(writer);
 		writer.writeInt(flags.value());
 		writer.write(selector.bytes());
 		writer.write(document.bytes());

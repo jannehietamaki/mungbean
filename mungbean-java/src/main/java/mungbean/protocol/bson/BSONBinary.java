@@ -30,7 +30,7 @@ public class BSONBinary extends BSONCoder<byte[]> {
 	}
 
 	@Override
-	protected byte[] decode(BSONCoders bson, LittleEndianDataReader reader) {
+	protected byte[] decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
 		int totalLength = reader.readInt();
 		int binaryType = reader.readByte();
 
@@ -50,7 +50,7 @@ public class BSONBinary extends BSONCoder<byte[]> {
 	}
 
 	@Override
-	protected void encode(BSONCoders bson, byte[] data, LittleEndianDataWriter writer) {
+	protected void encode(AbstractBSONCoders bson, byte[] data, LittleEndianDataWriter writer) {
 		writer.writeInt(4 + data.length);
 		writer.writeByte(BINARY);
 		writer.writeInt(data.length);

@@ -16,14 +16,18 @@
 package mungbean.protocol.message;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class CommandRequest extends QueryRequest {
+import mungbean.protocol.bson.AbstractBSONCoders;
+import mungbean.protocol.bson.BSONMap;
 
-	public CommandRequest(String dbName, final String command) {
+public class CommandRequest extends QueryRequest<Map<String, Object>> {
+
+	public CommandRequest(String dbName, final String command, AbstractBSONCoders coders) {
 		super(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, new HashMap<String, Object>() {
 			{
 				put(command, 1D);
 			}
-		});
+		}, coders, new BSONMap());
 	}
 }

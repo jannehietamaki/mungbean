@@ -46,5 +46,4 @@ public class MongoResponse {
 	public RequestOpCode opCode() {
 		return opCode;
 	}
-
 }

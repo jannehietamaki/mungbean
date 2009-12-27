@@ -13,18 +13,29 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.bson;
 
-public class BSONCoders extends AbstractBSONCoders {
+package mungbean.clojure;
 
-	public BSONCoders() {
+import mungbean.protocol.bson.AbstractBSONCoders;
+import mungbean.protocol.bson.BSONBoolean;
+import mungbean.protocol.bson.BSONDate;
+import mungbean.protocol.bson.BSONEndMarker;
+import mungbean.protocol.bson.BSONInteger;
+import mungbean.protocol.bson.BSONNull;
+import mungbean.protocol.bson.BSONNumber;
+import mungbean.protocol.bson.BSONOid;
+import mungbean.protocol.bson.BSONPattern;
+import mungbean.protocol.bson.BSONString;
+
+public class ClojureBSONCoders extends AbstractBSONCoders {
+	public ClojureBSONCoders() {
 		addEncoder(new BSONEndMarker());
 		addEncoder(new BSONNull());
-		addEncoder(new BSONArray<Object>());
+		addEncoder(new ClojureBSONSeq<Object>());
 		addEncoder(new BSONInteger());
 		addEncoder(new BSONNumber());
 		addEncoder(new BSONString());
-		addEncoder(new BSONMap());
+		addEncoder(new ClojureBSONMap());
 		addEncoder(new BSONOid());
 		addEncoder(new BSONPattern());
 		addEncoder(new BSONDate());

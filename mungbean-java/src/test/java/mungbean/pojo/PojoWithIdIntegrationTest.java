@@ -13,11 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean;
+package mungbean.pojo;
 
 import jdave.Block;
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
+
+import mungbean.DBCollection;
+import mungbean.Mungbean;
+import mungbean.NotFoundException;
+import mungbean.TestObjectWithId;
 
 import org.junit.runner.RunWith;
 

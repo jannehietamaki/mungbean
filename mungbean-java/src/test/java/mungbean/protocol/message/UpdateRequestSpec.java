@@ -25,6 +25,7 @@ import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
 import mungbean.protocol.DBTransaction;
+import mungbean.protocol.bson.BSONCoders;
 
 @RunWith(JDaveRunner.class)
 public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
@@ -40,7 +41,7 @@ public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
 					put("zoo", 5);
 				}
 			};
-			return new DBTransaction<Void>(new UpdateRequest("foozbar.foo", new UpdateOptionsBuilder(), selector, document), 126, -1);
+			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new BSONCoders(), new BSONCoders()), 126, -1);
 		}
 
 		public void updateRequestCanBeSerializedToByteStream() {
@@ -64,7 +65,6 @@ public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
 					'z', 'o', 'o', 0, // name
 					5, 0, 0, 0, // value
 					0 // eoo
-
 					}));
 		}
 	}

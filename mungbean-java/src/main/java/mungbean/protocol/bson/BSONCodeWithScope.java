@@ -25,12 +25,12 @@ public class BSONCodeWithScope extends BSONCoder<Void> {
 	}
 
 	@Override
-	protected Void decode(BSONCoders bson, LittleEndianDataReader reader) {
+	protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
 		throw new UnsupportedOperationException("CODE_W_SCOPE is not supported");
 	}
 
 	@Override
-	protected void encode(BSONCoders bson, Void o, LittleEndianDataWriter writer) {
+	protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
 
 	}
 

@@ -21,10 +21,10 @@ import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-
-import org.junit.runner.RunWith;
-
 import mungbean.protocol.DBConnection;
+import mungbean.protocol.bson.AbstractBSONCoders;
+import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.BSONMap;
 import mungbean.protocol.message.DeleteRequest;
 import mungbean.protocol.message.InsertRequest;
 import mungbean.protocol.message.QueryOptionsBuilder;
@@ -33,9 +33,13 @@ import mungbean.protocol.message.QueryResponse;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 import mungbean.protocol.message.UpdateRequest;
 
+import org.junit.runner.RunWith;
+
 @RunWith(JDaveRunner.class)
 public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 	public class WithServer {
+		private final AbstractBSONCoders coders = new BSONCoders();
+		BSONMap defaultCoder = new BSONMap();
 
 		public DBConnection create() {
 			return new DBConnection("localhost", 27017);
@@ -48,7 +52,7 @@ public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 		@SuppressWarnings("unchecked")
 		public void itemCanBeInsertedQueriedAndRemoved() {
 			final ObjectId id = new ObjectId();
-			context.execute(new InsertRequest("foozbar.foo", new HashMap<String, Object>() {
+			context.execute(new InsertRequest<Map<String, Object>>("foozbar.foo", coders, new HashMap<String, Object>() {
 				{
 					put("foo", "bar");
 					put("_id", id);
@@ -59,17 +63,17 @@ public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 					put("_id", id);
 				}
 			};
-			QueryResponse response = context.execute(new QueryRequest("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery));
+			QueryResponse<Map<String, Object>> response = context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, coders, defaultCoder));
 			List<Map<String, Object>> values = response.values();
 			specify(((HashMap<String, Object>) values.get(0)).get("_id"), does.equal(id));
-			context.execute(new UpdateRequest("foozbar.foo", new UpdateOptionsBuilder(), idQuery, new HashMap<String, Object>() {
+			context.execute(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), idQuery, new HashMap<String, Object>() {
 				{
 					put("zoo", 5);
 				}
-			}));
-			specify(((HashMap<String, Object>) context.execute(new QueryRequest("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery)).values().get(0)).get("zoo"), does.equal(5));
-			context.execute(new DeleteRequest("foozbar.foo", idQuery));
-			specify(context.execute(new QueryRequest("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery)).values().size(), does.equal(0));
+			}, coders, coders));
+			specify(((HashMap<String, Object>) context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, coders, defaultCoder)).values().get(0)).get("zoo"), does.equal(5));
+			context.execute(new DeleteRequest("foozbar.foo", coders, idQuery));
+			specify(context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, coders, defaultCoder)).values().size(), does.equal(0));
 		}
 	}
 }

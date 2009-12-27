@@ -22,13 +22,14 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import mungbean.protocol.LittleEndianDataReader;
+import mungbean.protocol.bson.BSONMap;
 
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class QueryResponseSpec extends Specification<QueryResponse> {
+public class QueryResponseSpec extends Specification<QueryResponse<Map<String, Object>>> {
 	public class WithCommandResponse {
-		public QueryResponse create() {
+		public QueryResponse<Map<String, Object>> create() {
 			byte[] bytes = new byte[] { 
 					65, 0, 0, 0, // length
 					70, 71, 94, 07,// reqid
@@ -49,7 +50,7 @@ public class QueryResponseSpec extends Specification<QueryResponse> {
 					0, 0, 0, 0, 0, 0, -16, 63, // 1
 					0 // eoo
 			};
-			return new QueryResponse(new LittleEndianDataReader(new ByteArrayInputStream(bytes)));
+			return new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap());
 		}
 
 		public void responseCanBeParsed() {

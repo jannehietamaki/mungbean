@@ -18,6 +18,7 @@ package mungbean.protocol.message;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
@@ -25,18 +26,20 @@ import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
 import mungbean.protocol.DBTransaction;
+import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.BSONMap;
 import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.QueryResponse;
 import mungbean.protocol.message.RequestOpCode;
 
 @RunWith(JDaveRunner.class)
-public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse>> {
+public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
 
 	public class WithoutQueryRules {
-		public DBTransaction<QueryResponse> create() {
-			QueryRequest message = new QueryRequest("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>());
-			return new DBTransaction<QueryResponse>(message, 124, -1);
+		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
+			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>(), new BSONCoders(), new BSONMap());
+			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 
 		public void messageCanBeSerializedIntoByteStream() {
@@ -57,13 +60,13 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse>
 	}
 
 	public class WithQueryContaingingRules {
-		public DBTransaction<QueryResponse> create() {
-			QueryRequest message = new QueryRequest("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, new HashMap<String, Object>() {
+		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
+			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, new HashMap<String, Object>() {
 				{
 					put("foo", "bar");
 				}
-			});
-			return new DBTransaction<QueryResponse>(message, 124, -1);
+			}, new BSONCoders(), new BSONMap());
+			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 
 		public void messageCanBeSerializedIntoByteStream() {
@@ -103,7 +106,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse>
 					'b', 'a', 'r', 0, // value
 					0 // eoo
 					});
-			QueryResponse response = context.readResponse(input);
+			QueryResponse<Map<String, Object>> response = context.readResponse(input);
 			specify(response.opCode(), does.equal(RequestOpCode.OP_REPLY));
 			specify(response.values().get(0), does.equal(new HashMap<String, Object>() {
 				{

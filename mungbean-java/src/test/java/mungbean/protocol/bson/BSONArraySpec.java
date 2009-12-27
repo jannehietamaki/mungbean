@@ -29,10 +29,10 @@ import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
 @RunWith(JDaveRunner.class)
-public class BSONArraySpec extends Specification<BSONArray> {
+public class BSONArraySpec extends Specification<BSONArray<Integer>> {
 	public class WithList {
-		public BSONArray create() {
-			return new BSONArray();
+		public BSONArray<Integer> create() {
+			return new BSONArray<Integer>();
 		}
 
 		public void listWithIntegersCanBeEncodedIntoBson() {

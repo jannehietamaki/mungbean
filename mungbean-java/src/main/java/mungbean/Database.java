@@ -17,6 +17,8 @@ package mungbean;
 
 import java.util.Map;
 
+import mungbean.pojo.PojoDBCollection;
+
 public class Database {
 	private final String dbName;
 	private final DbOperationExecutor executor;
@@ -31,7 +33,6 @@ public class Database {
 	}
 
 	public <T> DBCollection<T> openCollection(String name, Class<T> type) {
-		return new PojoDBCollection<T>(openCollection(name), type);
+		return new PojoDBCollection<T>(executor, dbName, name, type);
 	}
-
 }

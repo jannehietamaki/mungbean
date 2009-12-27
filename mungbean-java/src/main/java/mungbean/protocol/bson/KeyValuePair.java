@@ -13,23 +13,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean;
 
-import jdave.Specification;
-import jdave.junit4.JDaveRunner;
+package mungbean.protocol.bson;
 
-import org.junit.runner.RunWith;
+public class KeyValuePair<Key, Value> {
+	private final Key key;
+	private final Value value;
 
-@RunWith(JDaveRunner.class)
-public class PojoIntegrationTest extends Specification<DBCollection<TestObject>> {
-	public class WithDatabase {
-		public DBCollection<TestObject> create() {
-			return new Mungbean("localhost", 27017).openDatabase("foobar").openCollection("foo", TestObject.class);
-		}
+	public KeyValuePair(Key key, Value value) {
+		this.key = key;
+		this.value = value;
+	}
 
-		public void objectWithoutIdCanBeStored() {
-			context.insert(new TestObject("foo", 123));
-		}
+	public Key key() {
+		return key;
+	}
 
+	public Value value() {
+		return value;
 	}
 }

@@ -25,12 +25,12 @@ public class BSONMongoTimestamp extends BSONCoder<MongoTimestamp> {
 	}
 
 	@Override
-	protected MongoTimestamp decode(BSONCoders bson, LittleEndianDataReader reader) {
+	protected MongoTimestamp decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
 		return new MongoTimestamp(reader.readInt(), reader.readInt());
 	}
 
 	@Override
-	protected void encode(BSONCoders bson, MongoTimestamp ts, LittleEndianDataWriter writer) {
+	protected void encode(AbstractBSONCoders bson, MongoTimestamp ts, LittleEndianDataWriter writer) {
 		writer.writeInt(ts.time());
 		writer.writeInt(ts.incrementedField());
 	}

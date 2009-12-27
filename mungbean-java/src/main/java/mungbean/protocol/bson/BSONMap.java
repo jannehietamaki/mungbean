@@ -15,42 +15,36 @@
  */
 package mungbean.protocol.bson;
 
-import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import mungbean.protocol.LittleEndianDataReader;
-import mungbean.protocol.LittleEndianDataWriter;
+public class BSONMap extends AbstractBSONMap<Map<String, Object>> {
+	private final static Class<?> typeClass = Map.class;
 
-public class BSONMap extends BSONCoder<Map<String, Object>> {
-
+	@SuppressWarnings("unchecked")
 	public BSONMap() {
-		super(3, Map.class);
+		super((Class<Map<String, Object>>) typeClass);
 	}
 
 	@Override
-	protected Map<String, Object> decode(BSONCoders bson, LittleEndianDataReader reader) {
-		reader.readInt(); // Skip length
-		Map<String, Object> ret = new HashMap<String, Object>();
-		BSONCoder<?> b;
-		while (!(b = bson.forType((byte) reader.readByte())).isEndMarker()) {
-			String name = b.readPath(reader, "");
-			Object value = b.read(bson, reader);
-			ret.put(name, value);
-		}
-		return ret;
+	protected Map<String, Object> newInstance() {
+		return new HashMap<String, Object>();
 	}
 
 	@Override
-	protected void encode(BSONCoders bson, Map<String, Object> o, LittleEndianDataWriter writer) {
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		LittleEndianDataWriter localWriter = new LittleEndianDataWriter(byteOut);
-		for (Map.Entry<String, Object> entry : o.entrySet()) {
-			bson.forValue(entry.getValue()).write(bson, entry.getKey(), entry.getValue(), localWriter);
+	protected Map<String, Object> setValue(Map<String, Object> item, String key, Object value) {
+		item.put(key, value);
+		return item;
+	}
+
+	@Override
+	protected Iterable<KeyValuePair<String, Object>> entriesOf(Map<String, Object> item) {
+		List<KeyValuePair<String, Object>> returnValue = new ArrayList<KeyValuePair<String, Object>>();
+		for (Map.Entry<String, Object> entry : item.entrySet()) {
+			returnValue.add(new KeyValuePair<String, Object>(entry.getKey(), entry.getValue()));
 		}
-		byte[] bytes = byteOut.toByteArray();
-		writer.writeInt(bytes.length + 4 + 1);
-		writer.write(bytes);
-		writer.writeByte(BSONEndMarker.instance().type());
+		return returnValue;
 	}
 }

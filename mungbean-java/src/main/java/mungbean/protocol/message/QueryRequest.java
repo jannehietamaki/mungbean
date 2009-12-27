@@ -19,23 +19,27 @@ import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
+import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
+import mungbean.protocol.bson.BSONCoder;
 
-public class QueryRequest extends CollectionRequest<QueryResponse> {
+public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<ResponseType>> {
 
 	private final QueryOptionsBuilder builder;
 	private final int numberToSkip;
 	private final int numberToReturn;
 	private final BSON query;
 	private final boolean closeCursor;
+	private final BSONCoder<ResponseType> coder;
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query) {
+	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
 		super(collectionName);
 		this.builder = builder;
 		this.numberToSkip = numberToSkip;
 		this.numberToReturn = Math.abs(numberToReturn);
 		this.closeCursor = closeCursor;
-		this.query = toBson(query);
+		this.query = coders.forValue(query).write(coders, query);
+		this.coder = coder;
 	}
 
 	@Override
@@ -44,14 +48,14 @@ public class QueryRequest extends CollectionRequest<QueryResponse> {
 	}
 
 	@Override
-	public QueryResponse readResponse(LittleEndianDataReader reader) {
-		return new QueryResponse(reader);
+	public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
+		return new QueryResponse<ResponseType>(reader, coder);
 	}
 
 	@Override
 	public void send(LittleEndianDataWriter writer) {
 		writer.writeInt(builder.build());
-		writer.writeCString(collectionName());
+		writeCollectionName(writer);
 		writer.writeInt(numberToSkip);
 		if (closeCursor) {
 			if (numberToReturn > 0) {

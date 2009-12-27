@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ObjectId {
 	// http://www.mongodb.org/display/DOCS/Object+IDs
+	private final static byte[] hardwareAddress = hardwareAddress();
 
 	private final byte[] id;
 	private final static AtomicInteger incrementCounter = new AtomicInteger(0);
@@ -38,9 +39,8 @@ public class ObjectId {
 		for (; a < 4; a++) {
 			this.id[a] = (byte) ((time >> 8 * a) & 0xFF);
 		}
-		byte[] hwAddress = hardwareAddress();
 		for (; a < 7; a++) {
-			this.id[a] = hwAddress[a - 1];
+			this.id[a] = hardwareAddress[a - 1];
 		}
 		long pid = TimeSource.instance().startTime();
 		for (; a < 9; a++) {
@@ -51,22 +51,6 @@ public class ObjectId {
 		for (; a < 12; a++) {
 			this.id[a] = (byte) (counter & 0xff);
 			counter = counter >> 1;
-		}
-	}
-
-	private byte[] hardwareAddress() {
-		try {
-			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-			while (interfaces.hasMoreElements()) {
-				NetworkInterface networkInterface = interfaces.nextElement();
-				byte[] addr = networkInterface.getHardwareAddress();
-				if (addr != null) {
-					return addr;
-				}
-			}
-			throw new RuntimeException("Unable to retrieve hardware address!");
-		} catch (SocketException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
@@ -110,5 +94,21 @@ public class ObjectId {
 		}
 		result.append("]");
 		return result.toString();
+	}
+
+	private static byte[] hardwareAddress() {
+		try {
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+			while (interfaces.hasMoreElements()) {
+				NetworkInterface networkInterface = interfaces.nextElement();
+				byte[] addr = networkInterface.getHardwareAddress();
+				if (addr != null) {
+					return addr;
+				}
+			}
+			throw new RuntimeException("Unable to retrieve hardware address!");
+		} catch (SocketException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

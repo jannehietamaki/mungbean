@@ -16,19 +16,21 @@
 package mungbean.protocol.message;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import mungbean.protocol.DBTransaction;
+import mungbean.protocol.bson.BSONCoders;
 
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class CommandRequestSpec extends Specification<DBTransaction<QueryResponse>> {
+public class CommandRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
 	public class WithValidCommandQuery {
-		public DBTransaction<QueryResponse> create() {
-			return new DBTransaction<QueryResponse>(new CommandRequest("foobar", "getlasterror"), 123, -1);
+		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
+			return new DBTransaction<QueryResponse<Map<String, Object>>>(new CommandRequest("foobar", "getlasterror", new BSONCoders()), 123, -1);
 		}
 
 		public void commandQueryCanBeSerialized() {
@@ -44,8 +46,7 @@ public class CommandRequestSpec extends Specification<DBTransaction<QueryRespons
 					-1, -1, -1, -1, // NumberToReturn
 					27, 0, 0, 0, // ObjSize
 					01, // data_type = number
-					'g', 'e', 't', 'l', 'a', 's', 't', 'e', 'r', 'r', 'o', 'r', 0, // command
-																					// string
+					'g', 'e', 't', 'l', 'a', 's', 't', 'e', 'r', 'r', 'o', 'r', 0, // command  string
 					0, 0, 0, 0, 0, 0, -16, 63, // value == 1 (double)
 					0 // EOO
 					}));

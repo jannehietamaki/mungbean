@@ -2,26 +2,28 @@ package mungbean.protocol.message;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
+import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
+import mungbean.protocol.bson.BSONCoder;
 
-public class InsertRequest extends CollectionRequest<Void> {
+public class InsertRequest<Type> extends CollectionRequest<Void> {
 	private final List<BSON> documents = new ArrayList<BSON>();
 
-	public InsertRequest(String collectionName, Map<String, Object>... documents) {
+	public InsertRequest(String collectionName, AbstractBSONCoders coders, Type... documents) {
 		super(collectionName);
-		for (Map<String, Object> doc : documents) {
-			this.documents.add(toBson(doc));
+		for (Type doc : documents) {
+			BSONCoder<Type> coder = coders.forValue(doc);
+			this.documents.add(coder.write(coders, doc));
 		}
 	}
 
 	@Override
 	public void send(LittleEndianDataWriter writer) {
 		writer.writeInt(0); // RESERVED
-		writer.writeCString(collectionName());
+		writeCollectionName(writer);
 		for (BSON doc : documents) {
 			writer.write(doc.bytes());
 		}

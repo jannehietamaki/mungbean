@@ -25,13 +25,13 @@ public class BSONSymbol extends BSONCoder<String> {
 	}
 
 	@Override
-	protected String decode(BSONCoders bson, LittleEndianDataReader reader) {
+	protected String decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
 		reader.readInt(); // Skip length
 		return reader.readCString();
 	}
 
 	@Override
-	protected void encode(BSONCoders bson, String value, LittleEndianDataWriter writer) {
+	protected void encode(AbstractBSONCoders bson, String value, LittleEndianDataWriter writer) {
 		writer.writeCStringWithLength(value);
 	}
 

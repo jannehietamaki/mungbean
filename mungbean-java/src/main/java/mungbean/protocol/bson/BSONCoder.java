@@ -38,19 +38,15 @@ public abstract class BSONCoder<JavaType> {
 		return val != null && javaType.isAssignableFrom(val.getClass());
 	}
 
-	public static boolean isdbOnlyField(String s) {
-		return s.equals("_ns") || s.equals("_save") || s.equals("_update");
-	}
+	protected abstract JavaType decode(AbstractBSONCoders bson, LittleEndianDataReader reader);
 
-	protected abstract JavaType decode(BSONCoders bson, LittleEndianDataReader reader);
+	protected abstract void encode(AbstractBSONCoders bson, JavaType o, LittleEndianDataWriter writer);
 
-	protected abstract void encode(BSONCoders bson, JavaType o, LittleEndianDataWriter writer);
-
-	public JavaType read(BSONCoders bson, LittleEndianDataReader reader) {
+	public JavaType read(AbstractBSONCoders bson, LittleEndianDataReader reader) {
 		return decode(bson, reader);
 	}
 
-	public void write(BSONCoders bson, String name, JavaType o, LittleEndianDataWriter writer) {
+	public void write(AbstractBSONCoders bson, String name, JavaType o, LittleEndianDataWriter writer) {
 		writer.writeByte(type());
 		writer.writeCString(name);
 		encode(bson, o, writer);
@@ -68,10 +64,9 @@ public abstract class BSONCoder<JavaType> {
 		return false;
 	}
 
-	public BSON write(BSONCoders bson, JavaType o) {
+	public BSON write(AbstractBSONCoders bson, JavaType o) {
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		encode(bson, o, new LittleEndianDataWriter(byteOut));
 		return new BSON(byteOut.toByteArray());
 	}
-
 }
