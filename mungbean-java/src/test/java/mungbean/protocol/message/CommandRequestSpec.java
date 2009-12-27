@@ -16,45 +16,39 @@
 package mungbean.protocol.message;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
-import org.junit.runner.RunWith;
-
 import mungbean.protocol.DBTransaction;
 
+import org.junit.runner.RunWith;
+
 @RunWith(JDaveRunner.class)
-public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest>> {
-	public class WithValidRequest {
-		@SuppressWarnings("unchecked")
-		public DBTransaction<Void> create() {
-			InsertRequest message = new InsertRequest("foozbar.foo", new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-				}
-			});
-			return new DBTransaction<Void>(message, 123, -1);
+public class CommandRequestSpec extends Specification<DBTransaction<QueryResponse>> {
+	public class WithValidCommandQuery {
+		public DBTransaction<QueryResponse> create() {
+			return new DBTransaction<QueryResponse>(new CommandRequest("foobar", "getlasterror"), 123, -1);
 		}
 
-		public void messageCanBeSerializedIntoByteStream() {
+		public void commandQueryCanBeSerialized() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			context.send(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 50, 0, 0, 0, // message_lenght
-					123, 0, 0, 0, // requestId
+			specify(output.toByteArray(), does.containExactly(new byte[] { 67, 0, 0, 0, // message_lenght
+					123, 0, 0, 0, // requestID
 					-1, -1, -1, -1, // responseTo
-					-46, 7, 0, 0, // opCode
-					0, 0, 0, 0, // RESERVED
-					'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // collectionName
-					18, 0, 0, 0, // element_size
-					2, // element_type = string
-					'f', 'o', 'o', 0, // name
-					4, 0, 0, 0, // item_length
-					'b', 'a', 'r', 0, // value
-					0 // eoo
+					-44, 7, 0, 0, // opCode
+					0, 0, 0, 0, // opts
+					'f', 'o', 'o', 'b', 'a', 'r', '.', '$', 'c', 'm', 'd', 0, // fullCollectionName
+					0, 0, 0, 0, // numberToSkip
+					-1, -1, -1, -1, // NumberToReturn
+					27, 0, 0, 0, // ObjSize
+					01, // data_type = number
+					'g', 'e', 't', 'l', 'a', 's', 't', 'e', 'r', 'r', 'o', 'r', 0, // command
+																					// string
+					0, 0, 0, 0, 0, 0, -16, 63, // value == 1 (double)
+					0 // EOO
 					}));
 		}
 	}
-
 }

@@ -1,25 +1,34 @@
+/*
+   Copyright 2009 Janne Hietamäki
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
 package mungbean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
-
-import mungbean.util.FieldDefinition;
-import mungbean.util.ReflectionUtil;
+import mungbean.util.PojoMapper;
 
 public class PojoDBCollection<T> implements DBCollection<T> {
-	private final static Objenesis objenesis = new ObjenesisStd();
 
 	private final DBCollection<Map<String, Object>> storage;
-	private final Class<T> typeClass;
+	private final PojoMapper<T> mapper;
 
 	public PojoDBCollection(DBCollection<Map<String, Object>> storage, Class<T> typeClass) {
 		this.storage = storage;
-		this.typeClass = typeClass;
+		mapper = new PojoMapper<T>(typeClass);
 	}
 
 	@Override
@@ -34,12 +43,12 @@ public class PojoDBCollection<T> implements DBCollection<T> {
 
 	@Override
 	public T find(ObjectId id) {
-		return fromMap(storage.find(id));
+		return mapper.fromMap(storage.find(id));
 	}
 
 	@Override
 	public void insert(T doc) {
-		storage.insert(toMap(doc));
+		storage.insert(mapper.toMap(doc));
 	}
 
 	@Override
@@ -47,33 +56,19 @@ public class PojoDBCollection<T> implements DBCollection<T> {
 		List<T> result = new ArrayList<T>();
 		List<Map<String, Object>> docs = storage.query(rules, first, items);
 		for (Map<String, Object> doc : docs) {
-			result.add(fromMap(doc));
+			result.add(mapper.fromMap(doc));
 		}
 		return result;
 	}
 
 	@Override
 	public void update(Map<String, Object> query, T doc, boolean upsert) {
-		storage.update(query, toMap(doc), upsert);
+		storage.update(query, mapper.toMap(doc), upsert);
 	}
 
-	@SuppressWarnings("unchecked")
-	private T fromMap(Map<String, Object> doc) {
-		T ret = (T) objenesis.newInstance(typeClass);
-		FieldDefinition[] fields = ReflectionUtil.fieldsOf(typeClass);
-		for (FieldDefinition field : fields) {
-			field.set(ret, doc.get(field.name()));
-		}
-		return ret;
-	}
-
-	private Map<String, Object> toMap(T doc) {
-		Map<String, Object> ret = new HashMap<String, Object>();
-		FieldDefinition[] fields = ReflectionUtil.fieldsOf(typeClass);
-		for (FieldDefinition field : fields) {
-			ret.put(field.name(), field.get(doc));
-		}
-		return ret;
+	@Override
+	public Map<String, Object> command(String command) {
+		return storage.command(command);
 	}
 
 }

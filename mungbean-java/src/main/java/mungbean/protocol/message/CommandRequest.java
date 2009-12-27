@@ -13,26 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.bson;
+package mungbean.protocol.message;
 
-import mungbean.protocol.LittleEndianDataReader;
-import mungbean.protocol.LittleEndianDataWriter;
+import java.util.HashMap;
 
-public class BSONString extends BSONCoder<String> {
+public class CommandRequest extends QueryRequest {
 
-	protected BSONString() {
-		super(2, String.class);
+	public CommandRequest(String dbName, final String command) {
+		super(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, new HashMap<String, Object>() {
+			{
+				put(command, 1D);
+			}
+		});
 	}
-
-	@Override
-	protected String decode(BSONCoders bson, LittleEndianDataReader reader) {
-		reader.readInt(); // Skip length
-		return reader.readCString();
-	}
-
-	@Override
-	protected void encode(BSONCoders bson, String value, LittleEndianDataWriter writer) {
-		writer.writeCStringWithLength(value);
-	}
-
 }
