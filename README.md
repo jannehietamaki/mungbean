@@ -7,13 +7,16 @@ Language support so far
 
 *Java*
 - Mongo documents can be mapped to generic java.util.collections (Maps + Lists) or to POJOs
+- Missing features: GridFS, cursors, administration API, aggregation, conditional operators
+- Implemented features insert + update + remove + basic query
 
 *Clojure*
 Initial proof-of-concept done.
+- Implemented features insert + update + remove + basic query
+- This works: http://github.com/jannehietamaki/mungbean/blob/master/mungbean-clojure/test/mungbean_test.clj
 
 *Scala*
 Coming up next.
-
 
 License
 -------
