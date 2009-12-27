@@ -15,7 +15,7 @@ Language support so far
 
 **Clojure**
 
-Initial proof-of-concept done.
+- Initial proof-of-concept done.
 
 - Implemented features insert + update + remove + basic query
 
