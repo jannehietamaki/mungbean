@@ -46,7 +46,9 @@ public class PojoDBCollection<T> extends AbstractDBCollection<T> {
 		try {
 			Field field = doc.getClass().getField("_id");
 			field.setAccessible(true);
-			field.set(doc, new ObjectId());
+			if (field.get(doc) == null) {
+				field.set(doc, new ObjectId());
+			}
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException(e);
 		} catch (SecurityException e) {

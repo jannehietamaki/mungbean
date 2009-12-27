@@ -34,7 +34,7 @@ public class MapDBCollection extends AbstractDBCollection<Map<String, Object>> {
 
 	@Override
 	protected Map<String, Object> injectId(Map<String, Object> doc) {
-		if (doc.containsKey("_id")) {
+		if (!doc.containsKey("_id")) {
 			doc.put("_id", new ObjectId());
 		}
 		return doc;

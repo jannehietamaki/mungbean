@@ -39,7 +39,10 @@ public class BSONArray<T> extends AbstractBSONArray<List<T>, T> {
 
 	@Override
 	protected Iterable<KeyValuePair<Integer, T>> valuesOf(List<T> l) {
-		// TODO Auto-generated method stub
-		return null;
+		List<KeyValuePair<Integer, T>> returnValues = new ArrayList<KeyValuePair<Integer, T>>();
+		for (int a = 0; a < l.size(); a++) {
+			returnValues.add(new KeyValuePair<Integer, T>(a, l.get(a)));
+		}
+		return returnValues;
 	}
 }
