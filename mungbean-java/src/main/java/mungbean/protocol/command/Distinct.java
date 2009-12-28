@@ -18,30 +18,36 @@ package mungbean.protocol.command;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import mungbean.DBCollection;
 
-public class Count extends Command<Long> {
+public class Distinct extends Command<List<String>> {
 	private final Map<String, Object> query;
+	private final String field;
 
-	public Count() {
+	public Distinct(String field) {
 		this.query = Collections.emptyMap();
+		this.field = field;
 	}
 
-	public Count(Map<String, Object> query) {
+	public Distinct(String field, Map<String, Object> query) {
 		this.query = query;
+		this.field = field;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Long parseResponse(Map<String, Object> values) {
-		return ((Double) values.get("n")).longValue();
+	public List<String> parseResponse(Map<String, Object> values) {
+		return (List<String>) values.get("values");
 	}
 
 	@Override
 	public Map<String, Object> toMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("count", collection.name());
+		map.put("distinct", collection.name());
+		map.put("key", field);
 		map.put("query", query);
 		return map;
 	}

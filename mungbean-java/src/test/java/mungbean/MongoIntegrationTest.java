@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import mungbean.protocol.command.Count;
+import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.LastError;
 
 import org.junit.runner.RunWith;
@@ -52,6 +53,7 @@ public class MongoIntegrationTest extends Specification<DBCollection<Map<String,
 			List<Map<String, Object>> results = context.query(idQuery, 0, 100);
 			specify(results.size(), does.equal(1));
 			specify(results.get(0).get("foo"), does.equal("bar"));
+			context.command(new Distinct("foo")).contains("bar");
 			specify(context.command(new Count(idQuery)), does.equal(1));
 			context.delete(idQuery);
 			specify(context.query(idQuery, 0, 100).size(), does.equal(0));

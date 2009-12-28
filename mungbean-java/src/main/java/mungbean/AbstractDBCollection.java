@@ -152,6 +152,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		if (result.isEmpty()) {
 			throw new NotFoundException("Value not returned for command: " + command);
 		}
-		return command.parseResponse(result.get(0));
+		Map<String, Object> response = result.get(0);
+		if (!response.get("ok").equals(1D)) {
+			throw new RuntimeException(response.get("errmsg") + ": " + response.get("bad cmd"));
+		}
+		return command.parseResponse(response);
 	}
 }
