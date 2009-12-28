@@ -35,4 +35,8 @@ public class Database {
 	public <T> DBCollection<T> openCollection(String name, Class<T> type) {
 		return new PojoDBCollection<T>(executor, dbName, name, type);
 	}
+
+	public DatabaseAdmin dbAdmin() {
+		return new DatabaseAdmin(this);
+	}
 }

@@ -29,7 +29,7 @@ public class ObjectIdSpec extends Specification<ObjectId> {
 		}
 
 		public void toStringReturnsHumanReadableString() {
-			specify(context.toString(), does.equal("ObjectId[010203:040506:070809:0a0b0c]"));
+			specify(context.toString(), does.equal("ObjectId(0102030405060708090a0b0c)"));
 		}
 
 		public void meetsEqualsAndHashCodeContracts() {

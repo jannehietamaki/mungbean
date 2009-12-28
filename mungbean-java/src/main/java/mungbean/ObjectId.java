@@ -85,14 +85,17 @@ public class ObjectId {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder("ObjectId[");
+		StringBuilder result = new StringBuilder("ObjectId(");
+		result.append(toHex());
+		result.append(")");
+		return result.toString();
+	}
+
+	public String toHex() {
+		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < id.length; i++) {
-			if (i > 0 && i % 3 == 0) {
-				result.append(":");
-			}
 			result.append(Integer.toString((id[i] & 0xff) + 0x100, 16).substring(1));
 		}
-		result.append("]");
 		return result.toString();
 	}
 

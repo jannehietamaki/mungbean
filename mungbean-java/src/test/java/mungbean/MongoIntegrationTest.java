@@ -30,43 +30,50 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 @RunWith(JDaveRunner.class)
-public class MongoIntegrationTest extends Specification<DBCollection<Map<String, Object>>> {
+public class MongoIntegrationTest extends Specification<Database> {
 	public class WithDatabase {
-		public DBCollection<Map<String, Object>> create() {
-			return new Mungbean("localhost", 27017).openDatabase("foobar").openCollection("foo");
+		public Database create() {
+			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
+		}
+
+		public void destroy() {
+			context.dbAdmin().dropDatabase();
 		}
 
 		public void databaseCanBeAccessed() {
-			long initialCount = context.command(new Count());
+			DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+			long initialCount = collection.command(new Count());
 			final ObjectId id = new ObjectId();
-			context.insert(new HashMap<String, Object>() {
+			collection.insert(new HashMap<String, Object>() {
 				{
 					put("foo", "bar");
 					put("_id", id);
 				}
 			});
-			specify(context.command(new Count()), does.equal(initialCount + 1));
+			specify(collection.command(new Count()), does.equal(initialCount + 1));
 			HashMap<String, Object> idQuery = new HashMap<String, Object>() {
 				{
 					put("_id", id);
 				}
 			};
-			List<Map<String, Object>> results = context.query(idQuery, 0, 100);
+			List<Map<String, Object>> results = collection.query(idQuery, 0, 100);
 			specify(results.size(), does.equal(1));
 			specify(results.get(0).get("foo"), does.equal("bar"));
-			context.command(new Distinct("foo")).contains("bar");
-			runGroup();
-			specify(context.command(new Count(idQuery)), does.equal(1));
-			context.delete(idQuery);
-			specify(context.query(idQuery, 0, 100).size(), does.equal(0));
-			specify(context.command(new LastError()), does.equal(null));
-			specify(context.command(new Count()), does.equal(initialCount));
+			collection.command(new Distinct("foo")).contains("bar");
+			runGroup(collection);
+			specify(collection.command(new Count(idQuery)), does.equal(1));
+			collection.delete(idQuery);
+			specify(collection.query(idQuery, 0, 100).size(), does.equal(0));
+			specify(collection.command(new LastError()), does.equal(null));
+			specify(collection.command(new Count()), does.equal(initialCount));
+			specify(context.dbAdmin().getCollectionNames(), containsExactly("foo"));
+
 		}
 
-		private void runGroup() {
+		private void runGroup(DBCollection<Map<String, Object>> collection) {
 			HashMap<String, Double> initialValues = new HashMap<String, Double>();
 			initialValues.put("foo", 0D);
-			List<Map<String, Object>> result = context.command(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"));
+			List<Map<String, Object>> result = collection.command(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"));
 			specify(result.get(0).get("csum"), does.equal(5D));
 		}
 	}
