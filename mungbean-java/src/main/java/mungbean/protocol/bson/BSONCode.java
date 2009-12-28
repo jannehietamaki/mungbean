@@ -18,20 +18,21 @@ package mungbean.protocol.bson;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
-public class BSONCode extends BSONCoder<Void> {
+public class BSONCode extends BSONCoder<Code> {
 
 	protected BSONCode() {
-		super(13, Void.class);
+		super(13, Code.class);
 	}
 
 	@Override
-	protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		throw new UnsupportedOperationException("CODE is not supported");
+	protected Code decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+		reader.readInt(); // Skip length
+		return new Code(reader.readCString());
 	}
 
 	@Override
-	protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
-
+	protected void encode(AbstractBSONCoders bson, Code o, LittleEndianDataWriter writer) {
+		writer.writeCStringWithLength(o.code());
 	}
 
 }

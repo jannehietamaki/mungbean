@@ -21,6 +21,7 @@ import java.util.Map;
 
 import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
+import mungbean.protocol.command.Group;
 import mungbean.protocol.command.LastError;
 
 import org.junit.runner.RunWith;
@@ -54,11 +55,19 @@ public class MongoIntegrationTest extends Specification<DBCollection<Map<String,
 			specify(results.size(), does.equal(1));
 			specify(results.get(0).get("foo"), does.equal("bar"));
 			context.command(new Distinct("foo")).contains("bar");
+			runGroup();
 			specify(context.command(new Count(idQuery)), does.equal(1));
 			context.delete(idQuery);
 			specify(context.query(idQuery, 0, 100).size(), does.equal(0));
 			specify(context.command(new LastError()), does.equal(null));
 			specify(context.command(new Count()), does.equal(initialCount));
+		}
+
+		private void runGroup() {
+			HashMap<String, Double> initialValues = new HashMap<String, Double>();
+			initialValues.put("foo", 0D);
+			List<Map<String, Object>> result = context.command(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"));
+			specify(result.get(0).get("csum"), does.equal(5D));
 		}
 	}
 }

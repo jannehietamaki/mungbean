@@ -13,22 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package mungbean.protocol.bson;
 
-public class BSONCoders extends AbstractBSONCoders {
+public class Code {
+	private final String code;
 
-	public BSONCoders() {
-		addEncoder(new BSONEndMarker());
-		addEncoder(new BSONNull());
-		addEncoder(new BSONArray<Object>());
-		addEncoder(new BSONInteger());
-		addEncoder(new BSONNumber());
-		addEncoder(new BSONString());
-		addEncoder(new BSONMap());
-		addEncoder(new BSONOid());
-		addEncoder(new BSONPattern());
-		addEncoder(new BSONDate());
-		addEncoder(new BSONBoolean());
-		addEncoder(new BSONCode());
+	public Code(String code) {
+		this.code = code;
+	}
+
+	@Override
+	public String toString() {
+		return code();
+	}
+
+	public String code() {
+		return code;
 	}
 }
