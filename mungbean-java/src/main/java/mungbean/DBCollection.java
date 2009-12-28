@@ -18,6 +18,8 @@ package mungbean;
 import java.util.List;
 import java.util.Map;
 
+import mungbean.protocol.command.Command;
+
 public interface DBCollection<T> {
 
 	T insert(T doc);
@@ -34,5 +36,8 @@ public interface DBCollection<T> {
 
 	void delete(ObjectId id);
 
-	Map<String, Object> command(String command);
+	<ResponseType> ResponseType command(Command<ResponseType> command);
+
+	String name();
+
 }

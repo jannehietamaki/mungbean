@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mungbean.protocol.command.Count;
+import mungbean.protocol.command.LastError;
+
 import org.junit.runner.RunWith;
 
 import jdave.Specification;
@@ -32,6 +35,7 @@ public class MongoIntegrationTest extends Specification<DBCollection<Map<String,
 		}
 
 		public void databaseCanBeAccessed() {
+			long initialCount = context.command(new Count());
 			final ObjectId id = new ObjectId();
 			context.insert(new HashMap<String, Object>() {
 				{
@@ -39,6 +43,7 @@ public class MongoIntegrationTest extends Specification<DBCollection<Map<String,
 					put("_id", id);
 				}
 			});
+			specify(context.command(new Count()), does.equal(initialCount + 1));
 			HashMap<String, Object> idQuery = new HashMap<String, Object>() {
 				{
 					put("_id", id);
@@ -47,9 +52,11 @@ public class MongoIntegrationTest extends Specification<DBCollection<Map<String,
 			List<Map<String, Object>> results = context.query(idQuery, 0, 100);
 			specify(results.size(), does.equal(1));
 			specify(results.get(0).get("foo"), does.equal("bar"));
+			specify(context.command(new Count(idQuery)), does.equal(1));
 			context.delete(idQuery);
 			specify(context.query(idQuery, 0, 100).size(), does.equal(0));
-			specify(context.command("getlasterror").get("n"), does.equal(0));
+			specify(context.command(new LastError()), does.equal(null));
+			specify(context.command(new Count()), does.equal(initialCount));
 		}
 	}
 }

@@ -13,19 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.message;
+
+package mungbean.protocol.command;
 
 import java.util.Map;
 
-import mungbean.protocol.bson.BSONCoders;
-import mungbean.protocol.bson.BSONMap;
+import mungbean.DBCollection;
 
-public class CommandRequest extends QueryRequest<Map<String, Object>> {
+public abstract class Command<ResponseType> {
+	public abstract Map<String, Object> toMap(DBCollection<?> collection);
 
-	private static final BSONMap RESPONSE_CODER = new BSONMap();
-	private static final BSONCoders CODERS = new BSONCoders();
-
-	public CommandRequest(String dbName, Map<String, Object> content) {
-		super(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, CODERS, RESPONSE_CODER);
-	}
+	public abstract ResponseType parseResponse(Map<String, Object> values);
 }

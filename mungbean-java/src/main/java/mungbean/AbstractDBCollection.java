@@ -24,6 +24,7 @@ import mungbean.protocol.DBConnection;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.command.Command;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.DeleteRequest;
 import mungbean.protocol.message.InsertRequest;
@@ -45,6 +46,11 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		this.dbName = dbName;
 		this.collectionName = collectionName;
 		this.coders = coders;
+	}
+
+	@Override
+	public String name() {
+		return collectionName;
 	}
 
 	public abstract BSONCoder<T> defaultEncoder();
@@ -136,16 +142,16 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	@Override
-	public Map<String, Object> command(final String command) {
+	public <ResponseType> ResponseType command(final Command<ResponseType> command) {
 		List<Map<String, Object>> result = executor.execute(new DBConversation<List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> execute(DBConnection connection) {
-				return connection.execute(new CommandRequest(dbName, command, coders)).values();
+				return connection.execute(new CommandRequest(dbName, command.toMap(AbstractDBCollection.this))).values();
 			}
 		});
 		if (result.isEmpty()) {
-			throw new NotFoundException("Value not found for command: " + command);
+			throw new NotFoundException("Value not returned for command: " + command);
 		}
-		return result.get(0);
+		return command.parseResponse(result.get(0));
 	}
 }
