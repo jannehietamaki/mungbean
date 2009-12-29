@@ -28,7 +28,7 @@ Coming up next.
 Building
 --------
 
-Right now the Java part is built with sbt (doesn't automaticly run tests yet) and Clojure with Leiningen, so far there is nothing to get everything simply built.
+Just run ./boot.sh to fetch all dependencies and Leingingen binaries and after that ./build.sh can be used to build everything.
 
 License
 -------
