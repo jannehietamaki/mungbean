@@ -7,17 +7,13 @@ Language support so far
 
 **Java**
 
-* Mongo documents can be mapped to generic java.util.collections (Maps + Lists) or typesafe API for mapping [POJOs](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java)
-
-* Missing features: GridFS, cursors
-* Implemented features 
-- insert + update + remove [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
-- basic query 
-- DSLs for conditional operators and updates
-- Aggregation
+* insert + update + remove [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
+* Mongo documents can be mapped to generic java.util.collections (Maps + Lists) 
+* Typesafe API for mapping Mongo documents to [POJOs](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java)
+* Queries
+* DSLs for conditional operators and updates
+* Aggregation
 * administration API (partial)
-* Failover/replica pairs is implemented but not yet ready for use
-* Code examples can be found [here](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
 
 Code examples:
 
@@ -26,6 +22,10 @@ Code examples:
     List<DomainObject> objects = collection.query(new Query().field("name").is("foo"));  // typesafe query of POJOs
 
     collection.query(Aggregation.distinct("foo", new Query().field("bar").greaterThan(5))); // select distinct values of field 'foo' of those items where value of 'bar' is greater than 5.
+
+* More code examples can be found [here](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
+* Missing features: GridFS, cursors
+* Failover/replica pairs is implemented but not yet ready for use
 
 **Clojure**
 
