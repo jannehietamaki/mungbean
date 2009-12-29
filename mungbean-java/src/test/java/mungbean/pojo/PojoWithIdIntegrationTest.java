@@ -18,31 +18,40 @@ package mungbean.pojo;
 import jdave.Block;
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-
 import mungbean.DBCollection;
+import mungbean.Database;
 import mungbean.Mungbean;
 import mungbean.NotFoundException;
+import mungbean.ObjectId;
 import mungbean.TestObjectWithId;
+import mungbean.query.Query;
 
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class PojoWithIdIntegrationTest extends Specification<DBCollection<TestObjectWithId>> {
+public class PojoWithIdIntegrationTest extends Specification<Database> {
 	public class WithDatabase {
-		public DBCollection<TestObjectWithId> create() {
-			return new Mungbean("localhost", 27017).openDatabase("foobar").openCollection("foo", TestObjectWithId.class);
+		public Database create() {
+			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
+		}
+
+		public void destroy() {
+			context.dbAdmin().dropDatabase();
 		}
 
 		public void objectWithIdCanBeStored() {
-			final TestObjectWithId item = new TestObjectWithId("foo", 123);
-			context.insert(item);
-			TestObjectWithId itemFromDb = context.find(item.id());
+			final DBCollection<TestObjectWithId> collection = context.openCollection("foo", TestObjectWithId.class);
+			final TestObjectWithId item = collection.insert(new TestObjectWithId("foo", 123));
+			TestObjectWithId itemFromDb = collection.find(item.id());
+
+			specify(collection.query(new Query().field("name").is("foo")).get(0).value(), does.equal(123));
+
 			specify(itemFromDb.id(), does.equal(item.id()));
-			context.delete(item.id());
+			collection.delete(item.id());
 			specify(new Block() {
 				@Override
 				public void run() throws Throwable {
-					context.find(item.id());
+					collection.find(item.id());
 				}
 			}, does.raise(NotFoundException.class));
 		}
