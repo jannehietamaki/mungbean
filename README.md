@@ -6,6 +6,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 ### Java
 
+
 #### Features
 
 * insert + update + remove [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
@@ -16,6 +17,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 * Aggregation
 * administration API (partial)
 
+
 #### Code examples
 
     collection.update(new Query().field("foo").greaterThan(3), new Update().field("bar").increment(5)); // Find items having field 'foo' greater than 5 and update those field bar by 5.
@@ -25,6 +27,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
     collection.query(Aggregation.distinct("foo", new Query().field("bar").greaterThan(5))); // select distinct values of field 'foo' of those items where value of 'bar' is greater than 5.
 
 * More code examples can be found [here](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
+
 
 #### Missing features
 
