@@ -19,8 +19,12 @@ Language support so far
 * Failover/replica pairs is implemented but not yet ready for use
 * Code examples can be found [here](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
 
+Code examples:
+
     collection.update(new Query().field("foo").greaterThan(3), new Update().field("bar").increment(5)); // Find items having field 'foo' greater than 5 and update those field bar by 5.
+
     List<DomainObject> objects = collection.query(new Query().field("name").is("foo"));  // typesafe query of POJOs
+
     collection.query(Aggregation.distinct("foo", new Query().field("bar").greaterThan(5))); // select distinct values of field 'foo' of those items where value of 'bar' is greater than 5.
 
 **Clojure**
