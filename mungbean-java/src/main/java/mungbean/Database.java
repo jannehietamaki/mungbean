@@ -21,9 +21,9 @@ import mungbean.pojo.PojoDBCollection;
 
 public class Database {
 	private final String dbName;
-	private final DbOperationExecutor executor;
+	private final DBOperationExecutor executor;
 
-	public Database(DbOperationExecutor executor, String name) {
+	public Database(DBOperationExecutor executor, String name) {
 		this.dbName = name;
 		this.executor = executor;
 	}

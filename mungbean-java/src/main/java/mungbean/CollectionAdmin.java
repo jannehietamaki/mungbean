@@ -49,6 +49,7 @@ public class CollectionAdmin {
 		doc.put("name", name.toString());
 		doc.putAll(builder.build());
 		collection.execute(new DBConversation<Void>() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public Void execute(DBConnection connection) {
 				connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new BSONCoders(), doc));

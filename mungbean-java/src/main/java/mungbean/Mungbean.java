@@ -16,10 +16,14 @@
 package mungbean;
 
 public class Mungbean {
-	private final DbOperationExecutor executor;
+	private final DBOperationExecutor executor;
 
 	public Mungbean(String host, int port) {
-		executor = new DbOperationExecutor(host, port);
+		executor = new SingleNodeDbOperationExecutor(new Server(host, port));
+	}
+
+	public Mungbean(Server... servers) {
+		executor = new ClusterDbOperationExecutor(servers);
 	}
 
 	public Database openDatabase(String name) {

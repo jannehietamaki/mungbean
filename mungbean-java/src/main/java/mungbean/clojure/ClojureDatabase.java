@@ -16,13 +16,13 @@
 
 package mungbean.clojure;
 
-import mungbean.DbOperationExecutor;
+import mungbean.DBOperationExecutor;
 
 public class ClojureDatabase {
 	private final String dbName;
-	private final DbOperationExecutor executor;
+	private final DBOperationExecutor executor;
 
-	public ClojureDatabase(DbOperationExecutor executor, String name) {
+	public ClojureDatabase(DBOperationExecutor executor, String name) {
 		this.dbName = name;
 		this.executor = executor;
 	}

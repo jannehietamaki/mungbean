@@ -39,12 +39,12 @@ import mungbean.query.UpdateBuilder;
 public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	private static final BSONCoders QUERY_CODERS = new BSONCoders();
 
-	private final DbOperationExecutor executor;
+	private final DBOperationExecutor executor;
 	private final String dbName;
 	private final String collectionName;
 	private final AbstractBSONCoders coders;
 
-	public AbstractDBCollection(DbOperationExecutor executor, String dbName, String collectionName, AbstractBSONCoders coders) {
+	public AbstractDBCollection(DBOperationExecutor executor, String dbName, String collectionName, AbstractBSONCoders coders) {
 		this.executor = executor;
 		this.dbName = dbName;
 		this.collectionName = collectionName;
@@ -63,7 +63,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	public abstract BSONCoder<T> defaultEncoder();
 
 	public T insert(final T doc) {
-		return execute(new ErrorCheckingDBConversation() {
+		return executeWrite(new ErrorCheckingDBConversation() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public T doExecute(DBConnection connection) {
@@ -85,7 +85,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	private void doUpdate(final ObjectId id, final Object update) {
-		execute(new ErrorCheckingDBConversation() {
+		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
 				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), new HashMap<String, Object>() {
@@ -103,7 +103,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void delete(final Map<String, Object> query) {
-		execute(new ErrorCheckingDBConversation() {
+		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
 				connection.execute(new DeleteRequest(dbName(), QUERY_CODERS, query));
@@ -129,7 +129,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		if (upsert) {
 			options.upsert().multiUpdate();
 		}
-		execute(new ErrorCheckingDBConversation() {
+		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
 				connection.execute(new UpdateRequest<T>(dbName(), options, query, doc, coders, QUERY_CODERS));
@@ -178,7 +178,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
 	@Override
 	public <ResponseType> ResponseType command(final Command<ResponseType> command) {
-		return execute(new DBConversation<ResponseType>() {
+		return executeWrite(new DBConversation<ResponseType>() {
 			@Override
 			public ResponseType execute(DBConnection connection) {
 				return executeCommand(command, connection);
@@ -204,6 +204,9 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 			T value = doExecute(connection);
 			String message = executeCommand(new LastError(), connection);
 			if (message != null) {
+				if ("not master".equals(message)) {
+					throw new NotMasterException(message);
+				}
 				throw new MongoException(message);
 			}
 			return value;
@@ -214,5 +217,9 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
 	public <V> V execute(DBConversation<V> conversation) {
 		return executor.execute(conversation);
+	}
+
+	public <V> V executeWrite(DBConversation<V> conversation) {
+		return executor.executeWrite(conversation);
 	}
 }

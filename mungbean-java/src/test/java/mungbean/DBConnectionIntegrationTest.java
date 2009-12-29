@@ -42,7 +42,7 @@ public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 		BSONMap defaultCoder = new BSONMap();
 
 		public DBConnection create() {
-			return new DBConnection("localhost", 27017);
+			return new DBConnection(new Server("localhost", 27017));
 		}
 
 		public void destroy() {

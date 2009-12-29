@@ -16,13 +16,15 @@
 
 package mungbean.clojure;
 
-import mungbean.DbOperationExecutor;
+import mungbean.DBOperationExecutor;
+import mungbean.SingleNodeDbOperationExecutor;
+import mungbean.Server;
 
 public class ClojureMungbean {
-	private final DbOperationExecutor executor;
+	private final DBOperationExecutor executor;
 
 	public ClojureMungbean(String host, int port) {
-		executor = new DbOperationExecutor(host, port);
+		executor = new SingleNodeDbOperationExecutor(new Server(host, port));
 	}
 
 	public ClojureDatabase openDatabase(String name) {

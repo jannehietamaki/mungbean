@@ -16,13 +16,21 @@
 
 package mungbean;
 
-public interface DBOperationExecutor {
+public class Server {
+	private final String host;
+	private final int port;
 
-	<T> T execute(DBConversation<T> conversation);
+	public Server(String host, int port) {
+		this.host = host;
+		this.port = port;
+	}
 
-	<T> T executeWrite(DBConversation<T> conversation);
+	public String host() {
+		return host;
+	}
 
-
-	void close();
+	public int port() {
+		return port;
+	}
 
 }

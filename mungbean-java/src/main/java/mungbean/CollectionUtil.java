@@ -16,6 +16,7 @@
 
 package mungbean;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +33,24 @@ public class CollectionUtil {
 		};
 	}
 
+	public static Map<String, Object> merge(Map<String, Object>... maps) {
+		Map<String, Object> ret = new LinkedHashMap<String, Object>();
+		for (Map<String, Object> map : maps) {
+			ret.putAll(map);
+		}
+		return ret;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static List<Object> list(Object... items) {
 		return Arrays.asList(items);
+	}
+
+	public static List<Object> merge(List<Object>... lists) {
+		List<Object> ret = new ArrayList<Object>();
+		for (List<Object> list : lists) {
+			ret.addAll(list);
+		}
+		return ret;
 	}
 }

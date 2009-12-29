@@ -16,13 +16,10 @@
 
 package mungbean;
 
-public interface DBOperationExecutor {
+public class NotMasterException extends MongoException {
 
-	<T> T execute(DBConversation<T> conversation);
-
-	<T> T executeWrite(DBConversation<T> conversation);
-
-
-	void close();
+	public NotMasterException(String message) {
+		super(message);
+	}
 
 }

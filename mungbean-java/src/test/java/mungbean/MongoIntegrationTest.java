@@ -31,16 +31,14 @@ import mungbean.query.QueryField;
 import mungbean.query.Update;
 
 import org.junit.runner.RunWith;
+import static mungbean.CollectionUtil.*;
 
 @RunWith(JDaveRunner.class)
+@SuppressWarnings("unchecked")
 public class MongoIntegrationTest extends Specification<Database> {
 	public class WithDatabase {
 		final ObjectId id = new ObjectId();
-		private final Map<String, Object> idQuery = new HashMap<String, Object>() {
-			{
-				put("_id", id);
-			}
-		};
+		private final Map<String, Object> idQuery = map("_id", id);
 
 		private final Map<String, Object> doc = newDoc(id, "bar");
 
@@ -112,11 +110,6 @@ public class MongoIntegrationTest extends Specification<Database> {
 	}
 
 	private Map<String, Object> newDoc(final ObjectId id, final Object value) {
-		return new HashMap<String, Object>() {
-			{
-				put("foo", value);
-				put("_id", id);
-			}
-		};
+		return merge(map("foo", value), map("_id", id));
 	}
 }

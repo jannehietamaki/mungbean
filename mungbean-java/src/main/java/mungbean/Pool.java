@@ -26,11 +26,13 @@ public abstract class Pool<T> {
 		objects = new ConcurrentLinkedQueue<T>();
 	}
 
+	protected abstract T createNew();
+
+	protected abstract boolean isValid(T item);
+
 	public Pool(Collection<? extends T> objects) {
 		this.objects = new ConcurrentLinkedQueue<T>(objects);
 	}
-
-	public abstract T createNew();
 
 	public T borrow() {
 		T t;
@@ -41,11 +43,17 @@ public abstract class Pool<T> {
 	}
 
 	public void giveBack(T object) {
-		objects.offer(object);
+		if (object != null && isValid(object)) {
+			objects.offer(object);
+		}
 	}
 
 	protected T poll() {
-		return objects.poll();
+		T item;
+		do {
+			item = objects.poll();
+		} while (item != null && !isValid(item));
+		return item;
 	}
 
 }

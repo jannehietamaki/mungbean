@@ -20,19 +20,24 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import mungbean.Server;
 import mungbean.protocol.message.MongoRequest;
 
 public class DBConnection {
+
+	private static final int CONNECTION_TIMEOUT = 5000;
 	private int requestIdCounter = 0;
 	private final Socket socket;
 	private final InputStream inputStream;
 	private final OutputStream outputStream;
 
-	public DBConnection(String server, int port) {
+	public DBConnection(Server server) {
 		try {
-			socket = new Socket(server, port);
+			socket = new Socket();
+			socket.connect(new InetSocketAddress(server.host(), server.port()), CONNECTION_TIMEOUT);
 			inputStream = new BufferedInputStream(socket.getInputStream());
 			outputStream = new BufferedOutputStream(socket.getOutputStream());
 		} catch (IOException e) {

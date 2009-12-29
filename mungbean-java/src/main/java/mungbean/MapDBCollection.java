@@ -23,7 +23,7 @@ import mungbean.protocol.bson.BSONMap;
 
 public class MapDBCollection extends AbstractDBCollection<Map<String, Object>> {
 
-	public MapDBCollection(DbOperationExecutor executor, String dbName, String collectionName) {
+	public MapDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
 		super(executor, dbName, collectionName, new BSONCoders());
 	}
 

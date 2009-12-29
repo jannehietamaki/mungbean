@@ -20,13 +20,13 @@ import clojure.lang.IPersistentMap;
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import mungbean.AbstractDBCollection;
-import mungbean.DbOperationExecutor;
+import mungbean.DBOperationExecutor;
 import mungbean.ObjectId;
 import mungbean.protocol.bson.BSONCoder;
 
 public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
 
-	public ClojureDBCollection(DbOperationExecutor executor, String dbName, String collectionName) {
+	public ClojureDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
 		super(executor, dbName, collectionName, new ClojureBSONCoders());
 	}
 

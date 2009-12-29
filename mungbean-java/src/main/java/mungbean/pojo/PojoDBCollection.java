@@ -18,7 +18,7 @@ package mungbean.pojo;
 import java.lang.reflect.Field;
 
 import mungbean.AbstractDBCollection;
-import mungbean.DbOperationExecutor;
+import mungbean.DBOperationExecutor;
 import mungbean.ObjectId;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.BSONCoders;
@@ -27,7 +27,7 @@ public class PojoDBCollection<T> extends AbstractDBCollection<T> {
 
 	private final Class<T> typeClass;
 
-	public PojoDBCollection(DbOperationExecutor executor, String dbName, String collectionName, final Class<T> typeClass) {
+	public PojoDBCollection(DBOperationExecutor executor, String dbName, String collectionName, final Class<T> typeClass) {
 		super(executor, dbName, collectionName, new BSONCoders() {
 			{
 				addEncoder(new PojoEncoder<T>(typeClass));

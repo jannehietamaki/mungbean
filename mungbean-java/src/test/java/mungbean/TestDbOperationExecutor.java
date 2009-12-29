@@ -21,12 +21,12 @@ import java.io.OutputStream;
 
 import mungbean.protocol.DBConnection;
 
-public class TestDbOperationExecutor extends DbOperationExecutor {
+public class TestDbOperationExecutor extends SingleNodeDbOperationExecutor {
 	private final InputStream input;
 	private final OutputStream output;
 
 	public TestDbOperationExecutor(InputStream input, OutputStream output) {
-		super(null, 0);
+		super(new Server(null, 0));
 		this.input = input;
 		this.output = output;
 	}
