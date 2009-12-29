@@ -33,6 +33,7 @@ import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 import mungbean.protocol.message.UpdateRequest;
+import mungbean.query.AggregationBuilder;
 import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
@@ -150,6 +151,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, QUERY_CODERS, defaultEncoder())).values();
 			};
 		});
+	}
+
+	public <ResponseType> ResponseType query(AggregationBuilder<ResponseType> builder) {
+		return command(builder.build());
 	}
 
 	String dbName() {

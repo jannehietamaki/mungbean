@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.query.QueryBuilder;
 
 public class Count extends Command<Long> {
 	private final Map<String, Object> query;
@@ -31,6 +32,10 @@ public class Count extends Command<Long> {
 
 	public Count(Map<String, Object> query) {
 		this.query = query;
+	}
+
+	public Count(QueryBuilder query) {
+		this.query = query.build();
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
+import mungbean.query.Aggregation;
 import mungbean.query.Query;
 import mungbean.query.Update;
 
@@ -93,6 +94,8 @@ public class MongoIntegrationTest extends Specification<Database> {
 			for (int a = 0; a < 10; a++) {
 				collection.save(newDoc(new ObjectId(), a));
 			}
+
+			specify(collection.query(Aggregation.distinct("foo", new Query().field("foo").greaterThan(5))), containsExactly(6, 7, 8, 9));
 
 			List<Map<String, Object>> values = collection.query(new Query().field("foo").greaterThan(3).lessThan(8));
 			specify(values.size(), does.equal(4));

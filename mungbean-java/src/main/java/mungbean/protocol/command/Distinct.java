@@ -22,8 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.query.QueryBuilder;
 
-public class Distinct extends Command<List<String>> {
+public class Distinct extends Command<List<Object>> {
 	private final Map<String, Object> query;
 	private final String field;
 
@@ -37,10 +38,15 @@ public class Distinct extends Command<List<String>> {
 		this.field = field;
 	}
 
+	public Distinct(String field, QueryBuilder query) {
+		this.query = query.build();
+		this.field = field;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> parseResponse(Map<String, Object> values) {
-		return (List<String>) values.get("values");
+	public List<Object> parseResponse(Map<String, Object> values) {
+		return (List<Object>) values.get("values");
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import mungbean.protocol.command.Command;
+import mungbean.query.AggregationBuilder;
 import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
@@ -44,6 +45,8 @@ public interface DBCollection<T> {
 	List<T> query(Map<String, Object> rules, int first, int items);
 
 	List<T> query(QueryBuilder query);
+
+	<ResponseType> ResponseType query(AggregationBuilder<ResponseType> builder);
 
 	T find(ObjectId id);
 
