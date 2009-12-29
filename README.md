@@ -2,10 +2,11 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 **Warning, Mongbean is in alpha state, and will probably kill some kittens.**
 
-Language support so far
------------------------
+## Language support so far
 
-**Java**
+### Java
+
+#### Features
 
 * insert + update + remove [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
 * Mongo documents can be mapped to generic java.util.collections (Maps + Lists) 
@@ -15,7 +16,7 @@ Language support so far
 * Aggregation
 * administration API (partial)
 
-Code examples:
+#### Code examples
 
     collection.update(new Query().field("foo").greaterThan(3), new Update().field("bar").increment(5)); // Find items having field 'foo' greater than 5 and update those field bar by 5.
 
@@ -25,26 +26,27 @@ Code examples:
 
 * More code examples can be found [here](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
 
-* Missing features: GridFS, cursors
-* Failover/replica pairs is implemented but not yet ready for use
+#### Missing features
 
-**Clojure**
+* GridFS, cursors
+* Failover/replica pairs support is implemented but not yet ready for use
+
+### Clojure
 
 * Initial proof-of-concept done.
 * Implemented features insert + update + remove + basic query
 * [Working example](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-clojure/test/mungbean_test.clj)
 
-**Scala**
+### Scala
 
 Coming up next.
 
-Building
---------
+## Building
 
 Just run ./boot.sh to fetch all dependencies and Leingingen binaries and after that ./build.sh can be used to build everything.
 
-License
--------
+## License
+
 ASL 2.0
 
 
