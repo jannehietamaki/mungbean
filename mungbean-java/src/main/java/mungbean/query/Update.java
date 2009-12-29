@@ -19,32 +19,24 @@ package mungbean.query;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Query implements QueryBuilder {
+public class Update implements UpdateBuilder {
 	private final Map<String, Object> map = new LinkedHashMap<String, Object>();
-	private int skip;
-	private int limit;
+	private boolean upsert = false;
 
-	public QueryField field(String key) {
-		return new QueryField(this, map, key);
-	}
-
-	public void setSkip(int skip) {
-		this.skip = skip;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
+	public UpdateField field(String key) {
+		return new UpdateField(this, map, key);
 	}
 
 	public Map<String, Object> build() {
 		return map;
 	}
 
-	public int limit() {
-		return limit;
+	public Update setUpsert() {
+		upsert = true;
+		return this;
 	}
 
-	public int skip() {
-		return skip;
+	public boolean getUpsert() {
+		return upsert;
 	}
 }

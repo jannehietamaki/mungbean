@@ -27,6 +27,8 @@ import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
 import mungbean.query.Query;
+import mungbean.query.QueryField;
+import mungbean.query.Update;
 
 import org.junit.runner.RunWith;
 
@@ -92,10 +94,20 @@ public class MongoIntegrationTest extends Specification<Database> {
 			for (int a = 0; a < 10; a++) {
 				collection.insert(newDoc(new ObjectId(), a));
 			}
-			Query query = new Query();
-			query.field("foo").lessThan(8).greaterThan(3);
-			List<Map<String, Object>> values = collection.query(query);
+
+			List<Map<String, Object>> values = collection.query(new Query().field("foo").greaterThan(3).lessThan(8));
 			specify(values.size(), does.equal(4));
+		}
+
+		public void updatesCanBeDoneWithTheDsl() {
+			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+			for (int a = 0; a < 10; a++) {
+				collection.insert(newDoc(new ObjectId(), a));
+			}
+
+			QueryField query = new Query().field("foo").greaterThan(3);
+			collection.update(query, new Update().field("foo").increment(5));
+			specify(collection.query(new Query().field("foo").is(9)).size(), does.equal(2));
 		}
 	}
 

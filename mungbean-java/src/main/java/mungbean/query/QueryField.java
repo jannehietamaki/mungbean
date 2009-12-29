@@ -24,17 +24,16 @@ import mungbean.protocol.bson.Code;
 import scala.actors.threadpool.Arrays;
 import static mungbean.CollectionUtil.map;
 
-public class QueryField {
-	Map<String, Object> result;
-	String key;
+public class QueryField extends DslField implements QueryBuilder {
+	private final Query query;
 
-	QueryField(Map<String, Object> result, String key) {
-		this.result = result;
-		this.key = key;
+	QueryField(Query query, Map<String, Object> result, String key) {
+		super(key, result);
+		this.query = query;
 	}
 
 	public QueryField is(Object value) {
-		result.put(key, value);
+		putResult(value);
 		return this;
 	}
 
@@ -43,72 +42,67 @@ public class QueryField {
 	}
 
 	public QueryField lessThan(Object value) {
-		put(key, map("$lt", value));
+		put(map("$lt", value));
 		return this;
 	}
 
 	public QueryField greaterThan(Object value) {
-		put(key, map("$gt", value));
+		put(map("$gt", value));
 		return this;
 	}
 
 	public QueryField lessOrEqual(Object value) {
-		put(key, map("$lte", value));
+		put(map("$lte", value));
 		return this;
 	}
 
 	public QueryField greaterOrEqual(Object value) {
-		put(key, map("$gte", value));
+		put(map("$gte", value));
 		return this;
 	}
 
 	public QueryField not(Object value) {
-		put(key, map("$ne", value));
+		put(map("$ne", value));
 		return this;
 	}
 
 	public QueryField in(Object... values) {
-		put(key, map("$in", Arrays.asList(values)));
+		put(map("$in", Arrays.asList(values)));
 		return this;
 	}
 
 	public QueryField notIn(Object... values) {
-		put(key, map("$nin", Arrays.asList(values)));
+		put(map("$nin", Arrays.asList(values)));
 		return this;
 	}
 
 	public QueryField all(Object... values) {
-		put(key, map("$all", Arrays.asList(values)));
+		put(map("$all", Arrays.asList(values)));
 		return this;
 	}
 
 	public QueryField size(int value) {
-		put(key, map("$size", value));
+		put(map("$size", value));
 		return this;
 	}
 
 	public QueryField exists(boolean value) {
-		put(key, map("$exists", value));
+		put(map("$exists", value));
 		return this;
 	}
 
 	public QueryField where(String script) {
-		result.put(key, new Code(script));
+		putResult(new Code(script));
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
-	private void put(String key, Map<String, Object> value) {
-		Object val = result.get(key);
-		if (val != null) {
-			if (!(val instanceof Map)) {
-				throw new IllegalArgumentException("Invalid combination of arguments");
-			}
-			Map<String, Object> valueMap = (Map<String, Object>) val;
-			valueMap.putAll(value);
-		} else {
-			result.put(key, value);
-		}
+	@Override
+	public int limit() {
+		return query.limit();
 	}
 
+	@Override
+	public int skip() {
+		return query.skip();
+	}
 }

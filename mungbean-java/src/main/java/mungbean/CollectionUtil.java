@@ -17,7 +17,10 @@
 package mungbean;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import scala.actors.threadpool.Arrays;
 
 public class CollectionUtil {
 
@@ -27,5 +30,10 @@ public class CollectionUtil {
 				put(key, value);
 			}
 		};
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Object> list(Object... items) {
+		return Arrays.asList(items);
 	}
 }

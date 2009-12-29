@@ -31,7 +31,7 @@ import mungbean.protocol.bson.Code;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class QueryBuilderSpec extends Specification<Query> {
+public class QuerySpec extends Specification<Query> {
 	public class WithSimpleQuery {
 		public Query create() {
 			Query builder = new Query();

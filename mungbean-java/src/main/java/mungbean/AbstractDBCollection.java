@@ -33,7 +33,8 @@ import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 import mungbean.protocol.message.UpdateRequest;
-import mungbean.query.Query;
+import mungbean.query.QueryBuilder;
+import mungbean.query.UpdateBuilder;
 
 public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	private static final BSONCoders QUERY_CODERS = new BSONCoders();
@@ -75,21 +76,29 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
 	protected abstract T injectId(T doc);
 
-	public T update(final ObjectId id, final T doc) {
-		return execute(new ErrorCheckingDBConversation() {
+	public void update(final ObjectId id, final UpdateBuilder update) {
+		doUpdate(id, update.build());
+	}
+
+	public void update(final ObjectId id, final T doc) {
+		doUpdate(id, doc);
+	}
+
+	private void doUpdate(final ObjectId id, final Object update) {
+		execute(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
 				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), new HashMap<String, Object>() {
 					{
 						put("_id", id);
 					}
-				}, doc, coders, QUERY_CODERS));
-				return doc;
+				}, update, coders, QUERY_CODERS));
+				return null;
 			};
 		});
 	}
 
-	public void delete(Query query) {
+	public void delete(QueryBuilder query) {
 		delete(query.build());
 	}
 
@@ -103,11 +112,19 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		});
 	}
 
-	public void update(Query query, T doc, boolean upsert) {
+	public void update(QueryBuilder query, UpdateBuilder update) {
+		doUpdate(query.build(), update.build(), update.getUpsert());
+	}
+
+	public void update(QueryBuilder query, T doc, boolean upsert) {
 		update(query.build(), doc, upsert);
 	}
 
 	public void update(final Map<String, Object> query, final T doc, boolean upsert) {
+		doUpdate(query, doc, upsert);
+	}
+
+	private void doUpdate(final Map<String, Object> query, final Object doc, boolean upsert) {
 		final UpdateOptionsBuilder options = new UpdateOptionsBuilder();
 		if (upsert) {
 			options.upsert().multiUpdate();
@@ -121,7 +138,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		});
 	}
 
-	public List<T> query(Query query) {
+	public List<T> query(QueryBuilder query) {
 		return query(query.build(), query.skip(), query.limit());
 	}
 

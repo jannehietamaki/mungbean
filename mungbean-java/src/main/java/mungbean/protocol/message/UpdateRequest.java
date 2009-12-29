@@ -27,7 +27,7 @@ public class UpdateRequest<Type> extends CollectionRequest<Void> {
 	private final BSON selector;
 	private final BSON document;
 
-	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Type document, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
+	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Object document, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
 		super(collectionName);
 		this.flags = flags;
 		this.selector = selectorCoders.forValue(selector).write(coders, selector);
