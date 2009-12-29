@@ -13,10 +13,32 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean;
 
-public class NotFoundException extends MongoException {
-	public NotFoundException(String message) {
-		super(message);
+package mungbean.protocol.command.admin;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class IndexOptionsBuilder {
+	private boolean unique = false;
+	private boolean dropDups = false;
+
+	public IndexOptionsBuilder unique() {
+		unique = true;
+		return this;
+	}
+
+	public IndexOptionsBuilder dropDups() {
+		dropDups = true;
+		return this;
+	}
+
+	public Map<String, Object> build() {
+		return new LinkedHashMap<String, Object>() {
+			{
+				put("unique", unique);
+				put("dropDups", dropDups);
+			}
+		};
 	}
 }

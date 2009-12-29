@@ -13,10 +13,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package mungbean;
 
-public class NotFoundException extends MongoException {
-	public NotFoundException(String message) {
-		super(message);
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import mungbean.protocol.DBConnection;
+
+public class TestDbOperationExecutor extends DbOperationExecutor {
+	private final InputStream input;
+	private final OutputStream output;
+
+	public TestDbOperationExecutor(InputStream input, OutputStream output) {
+		super(null, 0);
+		this.input = input;
+		this.output = output;
 	}
+
+	@Override
+	public <T> T execute(DBConversation<T> conversation) {
+		return conversation.execute(new DBConnection(input, output));
+	}
+
 }

@@ -25,6 +25,7 @@ import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.BSONCoders;
 import mungbean.protocol.command.Command;
+import mungbean.protocol.command.LastError;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.DeleteRequest;
 import mungbean.protocol.message.InsertRequest;
@@ -48,6 +49,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		this.coders = coders;
 	}
 
+	public CollectionAdmin collectionAdmin() {
+		return new CollectionAdmin(this);
+	}
+
 	@Override
 	public String name() {
 		return collectionName;
@@ -56,10 +61,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	public abstract BSONCoder<T> defaultEncoder();
 
 	public T insert(final T doc) {
-		return executor.execute(new DBConversation<T>() {
+		return execute(new ErrorCheckingDBConversation() {
 			@SuppressWarnings("unchecked")
 			@Override
-			public T execute(DBConnection connection) {
+			public T doExecute(DBConnection connection) {
 				T newDoc = injectId(doc);
 				connection.execute(new InsertRequest<T>(dbName(), coders, newDoc));
 				return newDoc;
@@ -70,9 +75,9 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	protected abstract T injectId(T doc);
 
 	public T update(final ObjectId id, final T doc) {
-		return executor.execute(new DBConversation<T>() {
+		return execute(new ErrorCheckingDBConversation() {
 			@Override
-			public T execute(DBConnection connection) {
+			public T doExecute(DBConnection connection) {
 				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), new HashMap<String, Object>() {
 					{
 						put("_id", id);
@@ -84,9 +89,9 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void delete(final Map<String, Object> query) {
-		executor.execute(new DBConversation<Void>() {
+		execute(new ErrorCheckingDBConversation() {
 			@Override
-			public Void execute(DBConnection connection) {
+			public T doExecute(DBConnection connection) {
 				connection.execute(new DeleteRequest(dbName(), QUERY_CODERS, query));
 				return null;
 			};
@@ -98,9 +103,9 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		if (upsert) {
 			options.upsert().multiUpdate();
 		}
-		executor.execute(new DBConversation<Void>() {
+		execute(new ErrorCheckingDBConversation() {
 			@Override
-			public Void execute(DBConnection connection) {
+			public T doExecute(DBConnection connection) {
 				connection.execute(new UpdateRequest<T>(dbName(), options, query, doc, coders, QUERY_CODERS));
 				return null;
 			};
@@ -109,7 +114,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
 	public List<T> query(final Map<String, Object> rules, final int first, final int items) {
 		final QueryOptionsBuilder options = new QueryOptionsBuilder();
-		return executor.execute(new DBConversation<List<T>>() {
+		return execute(new DBConversation<List<T>>() {
 			@Override
 			public List<T> execute(DBConnection connection) {
 				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, QUERY_CODERS, defaultEncoder())).values();
@@ -143,12 +148,16 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
 	@Override
 	public <ResponseType> ResponseType command(final Command<ResponseType> command) {
-		List<Map<String, Object>> result = executor.execute(new DBConversation<List<Map<String, Object>>>() {
+		return execute(new DBConversation<ResponseType>() {
 			@Override
-			public List<Map<String, Object>> execute(DBConnection connection) {
-				return connection.execute(new CommandRequest(dbName, command.toMap(AbstractDBCollection.this))).values();
+			public ResponseType execute(DBConnection connection) {
+				return executeCommand(command, connection);
 			}
 		});
+	}
+
+	private <ResponseType> ResponseType executeCommand(Command<ResponseType> command, DBConnection connection) {
+		List<Map<String, Object>> result = connection.execute(new CommandRequest(dbName, command.toMap(AbstractDBCollection.this))).values();
 		if (result.isEmpty()) {
 			throw new NotFoundException("Value not returned for command: " + command);
 		}
@@ -157,5 +166,23 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 			throw new RuntimeException(response.get("errmsg") + ": " + response.get("bad cmd"));
 		}
 		return command.parseResponse(response);
+	}
+
+	private abstract class ErrorCheckingDBConversation implements DBConversation<T> {
+		@Override
+		public final T execute(DBConnection connection) {
+			T value = doExecute(connection);
+			String message = executeCommand(new LastError(), connection);
+			if (message != null) {
+				throw new MongoException(message);
+			}
+			return value;
+		}
+
+		protected abstract T doExecute(DBConnection connection);
+	}
+
+	public <V> V execute(DBConversation<V> conversation) {
+		return executor.execute(conversation);
 	}
 }

@@ -13,10 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package mungbean;
 
-public class NotFoundException extends MongoException {
-	public NotFoundException(String message) {
+public class MongoException extends RuntimeException {
+	public MongoException(String message) {
 		super(message);
+	}
+
+	public MongoException(String message, Throwable reason) {
+		super(message, reason);
 	}
 }

@@ -21,6 +21,7 @@ import java.util.Map;
 import mungbean.protocol.command.Command;
 
 public interface DBCollection<T> {
+	CollectionAdmin collectionAdmin();
 
 	T insert(T doc);
 

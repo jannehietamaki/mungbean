@@ -27,20 +27,27 @@ import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class MongoPerformanceTest extends Specification<DBCollection<Map<String, Object>>> {
+public class MongoPerformanceTest extends Specification<Database> {
 	public class WithDatabase {
 		Mungbean db;
 
-		public DBCollection<Map<String, Object>> create() {
+		public Database create() {
 			db = new Mungbean("localhost", 27017);
-			return db.openDatabase("foobar").openCollection("foo");
+			return db.openDatabase(new ObjectId().toHex());
 		}
 
 		public void destroy() {
+			context.dbAdmin().dropDatabase();
 			db.close();
 		}
 
 		public void databaseCanBeAccessed() throws InterruptedException {
+			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+			collection.insert(new HashMap<String, Object>() {
+				{
+					put("foo", "bar");
+				}
+			});
 			ExecutorService executor = Executors.newFixedThreadPool(10);
 			StopWatch timer = new StopWatch();
 			long total = 500000;
@@ -49,13 +56,13 @@ public class MongoPerformanceTest extends Specification<DBCollection<Map<String,
 					@Override
 					public void run() {
 						final ObjectId id = new ObjectId();
-						context.insert(new HashMap<String, Object>() {
+						collection.insert(new HashMap<String, Object>() {
 							{
 								put("foo", "bar");
 								put("_id", id);
 							}
 						});
-						context.delete(id);
+						collection.delete(id);
 					}
 				});
 			}

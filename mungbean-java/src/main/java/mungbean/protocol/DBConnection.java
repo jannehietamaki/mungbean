@@ -40,6 +40,12 @@ public class DBConnection {
 		}
 	}
 
+	public DBConnection(InputStream input, OutputStream output) {
+		this.inputStream = input;
+		this.outputStream = output;
+		this.socket = null;
+	}
+
 	public <T> T execute(MongoRequest<T> message) {
 		DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter(), -1);
 		transaction.send(outputStream);
@@ -56,7 +62,9 @@ public class DBConnection {
 
 	public void close() {
 		try {
-			socket.close();
+			if (socket != null) {
+				socket.close();
+			}
 		} catch (IOException e) {
 			throw new RuntimeIOException(e);
 		}

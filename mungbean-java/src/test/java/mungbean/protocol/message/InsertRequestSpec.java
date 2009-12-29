@@ -43,7 +43,8 @@ public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest
 		public void messageCanBeSerializedIntoByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			context.send(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 50, 0, 0, 0, // message_lenght
+			specify(output.toByteArray(), does.containExactly(new byte[] { 
+					50, 0, 0, 0, // message_lenght
 					123, 0, 0, 0, // requestId
 					-1, -1, -1, -1, // responseTo
 					-46, 7, 0, 0, // opCode

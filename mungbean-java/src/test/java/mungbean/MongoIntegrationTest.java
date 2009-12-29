@@ -19,19 +19,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jdave.Block;
+import jdave.Specification;
+import jdave.junit4.JDaveRunner;
 import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
-import mungbean.protocol.command.LastError;
+import mungbean.protocol.command.admin.IndexOptionsBuilder;
 
 import org.junit.runner.RunWith;
-
-import jdave.Specification;
-import jdave.junit4.JDaveRunner;
 
 @RunWith(JDaveRunner.class)
 public class MongoIntegrationTest extends Specification<Database> {
 	public class WithDatabase {
+		final ObjectId id = new ObjectId();
+		private final Map<String, Object> idQuery = new HashMap<String, Object>() {
+			{
+				put("_id", id);
+			}
+		};
+
+		private final Map<String, Object> doc = newDoc(id);
+
 		public Database create() {
 			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
 		}
@@ -40,34 +49,22 @@ public class MongoIntegrationTest extends Specification<Database> {
 			context.dbAdmin().dropDatabase();
 		}
 
-		public void databaseCanBeAccessed() {
+		public void databaseTests() {
 			DBCollection<Map<String, Object>> collection = context.openCollection("foo");
 			long initialCount = collection.command(new Count());
-			final ObjectId id = new ObjectId();
-			collection.insert(new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-					put("_id", id);
-				}
-			});
-			specify(collection.command(new Count()), does.equal(initialCount + 1));
-			HashMap<String, Object> idQuery = new HashMap<String, Object>() {
-				{
-					put("_id", id);
-				}
-			};
+			collection.insert(doc);
+
 			List<Map<String, Object>> results = collection.query(idQuery, 0, 100);
 			specify(results.size(), does.equal(1));
 			specify(results.get(0).get("foo"), does.equal("bar"));
 			collection.command(new Distinct("foo")).contains("bar");
+			specify(collection.command(new Count()), does.equal(initialCount + 1));
 			runGroup(collection);
 			specify(collection.command(new Count(idQuery)), does.equal(1));
 			collection.delete(idQuery);
 			specify(collection.query(idQuery, 0, 100).size(), does.equal(0));
-			specify(collection.command(new LastError()), does.equal(null));
-			specify(collection.command(new Count()), does.equal(initialCount));
 			specify(context.dbAdmin().getCollectionNames(), containsExactly("foo"));
-
+			specify(collection.command(new Count()), does.equal(initialCount));
 		}
 
 		private void runGroup(DBCollection<Map<String, Object>> collection) {
@@ -76,5 +73,26 @@ public class MongoIntegrationTest extends Specification<Database> {
 			List<Map<String, Object>> result = collection.command(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"));
 			specify(result.get(0).get("csum"), does.equal(5D));
 		}
+
+		public void violationOfUniqueIndexThrowsAnException() {
+			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+			collection.collectionAdmin().ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().unique());
+			collection.insert(newDoc(new ObjectId()));
+			specify(new Block() {
+				@Override
+				public void run() throws Throwable {
+					collection.insert(doc);
+				}
+			}, does.raise(RuntimeException.class));
+		}
+	}
+
+	private Map<String, Object> newDoc(final ObjectId id) {
+		return new HashMap<String, Object>() {
+			{
+				put("foo", "bar");
+				put("_id", id);
+			}
+		};
 	}
 }
