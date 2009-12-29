@@ -21,4 +21,10 @@ public class Assert {
 			throw new RuntimeException(message);
 		}
 	}
+
+	public static void notNull(Object value, String message) {
+		if (value == null) {
+			throw new RuntimeException(message);
+		}
+	}
 }

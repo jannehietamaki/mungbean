@@ -121,8 +121,8 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		});
 	}
 
-	public List<T> query(Query query, int first, int items) {
-		return query(query.build(), first, items);
+	public List<T> query(Query query) {
+		return query(query.build(), query.skip(), query.limit());
 	}
 
 	public List<T> query(final Map<String, Object> rules, final int first, final int items) {

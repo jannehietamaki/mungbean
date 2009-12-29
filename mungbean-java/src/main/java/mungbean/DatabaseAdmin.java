@@ -17,12 +17,12 @@
 package mungbean;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import mungbean.protocol.command.DummyCommand;
+import mungbean.query.Query;
 
 public class DatabaseAdmin {
 	private final Database database;
@@ -36,7 +36,7 @@ public class DatabaseAdmin {
 	}
 
 	public Collection<String> getCollectionNames() {
-		List<Map<String, Object>> names = database.openCollection("system.namespaces").query(new HashMap<String, Object>(), 0, Integer.MAX_VALUE);
+		List<Map<String, Object>> names = database.openCollection("system.namespaces").query(new Query());
 		HashSet<String> result = new HashSet<String>();
 		for (Map<String, Object> name : names) {
 			result.add(String.valueOf(name.get("name")).split("\\.")[1]);

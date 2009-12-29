@@ -38,7 +38,7 @@ public interface DBCollection<T> {
 
 	List<T> query(Map<String, Object> rules, int first, int items);
 
-	List<T> query(Query query, int first, int items);
+	List<T> query(Query query);
 
 	T find(ObjectId id);
 

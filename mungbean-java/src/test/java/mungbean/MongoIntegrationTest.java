@@ -94,7 +94,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 			}
 			Query query = new Query();
 			query.field("foo").lessThan(8).greaterThan(3);
-			List<Map<String, Object>> values = collection.query(query, 0, 10);
+			List<Map<String, Object>> values = collection.query(query);
 			specify(values.size(), does.equal(4));
 		}
 	}

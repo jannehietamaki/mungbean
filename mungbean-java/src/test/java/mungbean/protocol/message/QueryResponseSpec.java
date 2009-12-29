@@ -16,12 +16,10 @@
 package mungbean.protocol.message;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.bson.BSONMap;
 
@@ -59,17 +57,6 @@ public class QueryResponseSpec extends Specification<QueryResponse<Map<String, O
 			specify(obj.get("err"), does.equal(null));
 			specify(obj.get("n"), does.equal(0));
 			specify(obj.get("ok"), does.equal(1D));
-		}
-	}
-
-	public class WithCountResponse {
-		public QueryResponse<Map<String, Object>> create() {
-			InputStream input = getClass().getResourceAsStream("count.res");
-			return new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(input), new BSONMap());
-		}
-
-		public void responseCanBeParsed() {
-			specify(context.values().get(0).get("n"), does.not().equal(null));
 		}
 	}
 }

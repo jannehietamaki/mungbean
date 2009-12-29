@@ -21,12 +21,30 @@ import java.util.Map;
 
 public class Query {
 	private final Map<String, Object> map = new LinkedHashMap<String, Object>();
+	private int skip;
+	private int limit;
+
+	public QueryField field(String key) {
+		return new QueryField(map, key);
+	}
+
+	public void setSkip(int skip) {
+		this.skip = skip;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
 
 	public Map<String, Object> build() {
 		return map;
 	}
 
-	public QueryField field(String key) {
-		return new QueryField(map, key);
+	public int limit() {
+		return limit;
+	}
+
+	public int skip() {
+		return skip;
 	}
 }
