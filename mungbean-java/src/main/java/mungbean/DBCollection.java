@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import mungbean.protocol.command.Command;
+import mungbean.query.Query;
 
 public interface DBCollection<T> {
 	CollectionAdmin collectionAdmin();
@@ -27,11 +28,17 @@ public interface DBCollection<T> {
 
 	void delete(Map<String, Object> query);
 
+	void delete(Query query);
+
 	T update(ObjectId id, T doc);
 
 	void update(Map<String, Object> query, T doc, boolean upsert);
 
+	void update(Query query, T doc, boolean upsert);
+
 	List<T> query(Map<String, Object> rules, int first, int items);
+
+	List<T> query(Query query, int first, int items);
 
 	T find(ObjectId id);
 

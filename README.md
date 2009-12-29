@@ -9,9 +9,9 @@ Language support so far
 
 - Mongo documents can be mapped to generic java.util.collections (Maps + Lists) or to POJOs
 
-- Missing features: Failover, GridFS, cursors, administration API, conditional operators
+- Missing features: Failover/replica pairs, GridFS, cursors
 
-- Implemented features insert + update + remove + basic query + aggregation commands
+- Implemented features insert + update + remove + basic query + aggregation commands + conditional operators + administration API (partial)
 
 **Clojure**
 

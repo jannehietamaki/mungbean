@@ -14,35 +14,18 @@
    limitations under the License.
  */
 
-package mungbean.protocol.bson;
+package mungbean;
 
-public class Code {
-	private final String code;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-	public Code(String code) {
-		this.code = code;
-	}
+public class CollectionUtil {
 
-	@Override
-	public String toString() {
-		return code();
-	}
-
-	public String code() {
-		return code;
-	}
-
-	@Override
-	public int hashCode() {
-		return code.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o != null && o.getClass().equals(getClass())) {
-			Code other = (Code) o;
-			return other.code().equals(code());
-		}
-		return false;
+	public static Map<String, Object> map(final String key, final Object value) {
+		return new LinkedHashMap<String, Object>() {
+			{
+				put(key, value);
+			}
+		};
 	}
 }

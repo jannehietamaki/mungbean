@@ -14,35 +14,19 @@
    limitations under the License.
  */
 
-package mungbean.protocol.bson;
+package mungbean.query;
 
-public class Code {
-	private final String code;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-	public Code(String code) {
-		this.code = code;
+public class Query {
+	private final Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+	public Map<String, Object> build() {
+		return map;
 	}
 
-	@Override
-	public String toString() {
-		return code();
-	}
-
-	public String code() {
-		return code;
-	}
-
-	@Override
-	public int hashCode() {
-		return code.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o != null && o.getClass().equals(getClass())) {
-			Code other = (Code) o;
-			return other.code().equals(code());
-		}
-		return false;
+	public QueryField field(String key) {
+		return new QueryField(map, key);
 	}
 }

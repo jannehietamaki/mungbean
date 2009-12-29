@@ -26,6 +26,7 @@ import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
+import mungbean.query.Query;
 
 import org.junit.runner.RunWith;
 
@@ -39,7 +40,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 			}
 		};
 
-		private final Map<String, Object> doc = newDoc(id);
+		private final Map<String, Object> doc = newDoc(id, "bar");
 
 		public Database create() {
 			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
@@ -77,20 +78,31 @@ public class MongoIntegrationTest extends Specification<Database> {
 		public void violationOfUniqueIndexThrowsAnException() {
 			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
 			collection.collectionAdmin().ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().unique());
-			collection.insert(newDoc(new ObjectId()));
+			collection.insert(newDoc(new ObjectId(), "bar"));
 			specify(new Block() {
 				@Override
 				public void run() throws Throwable {
 					collection.insert(doc);
 				}
-			}, does.raise(RuntimeException.class));
+			}, does.raise(MongoException.class));
+		}
+
+		public void advancedQueriesCanBeDoneWithTheDsl() {
+			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+			for (int a = 0; a < 10; a++) {
+				collection.insert(newDoc(new ObjectId(), a));
+			}
+			Query query = new Query();
+			query.field("foo").lessThan(8).greaterThan(3);
+			List<Map<String, Object>> values = collection.query(query, 0, 10);
+			specify(values.size(), does.equal(4));
 		}
 	}
 
-	private Map<String, Object> newDoc(final ObjectId id) {
+	private Map<String, Object> newDoc(final ObjectId id, final Object value) {
 		return new HashMap<String, Object>() {
 			{
-				put("foo", "bar");
+				put("foo", value);
 				put("_id", id);
 			}
 		};

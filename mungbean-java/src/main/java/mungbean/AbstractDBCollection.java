@@ -33,6 +33,7 @@ import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 import mungbean.protocol.message.UpdateRequest;
+import mungbean.query.Query;
 
 public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	private static final BSONCoders QUERY_CODERS = new BSONCoders();
@@ -88,6 +89,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		});
 	}
 
+	public void delete(Query query) {
+		delete(query.build());
+	}
+
 	public void delete(final Map<String, Object> query) {
 		execute(new ErrorCheckingDBConversation() {
 			@Override
@@ -96,6 +101,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 				return null;
 			};
 		});
+	}
+
+	public void update(Query query, T doc, boolean upsert) {
+		update(query.build(), doc, upsert);
 	}
 
 	public void update(final Map<String, Object> query, final T doc, boolean upsert) {
@@ -110,6 +119,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 				return null;
 			};
 		});
+	}
+
+	public List<T> query(Query query, int first, int items) {
+		return query(query.build(), first, items);
 	}
 
 	public List<T> query(final Map<String, Object> rules, final int first, final int items) {
