@@ -8,8 +8,8 @@
 (.openCollection db name)
 )
 
-(defn insert [collection, doc]
-(.insert collection doc)
+(defn save [collection, doc]
+(.save collection doc)
 )
 
 (defn delete [collection, query]
