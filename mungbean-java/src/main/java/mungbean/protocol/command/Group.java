@@ -69,7 +69,7 @@ public class Group extends Command<List<Map<String, Object>>> {
 		if (query != null) {
 			group.put("cond", query);
 		}
-		group.put("ns", collection.name());
+		group.put("ns", collection.collectionName());
 		if (keys != null) {
 			group.put("key", keyMap());
 		}

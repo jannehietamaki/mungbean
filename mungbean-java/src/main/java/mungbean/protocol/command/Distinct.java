@@ -46,7 +46,7 @@ public class Distinct extends Command<List<String>> {
 	@Override
 	public Map<String, Object> toMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("distinct", collection.name());
+		map.put("distinct", collection.collectionName());
 		map.put("key", field);
 		map.put("query", query);
 		return map;

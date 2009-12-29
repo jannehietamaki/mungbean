@@ -42,7 +42,7 @@ public class PojoIntegrationTest extends Specification<Database> {
 
 		public void objectWithoutIdCanBeStoredAndRetrieved() {
 			DBCollection<TestObject> collection = context.openCollection("foo", TestObject.class);
-			collection.insert(new TestObject("foo", 123));
+			collection.save(new TestObject("foo", 123));
 			List<TestObject> objs = collection.query(new Query().field("name").is("foo"));
 			specify(objs.size(), does.equal(1));
 			specify(objs.get(0).name(), does.equal("foo"));

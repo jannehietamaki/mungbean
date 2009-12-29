@@ -15,6 +15,9 @@
  */
 package mungbean;
 
+import static mungbean.CollectionUtil.map;
+import static mungbean.CollectionUtil.merge;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +30,9 @@ import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
 import mungbean.query.Query;
-import mungbean.query.QueryField;
 import mungbean.query.Update;
 
 import org.junit.runner.RunWith;
-import static mungbean.CollectionUtil.*;
 
 @RunWith(JDaveRunner.class)
 @SuppressWarnings("unchecked")
@@ -53,7 +54,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 		public void databaseTests() {
 			DBCollection<Map<String, Object>> collection = context.openCollection("foo");
 			long initialCount = collection.command(new Count());
-			collection.insert(doc);
+			collection.save(doc);
 
 			List<Map<String, Object>> results = collection.query(idQuery, 0, 100);
 			specify(results.size(), does.equal(1));
@@ -78,11 +79,11 @@ public class MongoIntegrationTest extends Specification<Database> {
 		public void violationOfUniqueIndexThrowsAnException() {
 			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
 			collection.collectionAdmin().ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().unique());
-			collection.insert(newDoc(new ObjectId(), "bar"));
+			collection.save(newDoc(new ObjectId(), "bar"));
 			specify(new Block() {
 				@Override
 				public void run() throws Throwable {
-					collection.insert(doc);
+					collection.save(doc);
 				}
 			}, does.raise(MongoException.class));
 		}
@@ -90,7 +91,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 		public void advancedQueriesCanBeDoneWithTheDsl() {
 			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
 			for (int a = 0; a < 10; a++) {
-				collection.insert(newDoc(new ObjectId(), a));
+				collection.save(newDoc(new ObjectId(), a));
 			}
 
 			List<Map<String, Object>> values = collection.query(new Query().field("foo").greaterThan(3).lessThan(8));
@@ -100,11 +101,10 @@ public class MongoIntegrationTest extends Specification<Database> {
 		public void updatesCanBeDoneWithTheDsl() {
 			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
 			for (int a = 0; a < 10; a++) {
-				collection.insert(newDoc(new ObjectId(), a));
+				collection.save(newDoc(new ObjectId(), a));
 			}
 
-			QueryField query = new Query().field("foo").greaterThan(3);
-			collection.update(query, new Update().field("foo").increment(5));
+			collection.update(new Query().field("foo").greaterThan(3), new Update().field("foo").increment(5));
 			specify(collection.query(new Query().field("foo").is(9)).size(), does.equal(2));
 		}
 	}

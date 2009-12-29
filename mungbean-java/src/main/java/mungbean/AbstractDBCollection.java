@@ -56,13 +56,13 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	@Override
-	public String name() {
+	public String collectionName() {
 		return collectionName;
 	}
 
 	public abstract BSONCoder<T> defaultEncoder();
 
-	public T insert(final T doc) {
+	public T save(final T doc) {
 		return executeWrite(new ErrorCheckingDBConversation() {
 			@SuppressWarnings("unchecked")
 			@Override

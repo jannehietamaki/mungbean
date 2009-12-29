@@ -41,7 +41,7 @@ public class PojoWithIdIntegrationTest extends Specification<Database> {
 
 		public void objectWithIdCanBeStored() {
 			final DBCollection<TestObjectWithId> collection = context.openCollection("foo", TestObjectWithId.class);
-			final TestObjectWithId item = collection.insert(new TestObjectWithId("foo", 123));
+			final TestObjectWithId item = collection.save(new TestObjectWithId("foo", 123));
 			TestObjectWithId itemFromDb = collection.find(item.id());
 
 			specify(collection.query(new Query().field("name").is("foo")).get(0).value(), does.equal(123));

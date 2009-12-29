@@ -7,15 +7,27 @@ Language support so far
 
 **Java**
 
-- Mongo documents can be mapped to generic java.util.collections (Maps + Lists) or to POJOs
+- Mongo documents can be mapped to generic java.util.collections (Maps + Lists) or to [POJOs](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java)
 
 - Missing features: GridFS, cursors
 
-- Implemented features insert + update + remove + basic query + aggregation commands + conditional operators + administration API (partial)
+* Implemented features 
+- insert + update + remove [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
+- basic query 
+- DSLs for aggregation commands and conditional operators 
+- administration API (partial)
 
 - Failover/replica pairs is implemented but not yet ready for use
 
-- Code example can be found from here: http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java
+- Code examples can be found [here: ](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
+
+Update:
+
+    collection.update(new Query().field("foo").greaterThan(3), new Update().field("foo").increment(5));
+
+Query POJOs with the query DSL:
+
+    List<DomainObject> objects = collection.query(new Query().field("name").is("foo");
 
 **Clojure**
 

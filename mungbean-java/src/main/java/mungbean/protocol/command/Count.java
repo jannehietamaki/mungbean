@@ -41,7 +41,7 @@ public class Count extends Command<Long> {
 	@Override
 	public Map<String, Object> toMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("count", collection.name());
+		map.put("count", collection.collectionName());
 		map.put("query", query);
 		return map;
 	}

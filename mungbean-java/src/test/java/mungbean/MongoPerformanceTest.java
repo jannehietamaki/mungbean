@@ -43,7 +43,7 @@ public class MongoPerformanceTest extends Specification<Database> {
 
 		public void databaseCanBeAccessed() throws InterruptedException {
 			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-			collection.insert(new HashMap<String, Object>() {
+			collection.save(new HashMap<String, Object>() {
 				{
 					put("foo", "bar");
 				}
@@ -56,7 +56,7 @@ public class MongoPerformanceTest extends Specification<Database> {
 					@Override
 					public void run() {
 						final ObjectId id = new ObjectId();
-						collection.insert(new HashMap<String, Object>() {
+						collection.save(new HashMap<String, Object>() {
 							{
 								put("foo", "bar");
 								put("_id", id);

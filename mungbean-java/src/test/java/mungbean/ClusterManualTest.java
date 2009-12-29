@@ -34,7 +34,7 @@ public class ClusterManualTest extends Specification<Void> {
 			DBCollection<Map<String, Object>> collection = mung.openDatabase("foo").openCollection("bar");
 			while (true) {
 				try {
-					collection.insert(map("foo", "bar"));
+					collection.save(map("foo", "bar"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

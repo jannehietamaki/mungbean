@@ -25,7 +25,7 @@ import mungbean.query.UpdateBuilder;
 public interface DBCollection<T> {
 	CollectionAdmin collectionAdmin();
 
-	T insert(T doc);
+	T save(T doc);
 
 	void delete(Map<String, Object> query);
 
@@ -51,6 +51,6 @@ public interface DBCollection<T> {
 
 	<ResponseType> ResponseType command(Command<ResponseType> command);
 
-	String name();
+	String collectionName();
 
 }
