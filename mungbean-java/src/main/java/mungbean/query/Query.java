@@ -29,12 +29,14 @@ public class Query implements QueryBuilder {
 		return new QueryField(this, map, orderMap, key);
 	}
 
-	public void setSkip(int skip) {
+	public Query setSkip(int skip) {
 		this.skip = skip;
+		return this;
 	}
 
-	public void setLimit(int limit) {
+	public Query setLimit(int limit) {
 		this.limit = limit;
+		return this;
 	}
 
 	public Map<String, Object> build() {

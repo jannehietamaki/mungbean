@@ -26,10 +26,10 @@ import mungbean.protocol.DBTransaction;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class CommandRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
+public class CommandRequestSpec extends Specification<DBTransaction<Map<String, Object>>> {
 	public class WithValidCommandQuery {
-		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(new CommandRequest("foobar", new HashMap<String, Object>() {
+		public DBTransaction<Map<String, Object>> create() {
+			return new DBTransaction<Map<String, Object>>(new CommandRequest("foobar", new HashMap<String, Object>() {
 				{
 					put("getlasterror", 1D);
 				}

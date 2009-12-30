@@ -32,7 +32,7 @@ public class QueryResponse<ResponseType> extends MongoResponse {
 	private final List<ResponseType> values = new ArrayList<ResponseType>();
 
 	public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder) {
-		super(reader);		
+		super(reader);
 		responseFlag = reader.readInt();
 		cursorId = reader.readLong();
 		startingFrom = reader.readInt();

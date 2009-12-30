@@ -15,11 +15,17 @@
  */
 package mungbean;
 
+import mungbean.cluster.ClusterDbOperationExecutor;
+
 public class Mungbean {
 	private final DBOperationExecutor executor;
 
 	public Mungbean(String host, int port) {
-		executor = new SingleNodeDbOperationExecutor(new Server(host, port));
+		this(new Server(host, port));
+	}
+
+	public Mungbean(Server server) {
+		executor = new SingleNodeDbOperationExecutor(server);
 	}
 
 	public Mungbean(Server... servers) {

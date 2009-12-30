@@ -15,7 +15,7 @@
  */
 package mungbean.protocol.message;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
@@ -34,7 +34,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 	private final boolean closeCursor;
 	private final BSONCoder<ResponseType> coder;
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, Map<String, Object> order, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, Map<String, Object> order, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {		
 		super(collectionName);
 		this.builder = builder;
 		this.numberToSkip = numberToSkip;
@@ -48,7 +48,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 		if (order == null || order.isEmpty()) {
 			return coders.forValue(query).write(coders, query);
 		}
-		return new BSONMap().write(coders, new HashMap<String, Object>() {
+		return new BSONMap().write(coders, new LinkedHashMap<String, Object>() {
 			{
 				put("query", query);
 				put("orderby", order);

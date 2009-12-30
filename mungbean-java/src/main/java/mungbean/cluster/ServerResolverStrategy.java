@@ -14,29 +14,13 @@
    limitations under the License.
  */
 
-package mungbean;
+package mungbean.cluster;
 
-public class Server {
-	private final String host;
-	private final int port;
-	private final Authentication[] authentication;
+import mungbean.DBConversation;
 
-	public Server(String host, int port, Authentication... authentication) {
-		this.host = host;
-		this.port = port;
-		this.authentication = authentication;
-	}
+public interface ServerResolverStrategy {
+	<T> T execute(DBConversation<T> conversation);
 
-	public String host() {
-		return host;
-	}
-
-	public int port() {
-		return port;
-	}
-
-	public Authentication[] authentication() {
-		return authentication;
-	}
+	void close();
 
 }

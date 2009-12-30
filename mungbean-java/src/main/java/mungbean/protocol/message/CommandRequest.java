@@ -15,17 +15,56 @@
  */
 package mungbean.protocol.message;
 
+import static mungbean.CollectionUtil.map;
+
+import java.util.List;
 import java.util.Map;
 
+import mungbean.protocol.LittleEndianDataReader;
+import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.BSONCoders;
 import mungbean.protocol.bson.BSONMap;
 
-public class CommandRequest extends QueryRequest<Map<String, Object>> {
+public class CommandRequest implements MongoRequest<Map<String, Object>> {
 
 	private static final BSONMap RESPONSE_CODER = new BSONMap();
 	private static final BSONCoders CODERS = new BSONCoders();
+	private final QueryRequest<Map<String, Object>> query;
 
 	public CommandRequest(String dbName, Map<String, Object> content) {
-		super(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);
+		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);
+	}
+
+	public CommandRequest(String dbName, String command) {
+		this(dbName, map(command, 1D));
+	}
+
+	public CommandRequest(String command) {
+		query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), 0, 1, true, map(command, 1D), null, CODERS, RESPONSE_CODER);
+
+	}
+
+	@Override
+	public int length() {
+		return query.length();
+	}
+
+	@Override
+	public Map<String, Object> readResponse(LittleEndianDataReader reader) {
+		List<Map<String, Object>> values = query.readResponse(reader).values();
+		if (values.isEmpty()) {
+			return null;
+		}
+		return values.get(0);
+	}
+
+	@Override
+	public void send(LittleEndianDataWriter writer) {
+		query.send(writer);
+	}
+
+	@Override
+	public RequestOpCode type() {
+		return query.type();
 	}
 }

@@ -14,27 +14,28 @@
    limitations under the License.
  */
 
-package mungbean;
+package mungbean.cluster;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class ClusterDbOperationExecutor implements DBOperationExecutor {
-	// TODO need a mechanism to specify if it's ok to run the query against
-	// slave/passive-master
+import mungbean.DBConversation;
+import mungbean.DBOperationExecutor;
+import mungbean.MongoException;
+import mungbean.Server;
+import mungbean.SingleNodeDbOperationExecutor;
 
-	private final AtomicReference<SingleNodeDbOperationExecutor> currentMaster = new AtomicReference<SingleNodeDbOperationExecutor>();
-	private final List<SingleNodeDbOperationExecutor> allServers;
+public class RoundRobinResolverStrategy implements ServerResolverStrategy {
 	private final AtomicInteger roundRobinCount = new AtomicInteger(0);
 
-	public ClusterDbOperationExecutor(Server... servers) {
+	private final List<SingleNodeDbOperationExecutor> allServers;
+
+	public RoundRobinResolverStrategy(Server[] servers) {
 		allServers = new ArrayList<SingleNodeDbOperationExecutor>();
 		for (Server server : servers) {
 			allServers.add(new SingleNodeDbOperationExecutor(server));
 		}
-		findNewMaster();
 	}
 
 	@Override
@@ -45,36 +46,8 @@ public class ClusterDbOperationExecutor implements DBOperationExecutor {
 	}
 
 	@Override
-	public <T> T executeWrite(DBConversation<T> conversation) {
-		try {
-			return getWriteTarget().execute(conversation);
-		} catch (Exception e) {
-			return findNewMaster().execute(conversation);
-		}
-	}
-
-	@Override
 	public <T> T execute(DBConversation<T> conversation) {
 		return getReadTarget().execute(conversation);
-	}
-
-	private SingleNodeDbOperationExecutor getWriteTarget() {
-		SingleNodeDbOperationExecutor server = currentMaster.get();
-		if (server.isAlive() && server.isMaster()) {
-			return server;
-		}
-		return findNewMaster();
-	}
-
-	private SingleNodeDbOperationExecutor findNewMaster() {
-		for (SingleNodeDbOperationExecutor server : allServers) {
-			System.out.println(server.server().port() + " -> alive =" + server.isAlive() + " master=" + server.isMaster());
-			if (server.isMaster() && server.isAlive()) {
-				currentMaster.set(server);
-				return server;
-			}
-		}
-		throw new MongoException("Unable to find master!");
 	}
 
 	private SingleNodeDbOperationExecutor getReadTarget() {
@@ -87,4 +60,5 @@ public class ClusterDbOperationExecutor implements DBOperationExecutor {
 		}
 		throw new MongoException("No servers available for read!");
 	}
+
 }

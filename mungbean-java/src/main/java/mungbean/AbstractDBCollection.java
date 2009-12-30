@@ -196,11 +196,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	private <ResponseType> ResponseType executeCommand(Command<ResponseType> command, DBConnection connection) {
-		List<Map<String, Object>> result = connection.execute(new CommandRequest(dbName, command.toMap(AbstractDBCollection.this))).values();
-		if (result.isEmpty()) {
+		Map<String, Object> response = connection.execute(new CommandRequest(dbName, command.toMap(AbstractDBCollection.this)));
+		if (response == null) {
 			throw new NotFoundException("Value not returned for command: " + command);
 		}
-		Map<String, Object> response = result.get(0);
 		if (!response.get("ok").equals(1D)) {
 			throw new RuntimeException(response.get("errmsg") + ": " + response.get("bad cmd"));
 		}

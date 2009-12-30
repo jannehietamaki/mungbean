@@ -16,32 +16,16 @@
 
 package mungbean;
 
-import java.util.Map;
-
-import mungbean.query.Query;
-
 import org.junit.runner.RunWith;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-import static mungbean.CollectionUtil.*;
 
 @RunWith(JDaveRunner.class)
-public class ClusterManualTest extends Specification<Void> {
-	public class WithCluster {
-		public void writeOperationCanBeDone() throws InterruptedException {
-			Mungbean mung = new Mungbean(new Server("localhost", 10000), new Server("localhost", 10001));
-			DBCollection<Map<String, Object>> collection = mung.openDatabase(new ObjectId().toHex()).openCollection("bar");
-			int counter = 0;
-			while (true) {
-				try {
-					collection.save(map("foo", counter++));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				System.out.println(collection.query(new Query().setLimit(1).field("foo").orderDescending()));
-				Thread.sleep(100);
-			}
+public class Md5Spec extends Specification<Md5> {
+	public class WithMd5Helper {
+		public void Md5HexStringCanBeGenerated() {
+			specify(Md5.md5("foobar"), does.equal("3858F62230AC3C915F30C664312C63F"));
 		}
 	}
 }

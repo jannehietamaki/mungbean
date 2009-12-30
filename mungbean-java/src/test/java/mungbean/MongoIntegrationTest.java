@@ -45,7 +45,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 		private final Map<String, Object> doc = newDoc(id, "bar");
 
 		public Database create() {
-			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
+			return new Mungbean(new Server("localhost", 27017)).openDatabase(new ObjectId().toHex());
 		}
 
 		public void destroy() {

@@ -15,19 +15,11 @@
  */
 package mungbean;
 
-import static mungbean.CollectionUtil.map;
-
 import java.util.Map;
 
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.RuntimeIOException;
-import mungbean.protocol.bson.BSONCoders;
-import mungbean.protocol.bson.BSONMap;
-import mungbean.protocol.command.DummyCommand;
 import mungbean.protocol.message.CommandRequest;
-import mungbean.protocol.message.QueryOptionsBuilder;
-import mungbean.protocol.message.QueryRequest;
-import mungbean.protocol.message.QueryResponse;
 
 public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements DBOperationExecutor {
 	private boolean shuttingDown = false;
@@ -85,8 +77,8 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 	}
 
 	private boolean doIsAlive(DBConnection connection) {
-		QueryResponse<?> val = connection.execute(new CommandRequest("$cmd", new DummyCommand("ping").toMap(null)));
-		return val.responseFlag() == 0;
+		connection.execute(new CommandRequest("ismaster"));
+		return true;
 	}
 
 	public boolean isMaster() {
@@ -94,8 +86,8 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 			return execute(new DBConversation<Boolean>() {
 				@Override
 				public Boolean execute(DBConnection connection) {
-					QueryResponse<?> val = connection.execute(new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), 0, 1, true, map("ismaster", 1D), null, new BSONCoders(), new BSONMap()));
-					return val.responseFlag() == 0;
+					Map<String, Object> response = connection.execute(new CommandRequest("$cmd", "ismaster"));
+					return ((Number) response.get("ismaster")).intValue() == 1;
 				}
 			});
 		} catch (RuntimeIOException e) {

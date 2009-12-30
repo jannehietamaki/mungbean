@@ -16,27 +16,27 @@
 
 package mungbean;
 
-public class Server {
-	private final String host;
-	private final int port;
-	private final Authentication[] authentication;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
 
-	public Server(String host, int port, Authentication... authentication) {
-		this.host = host;
-		this.port = port;
-		this.authentication = authentication;
+public class Md5 {
+	private Md5() {
+
 	}
 
-	public String host() {
-		return host;
+	public static String md5(String source) {
+		try {
+			MessageDigest algorithm = MessageDigest.getInstance("MD5");
+			algorithm.reset();
+			algorithm.update(source.getBytes(Charset.forName("UTF-8")));
+			byte messageDigest[] = algorithm.digest();
+			StringBuilder hexString = new StringBuilder();
+			for (byte b : messageDigest) {
+				hexString.append(Integer.toHexString(0xFF & b));
+			}
+			return hexString.toString().toUpperCase();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
-
-	public int port() {
-		return port;
-	}
-
-	public Authentication[] authentication() {
-		return authentication;
-	}
-
 }
