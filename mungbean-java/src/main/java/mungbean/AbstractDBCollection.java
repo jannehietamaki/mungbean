@@ -79,14 +79,14 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	protected abstract T injectId(T doc);
 
 	public void update(final ObjectId id, final UpdateBuilder update) {
-		doUpdate(id, update.build());
+		doUpdateOne(id, update.build());
 	}
 
 	public void update(final ObjectId id, final T doc) {
-		doUpdate(id, doc);
+		doUpdateOne(id, doc);
 	}
 
-	private void doUpdate(final ObjectId id, final Object update) {
+	private void doUpdateOne(final ObjectId id, final Object update) {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
@@ -97,10 +97,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void delete(QueryBuilder query) {
-		remove(query.build());
+		delete(query.build());
 	}
 
-	public void remove(final Map<String, Object> query) {
+	public void delete(final Map<String, Object> query) {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
@@ -111,26 +111,18 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void update(QueryBuilder query, UpdateBuilder update) {
-		doUpdate(query.build(), update.build(), update.getUpsert());
+		doUpdate(query.build(), update.build(), update.options());
 	}
 
-	public void update(QueryBuilder query, T doc, boolean upsert) {
-		update(query.build(), doc, upsert);
+	public void update(Map<String, Object> query, Map<String, Object> updates) {
+		doUpdate(query, updates, new UpdateOptionsBuilder().multiUpdate());
 	}
 
-	public void update(final Map<String, Object> query, final T doc, boolean upsert) {
-		doUpdate(query, doc, upsert);
-	}
-
-	private void doUpdate(final Map<String, Object> query, final Object doc, boolean upsert) {
-		final UpdateOptionsBuilder options = new UpdateOptionsBuilder();
-		if (upsert) {
-			options.upsert().multiUpdate();
-		}
+	private void doUpdate(final Map<String, Object> query, final Object updates, final UpdateOptionsBuilder updateOptions) {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
-				connection.execute(new UpdateRequest<T>(dbName(), options, query, doc, documentCoders, queryCoders));
+				connection.execute(new UpdateRequest<T>(dbName(), updateOptions, query, updates, documentCoders, queryCoders));
 				return null;
 			};
 		});
@@ -175,7 +167,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void delete(ObjectId id) {
-		remove(idQuery(id));
+		delete(idQuery(id));
 	}
 
 	@Override

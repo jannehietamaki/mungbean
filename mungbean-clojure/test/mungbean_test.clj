@@ -5,6 +5,10 @@
 
 (declare coll)
 
+(defn insert-test-data [count & values] 
+   (doseq [n (take count (cycle values))] (mongo/insert coll {:foo n}))
+)
+
 (defmacro with-mungo [name & body]
 	`(let [db# (mongo/get-db (.toHex (new mungbean.ObjectId)))]
 	    (let [collection# (mongo/get-collection db# ~name)]
@@ -27,9 +31,22 @@
 
 (deftest generate-items-and-query
    (with-mungo "foo"
-       (doseq [n (take 15 (cycle ["foo" "bar" "zoo"]))]
-           (mongo/insert coll {:foo n})
-       )       
-       (is (= 5 (count (mongo/query coll {:foo "bar"} 0 100))))
+       (insert-test-data 10 "foo" "bar" "zoo")
+       (is (= 3 (count (mongo/query coll {:foo "bar"} 0 100))))
+   )
+)
+
+(deftest more-advanced-query
+   (with-mungo "foo"
+       (insert-test-data 10 1 3 5)       
+       (is (= 6 (count (mongo/query coll {:foo {:$gt 2}} 0 100))))
+   )
+)
+
+(deftest update-in-place
+   (with-mungo "foo"
+       (insert-test-data 10 1 3 5)
+       (mongo/update coll {} {:$inc {:foo 3}})
+       (is (= 3 (count (mongo/query coll {:foo 8} 0 100))))
    )
 )

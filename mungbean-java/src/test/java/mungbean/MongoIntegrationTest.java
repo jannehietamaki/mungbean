@@ -64,7 +64,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 			specify(collection.command(new Count()), does.equal(initialCount + 1));
 			runGroup(collection);
 			specify(collection.command(new Count(idQuery)), does.equal(1));
-			collection.remove(idQuery);
+			collection.delete(idQuery);
 			specify(collection.query(idQuery, 0, 100).size(), does.equal(0));
 			specify(context.dbAdmin().getCollectionNames(), containsExactly("foo"));
 			specify(collection.command(new Count()), does.equal(initialCount));

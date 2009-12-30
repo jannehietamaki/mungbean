@@ -15,6 +15,8 @@
  */
 package mungbean.protocol.message;
 
+import java.util.Map;
+
 public class UpdateOptionsBuilder {
 	private int value;
 
@@ -30,5 +32,16 @@ public class UpdateOptionsBuilder {
 
 	public int value() {
 		return value;
+	}
+
+	public static UpdateOptionsBuilder fromMap(Map<String, Object> updateOptions) {
+		UpdateOptionsBuilder returnValue = new UpdateOptionsBuilder();
+		if (updateOptions.containsKey("upsert")) {
+			returnValue.upsert();
+		}
+		if (updateOptions.containsKey("multiUpdate")) {
+			returnValue.multiUpdate();
+		}
+		return returnValue;
 	}
 }

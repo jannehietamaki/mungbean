@@ -16,13 +16,13 @@
 
 package mungbean.clojure;
 
-import clojure.lang.IPersistentMap;
-import clojure.lang.Keyword;
-import clojure.lang.Symbol;
 import mungbean.AbstractDBCollection;
 import mungbean.DBOperationExecutor;
 import mungbean.ObjectId;
 import mungbean.protocol.bson.BSONCoder;
+import clojure.lang.IPersistentMap;
+import clojure.lang.Keyword;
+import clojure.lang.Symbol;
 
 public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
 

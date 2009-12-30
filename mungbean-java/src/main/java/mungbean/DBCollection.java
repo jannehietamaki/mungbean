@@ -26,19 +26,15 @@ import mungbean.query.UpdateBuilder;
 public interface DBCollection<T> {
 	CollectionAdmin collectionAdmin();
 
+	String collectionName();
+
 	T save(T doc);
-
-	void remove(Map<String, Object> query);
-
-	void delete(QueryBuilder query);
 
 	void update(ObjectId id, T doc);
 
 	void update(ObjectId id, UpdateBuilder update);
 
-	void update(Map<String, Object> query, T doc, boolean upsert);
-
-	void update(QueryBuilder query, T doc, boolean upsert);
+	void update(Map<String, Object> query, Map<String, Object> updates);
 
 	void update(QueryBuilder query, UpdateBuilder update);
 
@@ -54,8 +50,10 @@ public interface DBCollection<T> {
 
 	void delete(ObjectId id);
 
-	<ResponseType> ResponseType command(Command<ResponseType> command);
+	void delete(QueryBuilder query);
 
-	String collectionName();
+	void delete(Map<String, Object> query);
+
+	<ResponseType> ResponseType command(Command<ResponseType> command);
 
 }

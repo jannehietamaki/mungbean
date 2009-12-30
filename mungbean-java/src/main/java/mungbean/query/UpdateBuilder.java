@@ -18,9 +18,11 @@ package mungbean.query;
 
 import java.util.Map;
 
+import mungbean.protocol.message.UpdateOptionsBuilder;
+
 public interface UpdateBuilder {
 	Map<String, Object> build();
 
-	boolean getUpsert();
+	UpdateOptionsBuilder options();
 
 }

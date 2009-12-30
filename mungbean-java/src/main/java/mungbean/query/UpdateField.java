@@ -21,6 +21,8 @@ import static mungbean.CollectionUtil.map;
 import java.util.Arrays;
 import java.util.Map;
 
+import mungbean.protocol.message.UpdateOptionsBuilder;
+
 public class UpdateField extends DslField implements UpdateBuilder {
 	private final Update update;
 
@@ -75,7 +77,8 @@ public class UpdateField extends DslField implements UpdateBuilder {
 	}
 
 	@Override
-	public boolean getUpsert() {
-		return update.getUpsert();
+	public UpdateOptionsBuilder options() {
+		return update.options();
 	}
+
 }

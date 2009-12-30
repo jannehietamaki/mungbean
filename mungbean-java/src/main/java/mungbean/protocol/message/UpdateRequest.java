@@ -25,18 +25,18 @@ import mungbean.protocol.bson.BSON;
 public class UpdateRequest<Type> extends CollectionRequest<Void> {
 	private final UpdateOptionsBuilder flags;
 	private final BSON selector;
-	private final BSON document;
+	private final BSON updates;
 
-	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Object document, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
+	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Object updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
 		super(collectionName);
 		this.flags = flags;
 		this.selector = selectorCoders.forValue(selector).write(coders, selector);
-		this.document = coders.forValue(document).write(coders, document);
+		this.updates = coders.forValue(updates).write(coders, updates);
 	}
 
 	@Override
 	public int length() {
-		return 4 + collectionNameLength() + 4 + selector.length() + document.length();
+		return 4 + collectionNameLength() + 4 + selector.length() + updates.length();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class UpdateRequest<Type> extends CollectionRequest<Void> {
 		writeCollectionName(writer);
 		writer.writeInt(flags.value());
 		writer.write(selector.bytes());
-		writer.write(document.bytes());
+		writer.write(updates.bytes());
 	}
 
 	@Override

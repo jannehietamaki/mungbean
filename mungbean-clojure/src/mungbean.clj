@@ -8,7 +8,7 @@
 
 (defn delete [collection, query] (.delete collection query))
 
-(defn update [collection, query, doc, upsert] (.update collection query doc upsert))
+(defn update [collection, query, updates] (.update collection query updates))
 
 (defn query [collection, rules, first, items] (.query collection rules first items))
 
