@@ -13,7 +13,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 * Mongo documents can be mapped to generic java.util.collections (Maps + Lists) 
 * Typesafe [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java) for mapping POJOs to Mongo documents and back
 * DSLs for conditional operators, sorting, aggregation and updates
-* administration API (partial)
+* administration API (partial), authentication
 
 #### Code examples
 
@@ -34,7 +34,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 #### Missing features
 
-* GridFS, cursors, authentication
+* GridFS, cursors
 * Failover/replica pairs support is implemented but not yet ready for use
 
 ### Clojure
