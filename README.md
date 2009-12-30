@@ -9,14 +9,11 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 #### Features
 
-* insert + update + remove [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
+* Basic operations: query, save, update, remove, ensureIndex, findOne, limit, sort [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
 * Mongo documents can be mapped to generic java.util.collections (Maps + Lists) 
-* Typesafe API for mapping Mongo documents to [POJOs](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java)
-* Queries
-* DSLs for conditional operators and updates
-* Aggregation
+* Typesafe [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java) for mapping POJOs to Mongo documents and back
+* DSLs for conditional operators, sorting, aggregation and updates
 * administration API (partial)
-
 
 #### Code examples
 
@@ -26,6 +23,9 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
     // typesafe query of POJOs
     List<DomainObject> objects = collection.query(new Query().field("name").is("foo"));
 
+    // Sorting
+    List<DomainObject> objects = collection.query(new Query().field("name").orderAscending());
+
     // select distinct values of field 'foo' of those items where value of 'bar' is greater than 5.
     collection.query(Aggregation.distinct("foo", new Query().field("bar").greaterThan(5))); 
 
@@ -34,7 +34,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 #### Missing features
 
-* GridFS, cursors
+* GridFS, cursors, authentication
 * Failover/replica pairs support is implemented but not yet ready for use
 
 ### Clojure
