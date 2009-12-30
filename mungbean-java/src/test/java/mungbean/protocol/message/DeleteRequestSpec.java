@@ -15,33 +15,30 @@
  */
 package mungbean.protocol.message;
 
+import static mungbean.CollectionUtil.map;
+
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-
-import org.junit.runner.RunWith;
-
 import mungbean.ObjectId;
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.BSONCoders;
+
+import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class DeleteRequestSpec extends Specification<DBTransaction<Void>> {
 	public class WithAny {
 		public DBTransaction<Void> create() {
-			return new DBTransaction<Void>(new DeleteRequest("foozbar.foo", new BSONCoders(), new HashMap<String, Object>() {
-				{
-					put("_id", new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }));
-				}
-			}), 123, -1);
+			return new DBTransaction<Void>(new DeleteRequest("foozbar.foo", new BSONCoders(), map("_id", new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }))), 123, -1);
 		}
 
 		public void deleteRequestCanBeSerializedToByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			context.send(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 58, 0, 0, 0, // message_lenght
+			specify(output.toByteArray(), does.containExactly(new byte[] { 
+					58, 0, 0, 0, // message_lenght
 					123, 0, 0, 0, // requestId
 					-1, -1, -1, -1, // responseTo
 					-42, 7, 0, 0, // opCode

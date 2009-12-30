@@ -32,6 +32,7 @@ import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.QueryResponse;
 import mungbean.protocol.message.RequestOpCode;
+import static mungbean.CollectionUtil.map;
 
 @RunWith(JDaveRunner.class)
 public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
@@ -61,11 +62,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 
 	public class WithQueryContaingingRules {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-				}
-			}, null, new BSONCoders(), new BSONMap());
+			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, map("foo", "bar"), null, new BSONCoders(), new BSONMap());
 			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 
@@ -108,11 +105,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 					});
 			QueryResponse<Map<String, Object>> response = context.readResponse(input);
 			specify(response.opCode(), does.equal(RequestOpCode.OP_REPLY));
-			specify(response.values().get(0), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-				}
-			}));
+			specify(response.values().get(0), does.equal(map("foo", "bar")));
 		}
 	}
 }

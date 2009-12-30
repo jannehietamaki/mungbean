@@ -81,15 +81,7 @@ public class QuerySpec extends Specification<Query> {
 		}
 
 		public void queryMapCanBeConstructed() {
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new HashMap<String, Object>() {
-						{
-							put("$ne", "bar");
-						}
-					});
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", map("$ne", "bar"))));
 		}
 	}
 
@@ -105,15 +97,7 @@ public class QuerySpec extends Specification<Query> {
 			values.add("foo");
 			values.add("bar");
 			values.add("zoo");
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new HashMap<String, Object>() {
-						{
-							put("$in", values);
-						}
-					});
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", map("$in", values))));
 		}
 	}
 
@@ -129,15 +113,7 @@ public class QuerySpec extends Specification<Query> {
 			values.add("foo");
 			values.add("bar");
 			values.add("zoo");
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new HashMap<String, Object>() {
-						{
-							put("$nin", values);
-						}
-					});
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", map("$nin", values))));
 		}
 	}
 
@@ -153,15 +129,7 @@ public class QuerySpec extends Specification<Query> {
 			values.add("foo");
 			values.add("bar");
 			values.add("zoo");
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new HashMap<String, Object>() {
-						{
-							put("$all", values);
-						}
-					});
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", map("$all", values))));
 		}
 	}
 
@@ -173,15 +141,7 @@ public class QuerySpec extends Specification<Query> {
 		}
 
 		public void queryMapCanBeConstructed() {
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new HashMap<String, Object>() {
-						{
-							put("$size", 5);
-						}
-					});
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", map("$size", 5))));
 		}
 	}
 
@@ -193,15 +153,7 @@ public class QuerySpec extends Specification<Query> {
 		}
 
 		public void queryMapCanBeConstructed() {
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new HashMap<String, Object>() {
-						{
-							put("$exists", true);
-						}
-					});
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", map("$exists", true))));
 		}
 	}
 
@@ -215,11 +167,7 @@ public class QuerySpec extends Specification<Query> {
 		}
 
 		public void queryMapCanBeConstructed() {
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", pattern);
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", pattern)));
 		}
 	}
 
@@ -232,12 +180,7 @@ public class QuerySpec extends Specification<Query> {
 		}
 
 		public void queryMapCanBeConstructed() {
-			specify(context.build(), does.equal(new HashMap<String, Object>() {
-				{
-					put("foo", new Code("this.a>3"));
-				}
-			}));
+			specify(context.build(), does.equal(map("foo", new Code("this.a>3"))));
 		}
 	}
-
 }

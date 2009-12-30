@@ -16,7 +16,8 @@
 
 package mungbean;
 
-import java.util.HashMap;
+import static mungbean.CollectionUtil.map;
+
 import java.util.List;
 import java.util.Map;
 
@@ -89,11 +90,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
-				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), new HashMap<String, Object>() {
-					{
-						put("_id", id);
-					}
-				}, update, coders, QUERY_CODERS));
+				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), map("_id", id), update, coders, QUERY_CODERS));
 				return null;
 			};
 		});
@@ -173,12 +170,8 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		return results.get(0);
 	}
 
-	private HashMap<String, Object> idQuery(final ObjectId id) {
-		return new HashMap<String, Object>() {
-			{
-				put("_id", id);
-			}
-		};
+	private Map<String, Object> idQuery(final ObjectId id) {
+		return map("_id", id);
 	}
 
 	public void delete(ObjectId id) {

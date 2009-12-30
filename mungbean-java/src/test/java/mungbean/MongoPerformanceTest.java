@@ -25,6 +25,7 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 import org.junit.runner.RunWith;
+import static mungbean.CollectionUtil.map;
 
 @RunWith(JDaveRunner.class)
 public class MongoPerformanceTest extends Specification<Database> {
@@ -43,11 +44,7 @@ public class MongoPerformanceTest extends Specification<Database> {
 
 		public void databaseCanBeAccessed() throws InterruptedException {
 			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-			collection.save(new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-				}
-			});
+			collection.save(map("foo", "bar"));
 			ExecutorService executor = Executors.newFixedThreadPool(10);
 			StopWatch timer = new StopWatch();
 			long total = 500000;

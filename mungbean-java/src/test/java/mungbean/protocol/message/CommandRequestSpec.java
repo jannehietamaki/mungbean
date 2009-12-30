@@ -16,7 +16,6 @@
 package mungbean.protocol.message;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import jdave.Specification;
@@ -29,11 +28,7 @@ import org.junit.runner.RunWith;
 public class CommandRequestSpec extends Specification<DBTransaction<Map<String, Object>>> {
 	public class WithValidCommandQuery {
 		public DBTransaction<Map<String, Object>> create() {
-			return new DBTransaction<Map<String, Object>>(new CommandRequest("foobar", new HashMap<String, Object>() {
-				{
-					put("getlasterror", 1D);
-				}
-			}), 123, -1);
+			return new DBTransaction<Map<String, Object>>(new CommandRequest("foobar", "getlasterror"), 123, -1);
 		}
 
 		public void commandQueryCanBeSerialized() {

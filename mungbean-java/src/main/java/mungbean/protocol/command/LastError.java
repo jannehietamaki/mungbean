@@ -16,17 +16,14 @@
 
 package mungbean.protocol.command;
 
-import java.util.HashMap;
+import static mungbean.CollectionUtil.map;
+
 import java.util.Map;
 
 import mungbean.DBCollection;
 
 public class LastError extends Command<String> {
-	private final Map<String, Object> parameters = new HashMap<String, Object>() {
-		{
-			put("getlasterror", 1D);
-		}
-	};
+	private final Map<String, Object> parameters = map("getlasterror", 1D);
 
 	@Override
 	public String parseResponse(Map<String, Object> values) {

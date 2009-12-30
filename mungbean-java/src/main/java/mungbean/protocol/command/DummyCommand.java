@@ -16,7 +16,8 @@
 
 package mungbean.protocol.command;
 
-import java.util.HashMap;
+import static mungbean.CollectionUtil.map;
+
 import java.util.Map;
 
 import mungbean.DBCollection;
@@ -35,10 +36,6 @@ public class DummyCommand extends Command<Void> {
 
 	@Override
 	public Map<String, Object> toMap(DBCollection<?> collection) {
-		return new HashMap<String, Object>() {
-			{
-				put(command, 1D);
-			}
-		};
+		return map(command, 1D);
 	}
 }

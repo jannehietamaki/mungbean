@@ -15,32 +15,24 @@
  */
 package mungbean.protocol.message;
 
+import static mungbean.CollectionUtil.map;
+
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-
-import org.junit.runner.RunWith;
-
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.BSONCoders;
+
+import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
 	public class WithValidRequest {
 		public DBTransaction<Void> create() {
-			Map<String, Object> selector = new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-				}
-			};
-			Map<String, Object> document = new HashMap<String, Object>() {
-				{
-					put("zoo", 5);
-				}
-			};
+			Map<String, Object> selector = map("foo", "bar");
+			Map<String, Object> document = map("zoo", 5);
 			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new BSONCoders(), new BSONCoders()), 126, -1);
 		}
 
