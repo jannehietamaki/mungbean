@@ -21,18 +21,18 @@ import mungbean.AbstractDBCollection;
 import mungbean.DBOperationExecutor;
 import mungbean.ObjectId;
 import mungbean.protocol.bson.BSONCoder;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 
 public class PojoDBCollection<T> extends AbstractDBCollection<T> {
 
 	private final Class<T> typeClass;
 
 	public PojoDBCollection(DBOperationExecutor executor, String dbName, String collectionName, final Class<T> typeClass) {
-		super(executor, dbName, collectionName, new BSONCoders() {
+		super(executor, dbName, collectionName, new MapBSONCoders() {
 			{
 				addEncoder(new PojoEncoder<T>(typeClass));
 			}
-		});
+		}, new MapBSONCoders());
 		this.typeClass = typeClass;
 	}
 

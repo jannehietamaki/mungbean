@@ -26,11 +26,9 @@ import scala.actors.threadpool.Arrays;
 public class CollectionUtil {
 
 	public static Map<String, Object> map(final String key, final Object value) {
-		return new LinkedHashMap<String, Object>() {
-			{
-				put(key, value);
-			}
-		};
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put(key, value);
+		return map;
 	}
 
 	public static Map<String, Object> merge(Map<String, Object>... maps) {

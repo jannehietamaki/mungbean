@@ -15,20 +15,25 @@
  */
 package mungbean.protocol.message;
 
-import java.nio.charset.Charset;
+import java.io.ByteArrayOutputStream;
 
+import mungbean.Utils;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
-public interface MongoRequest<ResponseType> {
-	final Charset UTF8 = Charset.forName("UTF-8");
+public abstract class MongoRequest<ResponseType> {
 
-	void send(LittleEndianDataWriter writer);
+	public abstract void send(LittleEndianDataWriter writer);
 
-	ResponseType readResponse(LittleEndianDataReader reader);
+	public abstract ResponseType readResponse(LittleEndianDataReader reader);
 
-	RequestOpCode type();
+	public abstract RequestOpCode type();
 
-	int length();
+	public abstract int length();
 
+	public String debugInfo() {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		send(new LittleEndianDataWriter(output));
+		return "[MongoRequest: opCode= " + type() + " data=" + Utils.toHex(output.toByteArray()) + "]";
+	}
 }

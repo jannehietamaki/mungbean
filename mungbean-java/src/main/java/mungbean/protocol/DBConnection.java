@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import static mungbean.Md5.md5;
 
 import mungbean.Authentication;
+import mungbean.MongoException;
 import mungbean.Server;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.MongoRequest;
@@ -71,9 +72,15 @@ public class DBConnection {
 	}
 
 	public <T> T execute(MongoRequest<T> message) {
-		DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter(), -1);
-		transaction.send(outputStream);
-		return transaction.readResponse(inputStream);
+		try {
+			DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter(), -1);
+			transaction.send(outputStream);
+			return transaction.readResponse(inputStream);
+		} catch (Exception e) {
+			// TODO We should probably close this connection as it's state is
+			// not known?
+			throw new MongoException("Error communicating with server", e, message);
+		}
 	}
 
 	private int incrementAndGetCounter() {

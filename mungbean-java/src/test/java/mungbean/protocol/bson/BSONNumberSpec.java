@@ -35,7 +35,7 @@ public class BSONNumberSpec extends Specification<BSONNumber> {
 
 		public void doubleValueCanBeEncodedIntoBson() {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			context.write(new BSONCoders(), "foo", 123D, new LittleEndianDataWriter(out));
+			context.write(new MapBSONCoders(), "foo", 123D, new LittleEndianDataWriter(out));
 			specify(out.toByteArray(), does.containExactly(new byte[] { 1, 'f', 'o', 'o', 0, 0, 0, 0, 0, 0, -64, 94, 64 }));
 		}
 

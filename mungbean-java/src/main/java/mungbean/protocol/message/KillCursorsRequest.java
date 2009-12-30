@@ -18,7 +18,7 @@ package mungbean.protocol.message;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
-public class KillCursorsRequest implements MongoRequest<Void> {
+public class KillCursorsRequest extends MongoRequest<Void> {
 	private final long[] cursorIds;
 
 	public KillCursorsRequest(long... cursorIds) {

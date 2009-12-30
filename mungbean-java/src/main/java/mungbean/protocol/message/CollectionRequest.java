@@ -15,9 +15,10 @@
  */
 package mungbean.protocol.message;
 
+import mungbean.Utils;
 import mungbean.protocol.LittleEndianDataWriter;
 
-public abstract class CollectionRequest<ReturnType> implements MongoRequest<ReturnType> {
+public abstract class CollectionRequest<ReturnType> extends MongoRequest<ReturnType> {
 	private final String collectionName;
 
 	public CollectionRequest(String collectionName) {
@@ -25,7 +26,7 @@ public abstract class CollectionRequest<ReturnType> implements MongoRequest<Retu
 	}
 
 	protected int collectionNameLength() {
-		return 1 + collectionName.getBytes(UTF8).length;
+		return 1 + collectionName.getBytes(Utils.UTF8).length;
 	}
 
 	protected void writeCollectionName(LittleEndianDataWriter writer) {

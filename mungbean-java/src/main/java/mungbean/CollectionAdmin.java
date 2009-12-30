@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import mungbean.protocol.DBConnection;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
 import mungbean.protocol.message.InsertRequest;
 
@@ -52,7 +52,7 @@ public class CollectionAdmin {
 			@SuppressWarnings("unchecked")
 			@Override
 			public Void execute(DBConnection connection) {
-				connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new BSONCoders(), doc));
+				connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new MapBSONCoders(), doc));
 				return null;
 			}
 		});

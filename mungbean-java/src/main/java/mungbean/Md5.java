@@ -16,7 +16,6 @@
 
 package mungbean;
 
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
 public class Md5 {
@@ -28,13 +27,8 @@ public class Md5 {
 		try {
 			MessageDigest algorithm = MessageDigest.getInstance("MD5");
 			algorithm.reset();
-			algorithm.update(source.getBytes(Charset.forName("UTF-8")));
-			byte messageDigest[] = algorithm.digest();
-			StringBuilder hexString = new StringBuilder();
-			for (byte b : messageDigest) {
-				hexString.append(Integer.toHexString(0xFF & b));
-			}
-			return hexString.toString().toUpperCase();
+			algorithm.update(source.getBytes(Utils.UTF8));
+			return Utils.toHex(algorithm.digest());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

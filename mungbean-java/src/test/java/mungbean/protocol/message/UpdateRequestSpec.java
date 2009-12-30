@@ -23,7 +23,7 @@ import java.util.Map;
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 import mungbean.protocol.DBTransaction;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 
 import org.junit.runner.RunWith;
 
@@ -33,7 +33,7 @@ public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
 		public DBTransaction<Void> create() {
 			Map<String, Object> selector = map("foo", "bar");
 			Map<String, Object> document = map("zoo", 5);
-			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new BSONCoders(), new BSONCoders()), 126, -1);
+			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new MapBSONCoders(), new MapBSONCoders()), 126, -1);
 		}
 
 		public void updateRequestCanBeSerializedToByteStream() {

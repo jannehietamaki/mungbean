@@ -13,22 +13,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.bson;
 
-public class BSONCoders extends AbstractBSONCoders {
+package mungbean;
 
-	public BSONCoders() {
-		addEncoder(new BSONEndMarker());
-		addEncoder(new BSONNull());
-		addEncoder(new BSONArray<Object>());
-		addEncoder(new BSONInteger());
-		addEncoder(new BSONNumber());
-		addEncoder(new BSONString());
-		addEncoder(new BSONMap());
-		addEncoder(new BSONOid());
-		addEncoder(new BSONPattern());
-		addEncoder(new BSONDate());
-		addEncoder(new BSONBoolean());
-		addEncoder(new BSONCode());
+import java.nio.charset.Charset;
+
+public class Utils {
+
+	public static final Charset UTF8 = Charset.forName("UTF-8");
+
+	public static String toHex(byte[] content) {
+		StringBuilder hexString = new StringBuilder();
+		for (byte b : content) {
+			hexString.append(Integer.toHexString(0xFF & b));
+		}
+		return hexString.toString().toUpperCase();
 	}
 }

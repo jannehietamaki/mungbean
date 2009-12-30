@@ -23,7 +23,7 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.bson.AbstractBSONCoders;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.protocol.bson.BSONMap;
 import mungbean.protocol.message.DeleteRequest;
 import mungbean.protocol.message.InsertRequest;
@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 @RunWith(JDaveRunner.class)
 public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 	public class WithServer {
-		private final AbstractBSONCoders coders = new BSONCoders();
+		private final AbstractBSONCoders coders = new MapBSONCoders();
 		BSONMap defaultCoder = new BSONMap();
 
 		public DBConnection create() {

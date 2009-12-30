@@ -23,7 +23,7 @@ import java.util.Map;
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 import mungbean.protocol.DBTransaction;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 
 import org.junit.runner.RunWith;
 
@@ -32,7 +32,7 @@ public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest
 	public class WithValidRequest {
 		@SuppressWarnings("unchecked")
 		public DBTransaction<Void> create() {
-			InsertRequest<Map<String, Object>> message = new InsertRequest<Map<String, Object>>("foozbar.foo", new BSONCoders(), map("foo", "bar"));
+			InsertRequest<Map<String, Object>> message = new InsertRequest<Map<String, Object>>("foozbar.foo", new MapBSONCoders(), map("foo", "bar"));
 			return new DBTransaction<Void>(message, 123, -1);
 		}
 

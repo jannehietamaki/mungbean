@@ -44,6 +44,6 @@ public abstract class AbstractBSONCoders {
 				return (BSONCoder<T>) bson;
 			}
 		}
-		throw new IllegalArgumentException("Unable to find encoder for object " + val + " (" + val.getClass().getName() + "/" + Arrays.asList(val.getClass().getInterfaces()) + ")");
+		throw new IllegalArgumentException(getClass().getSimpleName() + ": Unable to find encoder for object " + val + " (" + val.getClass().getName() + "/" + Arrays.asList(val.getClass().getInterfaces()) + ")");
 	}
 }

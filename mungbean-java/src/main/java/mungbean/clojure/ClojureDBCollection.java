@@ -27,7 +27,7 @@ import mungbean.protocol.bson.BSONCoder;
 public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
 
 	public ClojureDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
-		super(executor, dbName, collectionName, new ClojureBSONCoders());
+		super(executor, dbName, collectionName, new ClojureBSONCoders(), new ClojureBSONCoders());
 	}
 
 	@Override
@@ -43,4 +43,5 @@ public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
 		}
 		return doc;
 	}
+
 }

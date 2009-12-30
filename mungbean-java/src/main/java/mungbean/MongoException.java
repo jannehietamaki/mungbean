@@ -16,6 +16,8 @@
 
 package mungbean;
 
+import mungbean.protocol.message.MongoRequest;
+
 public class MongoException extends RuntimeException {
 	public MongoException(String message) {
 		super(message);
@@ -24,4 +26,9 @@ public class MongoException extends RuntimeException {
 	public MongoException(String message, Throwable reason) {
 		super(message, reason);
 	}
+
+	public MongoException(String message, Throwable reason, MongoRequest<?> request) {
+		this(message + request.debugInfo(), reason);
+	}
+
 }

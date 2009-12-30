@@ -35,12 +35,12 @@ public class BSONStringSpec extends Specification<BSONString> {
 
 		public void stringValueCanBeEncodedIntoBson() {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			context.write(new BSONCoders(), "foo", "bar", new LittleEndianDataWriter(out));
+			context.write(new MapBSONCoders(), "foo", "bar", new LittleEndianDataWriter(out));
 			specify(out.toByteArray(), does.containExactly(new byte[] { 2, 'f', 'o', 'o', 0, 0, 0, 0, 4, 'b', 'a', 'r', 0 }));
 		}
 
 		public void stringValueCanBeDecodedFromBson() {
-			specify(context.decode(new BSONCoders(), new LittleEndianDataReader(new ByteArrayInputStream(new byte[] { 0, 0, 0, 3, 'f', 'o', 'o', 0 }))), does.equal("foo"));
+			specify(context.decode(new MapBSONCoders(), new LittleEndianDataReader(new ByteArrayInputStream(new byte[] { 0, 0, 0, 3, 'f', 'o', 'o', 0 }))), does.equal("foo"));
 		}
 	}
 }

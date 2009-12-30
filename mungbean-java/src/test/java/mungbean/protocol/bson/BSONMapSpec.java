@@ -57,7 +57,7 @@ public class BSONMapSpec extends Specification<BSONMap> {
 					put("bar", "zap");
 				}
 			};
-			context.write(new BSONCoders(), "foo", map, new LittleEndianDataWriter(out));
+			context.write(new MapBSONCoders(), "foo", map, new LittleEndianDataWriter(out));
 			specify(out.toByteArray(), does.containExactly(MAP_FIXTURE));
 		}
 
@@ -65,7 +65,7 @@ public class BSONMapSpec extends Specification<BSONMap> {
 			LittleEndianDataReader reader = new LittleEndianDataReader(new ByteArrayInputStream(MAP_FIXTURE));
 			specify(reader.readByte(), does.equal((byte) 3));
 			specify(context.readPath(reader, ""), does.equal("foo"));
-			Map<String, Object> ret = context.read(new BSONCoders(), reader);
+			Map<String, Object> ret = context.read(new MapBSONCoders(), reader);
 			specify(ret.get("foo"), does.equal(1));
 			specify(ret.get("bar"), does.equal("zap"));
 		}
@@ -128,7 +128,7 @@ public class BSONMapSpec extends Specification<BSONMap> {
 					});
 				}
 			};
-			context.write(new BSONCoders(), "foo", map, new LittleEndianDataWriter(out));
+			context.write(new MapBSONCoders(), "foo", map, new LittleEndianDataWriter(out));
 			specify(out.toByteArray(), does.containExactly(MAP_FIXTURE));
 		}
 
@@ -136,7 +136,7 @@ public class BSONMapSpec extends Specification<BSONMap> {
 			LittleEndianDataReader reader = new LittleEndianDataReader(new ByteArrayInputStream(MAP_FIXTURE));
 			specify(reader.readByte(), does.equal((byte) 3));
 			specify(context.readPath(reader, ""), does.equal("foo"));
-			Map<String, Object> ret = context.read(new BSONCoders(), reader);
+			Map<String, Object> ret = context.read(new MapBSONCoders(), reader);
 			specify(ret.get("foo"), does.equal(1));
 			specify(ret.get("bar"), new HashMap<String, Object>() {
 				{

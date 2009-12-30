@@ -35,13 +35,13 @@ public class BSONBooleanSpec extends Specification<BSONBoolean> {
 
 		public void trueBooleanCanBeEncodedIntoBson() {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			context.write(new BSONCoders(), "foo", true, new LittleEndianDataWriter(out));
+			context.write(new MapBSONCoders(), "foo", true, new LittleEndianDataWriter(out));
 			specify(out.toByteArray(), does.containExactly(new byte[] { 8, 'f', 'o', 'o', 0, 1 }));
 		}
 
 		public void falseBooleanCanBeEncodedIntoBson() {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			context.write(new BSONCoders(), "foo", false, new LittleEndianDataWriter(out));
+			context.write(new MapBSONCoders(), "foo", false, new LittleEndianDataWriter(out));
 			specify(out.toByteArray(), does.containExactly(new byte[] { 8, 'f', 'o', 'o', 0, 0 }));
 		}
 	}

@@ -18,13 +18,13 @@ package mungbean;
 import java.util.Map;
 
 import mungbean.protocol.bson.BSONCoder;
-import mungbean.protocol.bson.BSONCoders;
 import mungbean.protocol.bson.BSONMap;
+import mungbean.protocol.bson.MapBSONCoders;
 
 public class MapDBCollection extends AbstractDBCollection<Map<String, Object>> {
 
 	public MapDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
-		super(executor, dbName, collectionName, new BSONCoders());
+		super(executor, dbName, collectionName, new MapBSONCoders(), new MapBSONCoders());
 	}
 
 	@Override

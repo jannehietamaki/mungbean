@@ -24,7 +24,6 @@ import java.util.Map;
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
-import mungbean.protocol.bson.BSONCoders;
 import mungbean.protocol.command.Command;
 import mungbean.protocol.command.LastError;
 import mungbean.protocol.message.CommandRequest;
@@ -39,18 +38,19 @@ import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
 public abstract class AbstractDBCollection<T> implements DBCollection<T> {
-	private static final BSONCoders QUERY_CODERS = new BSONCoders();
 
 	private final DBOperationExecutor executor;
 	private final String dbName;
 	private final String collectionName;
-	private final AbstractBSONCoders coders;
+	private final AbstractBSONCoders documentCoders;
+	private final AbstractBSONCoders queryCoders;
 
-	public AbstractDBCollection(DBOperationExecutor executor, String dbName, String collectionName, AbstractBSONCoders coders) {
+	public AbstractDBCollection(DBOperationExecutor executor, String dbName, String collectionName, AbstractBSONCoders documentCoders, AbstractBSONCoders queryCoders) {
 		this.executor = executor;
 		this.dbName = dbName;
 		this.collectionName = collectionName;
-		this.coders = coders;
+		this.documentCoders = documentCoders;
+		this.queryCoders = queryCoders;
 	}
 
 	public CollectionAdmin collectionAdmin() {
@@ -62,7 +62,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		return collectionName;
 	}
 
-	public abstract BSONCoder<T> defaultEncoder();
+	protected abstract BSONCoder<T> defaultEncoder();
 
 	public T save(final T doc) {
 		return executeWrite(new ErrorCheckingDBConversation() {
@@ -70,7 +70,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 			@Override
 			public T doExecute(DBConnection connection) {
 				T newDoc = injectId(doc);
-				connection.execute(new InsertRequest<T>(dbName(), coders, newDoc));
+				connection.execute(new InsertRequest<T>(dbName(), documentCoders, newDoc));
 				return newDoc;
 			}
 		});
@@ -90,7 +90,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
-				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), map("_id", id), update, coders, QUERY_CODERS));
+				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), map("_id", id), update, documentCoders, queryCoders));
 				return null;
 			};
 		});
@@ -104,7 +104,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
-				connection.execute(new DeleteRequest(dbName(), QUERY_CODERS, query));
+				connection.execute(new DeleteRequest(dbName(), queryCoders, query));
 				return null;
 			};
 		});
@@ -130,7 +130,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
-				connection.execute(new UpdateRequest<T>(dbName(), options, query, doc, coders, QUERY_CODERS));
+				connection.execute(new UpdateRequest<T>(dbName(), options, query, doc, documentCoders, queryCoders));
 				return null;
 			};
 		});
@@ -149,7 +149,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		return execute(new DBConversation<List<T>>() {
 			@Override
 			public List<T> execute(DBConnection connection) {
-				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, order, QUERY_CODERS, defaultEncoder())).values();
+				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, order, queryCoders, defaultEncoder())).values();
 			};
 		});
 	}

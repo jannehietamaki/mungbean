@@ -22,13 +22,13 @@ import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.protocol.bson.BSONMap;
 
-public class CommandRequest implements MongoRequest<Map<String, Object>> {
+public class CommandRequest extends MongoRequest<Map<String, Object>> {
 
 	private static final BSONMap RESPONSE_CODER = new BSONMap();
-	private static final BSONCoders CODERS = new BSONCoders();
+	private static final MapBSONCoders CODERS = new MapBSONCoders();
 	private final QueryRequest<Map<String, Object>> query;
 
 	public CommandRequest(String dbName, Map<String, Object> content) {

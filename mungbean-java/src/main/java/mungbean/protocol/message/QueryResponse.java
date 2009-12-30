@@ -21,10 +21,10 @@ import java.util.List;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 
 public class QueryResponse<ResponseType> extends MongoResponse {
-	private static final AbstractBSONCoders BSON = new BSONCoders();
+	private static final AbstractBSONCoders BSON = new MapBSONCoders();
 	private final int responseFlag;
 	private final long cursorId;
 	private final int startingFrom;

@@ -26,12 +26,8 @@ import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
 import mungbean.protocol.DBTransaction;
-import mungbean.protocol.bson.BSONCoders;
+import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.protocol.bson.BSONMap;
-import mungbean.protocol.message.QueryOptionsBuilder;
-import mungbean.protocol.message.QueryRequest;
-import mungbean.protocol.message.QueryResponse;
-import mungbean.protocol.message.RequestOpCode;
 import static mungbean.CollectionUtil.map;
 
 @RunWith(JDaveRunner.class)
@@ -39,7 +35,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 
 	public class WithoutQueryRules {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>(), null, new BSONCoders(), new BSONMap());
+			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>(), null, new MapBSONCoders(), new BSONMap());
 			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 
@@ -62,7 +58,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 
 	public class WithQueryContaingingRules {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, map("foo", "bar"), null, new BSONCoders(), new BSONMap());
+			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, map("foo", "bar"), null, new MapBSONCoders(), new BSONMap());
 			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 
