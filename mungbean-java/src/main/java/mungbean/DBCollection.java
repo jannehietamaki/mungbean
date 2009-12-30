@@ -28,7 +28,7 @@ public interface DBCollection<T> {
 
 	T save(T doc);
 
-	void delete(Map<String, Object> query);
+	void remove(Map<String, Object> query);
 
 	void delete(QueryBuilder query);
 
@@ -43,6 +43,8 @@ public interface DBCollection<T> {
 	void update(QueryBuilder query, UpdateBuilder update);
 
 	List<T> query(Map<String, Object> rules, int first, int items);
+
+	List<T> query(Map<String, Object> rules, Map<String, Object> order, int first, int items);
 
 	List<T> query(QueryBuilder query);
 

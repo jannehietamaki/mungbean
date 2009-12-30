@@ -21,6 +21,8 @@ import java.util.Map;
 public interface QueryBuilder {
 	Map<String, Object> build();
 
+	Map<String, Object> order();
+
 	int limit();
 
 	int skip();

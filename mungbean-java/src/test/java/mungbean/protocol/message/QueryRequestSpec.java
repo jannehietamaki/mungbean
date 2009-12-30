@@ -38,7 +38,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 
 	public class WithoutQueryRules {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>(), new BSONCoders(), new BSONMap());
+			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>(), null, new BSONCoders(), new BSONMap());
 			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 
@@ -65,7 +65,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 				{
 					put("foo", "bar");
 				}
-			}, new BSONCoders(), new BSONMap());
+			}, null, new BSONCoders(), new BSONMap());
 			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
 		}
 

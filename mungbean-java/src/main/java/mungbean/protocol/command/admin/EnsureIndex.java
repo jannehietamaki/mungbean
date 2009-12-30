@@ -47,8 +47,10 @@ public class EnsureIndex extends Command<Void> {
 
 	private Map<String, Object> toMap() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		double value = 1D;
 		for (String field : fields) {
-			map.put(field, 1D);
+			map.put(field, value);
+			value = -1D;
 		}
 		return map;
 	}

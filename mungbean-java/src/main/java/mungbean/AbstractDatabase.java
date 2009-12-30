@@ -13,19 +13,33 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean.protocol.message;
+
+package mungbean;
 
 import java.util.Map;
 
-import mungbean.protocol.bson.BSONCoders;
-import mungbean.protocol.bson.BSONMap;
+public abstract class AbstractDatabase {
+	private final String dbName;
+	private final DBOperationExecutor executor;
 
-public class CommandRequest extends QueryRequest<Map<String, Object>> {
+	public AbstractDatabase(DBOperationExecutor executor, String name) {
+		this.dbName = name;
+		this.executor = executor;
+	}
 
-	private static final BSONMap RESPONSE_CODER = new BSONMap();
-	private static final BSONCoders CODERS = new BSONCoders();
+	protected String dbName() {
+		return dbName;
+	}
 
-	public CommandRequest(String dbName, Map<String, Object> content) {
-		super(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);
+	protected DBOperationExecutor executor() {
+		return executor;
+	}
+
+	public DatabaseAdmin dbAdmin() {
+		return new DatabaseAdmin(this);
+	}
+
+	DBCollection<Map<String, Object>> mapCollection(String name) {
+		return new MapDBCollection(executor(), dbName(), name);
 	}
 }

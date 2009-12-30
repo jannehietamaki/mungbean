@@ -63,7 +63,7 @@ public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 					put("_id", id);
 				}
 			};
-			QueryResponse<Map<String, Object>> response = context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, coders, defaultCoder));
+			QueryResponse<Map<String, Object>> response = context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, null, coders, defaultCoder));
 			List<Map<String, Object>> values = response.values();
 			specify(((HashMap<String, Object>) values.get(0)).get("_id"), does.equal(id));
 			context.execute(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), idQuery, new HashMap<String, Object>() {
@@ -71,9 +71,9 @@ public class DBConnectionIntegrationTest extends Specification<DBConnection> {
 					put("zoo", 5);
 				}
 			}, coders, coders));
-			specify(((HashMap<String, Object>) context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, coders, defaultCoder)).values().get(0)).get("zoo"), does.equal(5));
+			specify(((HashMap<String, Object>) context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, null, coders, defaultCoder)).values().get(0)).get("zoo"), does.equal(5));
 			context.execute(new DeleteRequest("foozbar.foo", coders, idQuery));
-			specify(context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, coders, defaultCoder)).values().size(), does.equal(0));
+			specify(context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, idQuery, null, coders, defaultCoder)).values().size(), does.equal(0));
 		}
 	}
 }

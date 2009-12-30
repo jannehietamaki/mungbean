@@ -64,7 +64,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 			specify(collection.command(new Count()), does.equal(initialCount + 1));
 			runGroup(collection);
 			specify(collection.command(new Count(idQuery)), does.equal(1));
-			collection.delete(idQuery);
+			collection.remove(idQuery);
 			specify(collection.query(idQuery, 0, 100).size(), does.equal(0));
 			specify(context.dbAdmin().getCollectionNames(), containsExactly("foo"));
 			specify(collection.command(new Count()), does.equal(initialCount));
@@ -97,8 +97,10 @@ public class MongoIntegrationTest extends Specification<Database> {
 
 			specify(collection.query(Aggregation.distinct("foo", new Query().field("foo").greaterThan(5))), containsExactly(6, 7, 8, 9));
 
-			List<Map<String, Object>> values = collection.query(new Query().field("foo").greaterThan(3).lessThan(8));
+			List<Map<String, Object>> values = collection.query(new Query().field("foo").orderDescending().greaterThan(3).lessThan(8));
 			specify(values.size(), does.equal(4));
+			specify(values.get(0).get("foo"), does.equal(7));
+			specify(values.get(3).get("foo"), does.equal(4));
 		}
 
 		public void updatesCanBeDoneWithTheDsl() {

@@ -15,6 +15,7 @@
  */
 package mungbean.protocol.message;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
@@ -22,6 +23,7 @@ import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 import mungbean.protocol.bson.BSONCoder;
+import mungbean.protocol.bson.BSONMap;
 
 public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<ResponseType>> {
 
@@ -32,14 +34,26 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 	private final boolean closeCursor;
 	private final BSONCoder<ResponseType> coder;
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, Map<String, Object> order, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
 		super(collectionName);
 		this.builder = builder;
 		this.numberToSkip = numberToSkip;
 		this.numberToReturn = Math.abs(numberToReturn);
 		this.closeCursor = closeCursor;
-		this.query = coders.forValue(query).write(coders, query);
+		this.query = buildQuery(coders, query, order);
 		this.coder = coder;
+	}
+
+	private BSON buildQuery(AbstractBSONCoders coders, final Map<String, Object> query, final Map<String, Object> order) {
+		if (order == null || order.isEmpty()) {
+			return coders.forValue(query).write(coders, query);
+		}
+		return new BSONMap().write(coders, new HashMap<String, Object>() {
+			{
+				put("query", query);
+				put("orderby", order);
+			}
+		});
 	}
 
 	@Override

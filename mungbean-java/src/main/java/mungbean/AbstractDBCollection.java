@@ -100,10 +100,10 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void delete(QueryBuilder query) {
-		delete(query.build());
+		remove(query.build());
 	}
 
-	public void delete(final Map<String, Object> query) {
+	public void remove(final Map<String, Object> query) {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
@@ -140,15 +140,19 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public List<T> query(QueryBuilder query) {
-		return query(query.build(), query.skip(), query.limit());
+		return query(query.build(), query.order(), query.skip(), query.limit());
 	}
 
 	public List<T> query(final Map<String, Object> rules, final int first, final int items) {
+		return query(rules, null, first, items);
+	}
+
+	public List<T> query(final Map<String, Object> rules, final Map<String, Object> order, final int first, final int items) {
 		final QueryOptionsBuilder options = new QueryOptionsBuilder();
 		return execute(new DBConversation<List<T>>() {
 			@Override
 			public List<T> execute(DBConnection connection) {
-				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, QUERY_CODERS, defaultEncoder())).values();
+				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, order, QUERY_CODERS, defaultEncoder())).values();
 			};
 		});
 	}
@@ -178,7 +182,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public void delete(ObjectId id) {
-		delete(idQuery(id));
+		remove(idQuery(id));
 	}
 
 	@Override

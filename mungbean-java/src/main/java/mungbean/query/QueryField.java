@@ -26,10 +26,12 @@ import static mungbean.CollectionUtil.map;
 
 public class QueryField extends DslField implements QueryBuilder {
 	private final Query query;
+	private final Map<String, Object> orderMap;
 
-	QueryField(Query query, Map<String, Object> result, String key) {
+	QueryField(Query query, Map<String, Object> result, Map<String, Object> orderMap, String key) {
 		super(key, result);
 		this.query = query;
+		this.orderMap = orderMap;
 	}
 
 	public QueryField is(Object value) {
@@ -96,6 +98,16 @@ public class QueryField extends DslField implements QueryBuilder {
 		return this;
 	}
 
+	public QueryField orderAscending() {
+		orderMap.put(key(), 1D);
+		return this;
+	}
+
+	public QueryField orderDescending() {
+		orderMap.put(key(), -1D);
+		return this;
+	}
+
 	@Override
 	public int limit() {
 		return query.limit();
@@ -104,5 +116,10 @@ public class QueryField extends DslField implements QueryBuilder {
 	@Override
 	public int skip() {
 		return query.skip();
+	}
+
+	@Override
+	public Map<String, Object> order() {
+		return orderMap;
 	}
 }

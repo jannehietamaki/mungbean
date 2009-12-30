@@ -94,7 +94,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 			return execute(new DBConversation<Boolean>() {
 				@Override
 				public Boolean execute(DBConnection connection) {
-					QueryResponse<?> val = connection.execute(new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), 0, 1, true, map("ismaster", 1D), new BSONCoders(), new BSONMap()));
+					QueryResponse<?> val = connection.execute(new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), 0, 1, true, map("ismaster", 1D), null, new BSONCoders(), new BSONMap()));
 					return val.responseFlag() == 0;
 				}
 			});

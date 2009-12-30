@@ -21,11 +21,12 @@ import java.util.Map;
 
 public class Query implements QueryBuilder {
 	private final Map<String, Object> map = new LinkedHashMap<String, Object>();
+	private final Map<String, Object> orderMap = new LinkedHashMap<String, Object>();
 	private int skip;
 	private int limit;
 
 	public QueryField field(String key) {
-		return new QueryField(this, map, key);
+		return new QueryField(this, map, orderMap, key);
 	}
 
 	public void setSkip(int skip) {
@@ -38,6 +39,11 @@ public class Query implements QueryBuilder {
 
 	public Map<String, Object> build() {
 		return map;
+	}
+
+	@Override
+	public Map<String, Object> order() {
+		return orderMap;
 	}
 
 	public int limit() {

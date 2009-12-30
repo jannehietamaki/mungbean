@@ -16,18 +16,17 @@
 
 package mungbean.clojure;
 
+import mungbean.AbstractDatabase;
 import mungbean.DBOperationExecutor;
 
-public class ClojureDatabase {
-	private final String dbName;
-	private final DBOperationExecutor executor;
+public class ClojureDatabase extends AbstractDatabase {
 
 	public ClojureDatabase(DBOperationExecutor executor, String name) {
-		this.dbName = name;
-		this.executor = executor;
+		super(executor, name);
 	}
 
 	public ClojureDBCollection openCollection(String name) {
-		return new ClojureDBCollection(executor, dbName, name);
+		return new ClojureDBCollection(executor(), dbName(), name);
 	}
+
 }

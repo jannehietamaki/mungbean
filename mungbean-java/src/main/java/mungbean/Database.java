@@ -19,24 +19,16 @@ import java.util.Map;
 
 import mungbean.pojo.PojoDBCollection;
 
-public class Database {
-	private final String dbName;
-	private final DBOperationExecutor executor;
-
+public class Database extends AbstractDatabase {
 	public Database(DBOperationExecutor executor, String name) {
-		this.dbName = name;
-		this.executor = executor;
+		super(executor, name);
 	}
 
 	public DBCollection<Map<String, Object>> openCollection(String name) {
-		return new MapDBCollection(executor, dbName, name);
+		return mapCollection(name);
 	}
 
 	public <T> DBCollection<T> openCollection(String name, Class<T> type) {
-		return new PojoDBCollection<T>(executor, dbName, name, type);
-	}
-
-	public DatabaseAdmin dbAdmin() {
-		return new DatabaseAdmin(this);
+		return new PojoDBCollection<T>(executor(), dbName(), name, type);
 	}
 }
