@@ -28,12 +28,12 @@ import jdave.junit4.JDaveRunner;
 public class KillCursorsRequestSpec extends Specification<DBTransaction<Void>> {
 	public class WithAny {
 		public DBTransaction<Void> create() {
-			return new DBTransaction<Void>(new KillCursorsRequest(123L, 125L, 120L), 129, -1);
+			return new DBTransaction<Void>(new KillCursorsRequest(123L, 125L, 120L), 129);
 		}
 
 		public void requestCanBeSerialized() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { 48, 0, 0, 0, // message_lenght
 					-127, 0, 0, 0, // requestId
 					-1, -1, -1, -1, // responseTo

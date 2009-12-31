@@ -33,12 +33,12 @@ public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
 		public DBTransaction<Void> create() {
 			Map<String, Object> selector = map("foo", "bar");
 			Map<String, Object> document = map("zoo", 5);
-			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new MapBSONCoders(), new MapBSONCoders()), 126, -1);
+			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new MapBSONCoders(), new MapBSONCoders()), 126);
 		}
 
 		public void updateRequestCanBeSerializedToByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { 68, 0, 0, 0, // message_lenght
 					126, 0, 0, 0, // requestId
 					-1, -1, -1, -1, // responseTo

@@ -30,12 +30,12 @@ import jdave.junit4.JDaveRunner;
 public class GetMoreRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
 	public class WithValidRequest {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(new GetMoreRequest<Map<String, Object>>("foozbar.foo", 123123L, 0, new BSONMap()), 127, -1);
+			return new DBTransaction<QueryResponse<Map<String, Object>>>(new GetMoreRequest<Map<String, Object>>("foozbar.foo", 123123L, 0, new BSONMap()), 127);
 		}
 
 		public void requestCanBeSerialized() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { 44, 0, 0, 0, // message_lenght
 					127, 0, 0, 0, // requestId
 					-1, -1, -1, -1, // responseTo

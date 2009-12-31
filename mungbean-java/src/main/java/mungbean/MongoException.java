@@ -37,4 +37,10 @@ public class MongoException extends RuntimeException {
 		this(message + ": " + response.toString());
 	}
 
+	public static MongoException forResponse(Map<String, Object> message) {
+		if ("unauthorized".equals(message.get("err"))) {
+			throw new MongoException("Not authorized", message);
+		}
+		throw new MongoException("Operation failed", message);
+	}
 }

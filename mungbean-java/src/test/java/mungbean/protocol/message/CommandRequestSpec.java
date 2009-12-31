@@ -28,12 +28,12 @@ import org.junit.runner.RunWith;
 public class CommandRequestSpec extends Specification<DBTransaction<Map<String, Object>>> {
 	public class WithValidCommandQuery {
 		public DBTransaction<Map<String, Object>> create() {
-			return new DBTransaction<Map<String, Object>>(new CommandRequest("foobar", "getlasterror"), 123, -1);
+			return new DBTransaction<Map<String, Object>>(new CommandRequest("foobar", "getlasterror"), 123);
 		}
 
 		public void commandQueryCanBeSerialized() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { 67, 0, 0, 0, // message_lenght
 					123, 0, 0, 0, // requestID
 					-1, -1, -1, -1, // responseTo

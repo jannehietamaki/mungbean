@@ -36,12 +36,12 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 	public class WithoutQueryRules {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
 			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), 0, 0, true, new HashMap<String, Object>(), null, new MapBSONCoders(), new BSONMap());
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
+			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
 		}
 
 		public void messageCanBeSerializedIntoByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { //
 					45, 0, 0, 0, // message_lenght
 					124, 0, 0, 0, // requestID
@@ -60,12 +60,12 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 	public class WithQueryContaingingRules {
 		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
 			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), 0, 0, false, map("foo", "bar"), null, new MapBSONCoders(), new BSONMap());
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124, -1);
+			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
 		}
 
 		public void messageCanBeSerializedIntoByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { 58, 0, 0, 0, // messageLength
 					124, 0, 0, 0, // requestID
 					-1, -1, -1, -1, // responseTo

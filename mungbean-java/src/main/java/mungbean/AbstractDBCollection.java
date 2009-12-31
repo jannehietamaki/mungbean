@@ -197,7 +197,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 			T value = doExecute(connection);
 			Map<String, Object> message = executeCommand(new LastError(), connection);
 			if (message.get("err") != null) {
-				throw new MongoException("Operation failed", message);
+				throw MongoException.forResponse(message);
 			}
 			return value;
 		}

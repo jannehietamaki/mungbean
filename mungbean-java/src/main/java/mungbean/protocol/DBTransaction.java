@@ -19,24 +19,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import mungbean.MongoException;
 import mungbean.protocol.message.MongoRequest;
+import mungbean.protocol.message.QueryResponse;
 
 public class DBTransaction<T> {
 	private final MongoRequest<T> message;
 	private final int requestId;
-	private final int responseTo;
+	private final int responseTo = -1;
 
-	public DBTransaction(MongoRequest<T> message, int requestId, int responseTo) {
+	public DBTransaction(MongoRequest<T> message, int requestId) {
 		this.message = message;
 		this.requestId = requestId;
-		this.responseTo = responseTo;
 	}
 
-	public void send(OutputStream output) {
+	public void sendRequest(OutputStream output) {
 		LittleEndianDataWriter writer = new LittleEndianDataWriter(output);
 		writer.writeInt(message.length() + 4 * 4);
 		writer.writeInt(requestId);
-		writer.writeInt(responseTo); // ResponseTo
+		writer.writeInt(responseTo);
 		writer.writeInt(message.type().opCode());
 		message.send(writer);
 		try {
@@ -48,6 +49,18 @@ public class DBTransaction<T> {
 
 	public T readResponse(InputStream inputStream) {
 		return message.readResponse(new LittleEndianDataReader(inputStream));
+	}
+
+	public T call(OutputStream outputStream, InputStream inputStream) {
+		sendRequest(outputStream);
+		T response = readResponse(inputStream);
+		if (response instanceof QueryResponse) {
+			QueryResponse<?> receivedResponse = (QueryResponse<?>) response;
+			if (receivedResponse.responseTo() != requestId) {
+				throw new MongoException("Received response to unexpected request " + requestId + "!=" + receivedResponse.responseTo());
+			}
+		}
+		return response;
 	}
 
 }

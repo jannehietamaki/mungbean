@@ -58,12 +58,11 @@ public class DBConnection {
 
 	public <T> T execute(MongoRequest<T> message) {
 		try {
-			DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter(), -1);
-			transaction.send(outputStream);
-			return transaction.readResponse(inputStream);
+			DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter());
+			return transaction.call(outputStream, inputStream);
 		} catch (Exception e) {
-			// TODO We should probably close this connection as it's state is
-			// not known?
+			// TODO We should probably close this connection as it's state might
+			// be wrong
 			throw new MongoException("Error communicating with server", e, message);
 		}
 	}

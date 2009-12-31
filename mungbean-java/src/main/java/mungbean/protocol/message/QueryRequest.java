@@ -63,7 +63,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 
 	@Override
 	public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
-		return new QueryResponse<ResponseType>(reader, coder);
+		return new QueryResponse<ResponseType>(reader, coder);		
 	}
 
 	@Override

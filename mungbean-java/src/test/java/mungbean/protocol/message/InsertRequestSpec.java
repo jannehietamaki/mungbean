@@ -33,12 +33,12 @@ public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest
 		@SuppressWarnings("unchecked")
 		public DBTransaction<Void> create() {
 			InsertRequest<Map<String, Object>> message = new InsertRequest<Map<String, Object>>("foozbar.foo", new MapBSONCoders(), map("foo", "bar"));
-			return new DBTransaction<Void>(message, 123, -1);
+			return new DBTransaction<Void>(message, 123);
 		}
 
 		public void messageCanBeSerializedIntoByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.send(output);
+			context.sendRequest(output);
 			specify(output.toByteArray(), does.containExactly(new byte[] { 
 					50, 0, 0, 0, // message_lenght
 					123, 0, 0, 0, // requestId
