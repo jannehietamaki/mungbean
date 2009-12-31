@@ -32,7 +32,7 @@ public class CommandRequest extends MongoRequest<Map<String, Object>> {
 	private final QueryRequest<Map<String, Object>> query;
 
 	public CommandRequest(String dbName, Map<String, Object> content) {
-		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);
+		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);		
 	}
 
 	public CommandRequest(String dbName, String command) {

@@ -16,6 +16,8 @@
 
 package mungbean;
 
+import java.util.Map;
+
 import mungbean.protocol.message.MongoRequest;
 
 public class MongoException extends RuntimeException {
@@ -23,12 +25,16 @@ public class MongoException extends RuntimeException {
 		super(message);
 	}
 
-	public MongoException(String message, Throwable reason) {
+	private MongoException(String message, Throwable reason) {
 		super(message, reason);
 	}
 
 	public MongoException(String message, Throwable reason, MongoRequest<?> request) {
 		this(message + request.debugInfo(), reason);
+	}
+
+	public MongoException(String message, Map<String, Object> response) {
+		this(message + ": " + response.toString());
 	}
 
 }

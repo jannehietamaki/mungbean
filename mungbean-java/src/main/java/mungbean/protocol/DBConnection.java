@@ -22,13 +22,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.LinkedHashMap;
-import static mungbean.Md5.md5;
 
 import mungbean.Authentication;
 import mungbean.MongoException;
 import mungbean.Server;
-import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.MongoRequest;
 
 public class DBConnection {
@@ -46,23 +43,11 @@ public class DBConnection {
 			inputStream = new BufferedInputStream(socket.getInputStream());
 			outputStream = new BufferedOutputStream(socket.getOutputStream());
 			for (Authentication authentication : server.authentication()) {
-				authenticate(authentication);
+				authentication.authenticate(this);
 			}
 		} catch (IOException e) {
 			throw new RuntimeIOException(e);
 		}
-	}
-
-	private void authenticate(final Authentication authentication) {
-		final String nonce = (String) execute(new CommandRequest(authentication.database(), "getnonce")).get("nonce");
-		execute(new CommandRequest(authentication.database(), new LinkedHashMap<String, Object>() {
-			{
-				put("authenticate", 1D);
-				put("user", authentication.user());
-				put("nonce", nonce);
-				put("key", md5(nonce + authentication.user() + md5(authentication.user() + ":mongo:" + authentication.password())));
-			}
-		}));
 	}
 
 	public DBConnection(InputStream input, OutputStream output) {

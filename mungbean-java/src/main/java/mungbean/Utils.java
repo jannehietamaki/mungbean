@@ -25,8 +25,8 @@ public class Utils {
 	public static String toHex(byte[] content) {
 		StringBuilder hexString = new StringBuilder();
 		for (byte b : content) {
-			hexString.append(Integer.toHexString(0xFF & b));
+			hexString.append(String.format("%02x", (0xFF & b)));
 		}
-		return hexString.toString().toUpperCase();
+		return hexString.toString().toLowerCase();
 	}
 }

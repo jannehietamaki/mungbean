@@ -22,12 +22,12 @@ import java.util.Map;
 
 import mungbean.DBCollection;
 
-public class LastError extends Command<String> {
+public class LastError extends Command<Map<String, Object>> {
 	private final Map<String, Object> parameters = map("getlasterror", 1D);
 
 	@Override
-	public String parseResponse(Map<String, Object> values) {
-		return (String) values.get("err");
+	public Map<String, Object> parseResponse(Map<String, Object> values) {
+		return values;
 	}
 
 	@Override

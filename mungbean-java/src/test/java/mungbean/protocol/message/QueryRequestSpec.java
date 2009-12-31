@@ -42,7 +42,8 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 		public void messageCanBeSerializedIntoByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			context.send(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 45, 0, 0, 0, // message_lenght
+			specify(output.toByteArray(), does.containExactly(new byte[] { //
+					45, 0, 0, 0, // message_lenght
 					124, 0, 0, 0, // requestID
 					-1, -1, -1, -1, // responseTo
 					-44, 7, 0, 0, // opCode

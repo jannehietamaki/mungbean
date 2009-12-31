@@ -186,7 +186,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 			throw new NotFoundException("Value not returned for command: " + command);
 		}
 		if (!response.get("ok").equals(1D)) {
-			throw new RuntimeException(response.get("errmsg") + ": " + response.get("bad cmd"));
+			throw new MongoException("Command execution failed", response);
 		}
 		return command.parseResponse(response);
 	}
@@ -195,12 +195,9 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		@Override
 		public final T execute(DBConnection connection) {
 			T value = doExecute(connection);
-			String message = executeCommand(new LastError(), connection);
-			if (message != null) {
-				if ("not master".equals(message)) {
-					throw new NotMasterException(message);
-				}
-				throw new MongoException(message);
+			Map<String, Object> message = executeCommand(new LastError(), connection);
+			if (message.get("err") != null) {
+				throw new MongoException("Operation failed", message);
 			}
 			return value;
 		}

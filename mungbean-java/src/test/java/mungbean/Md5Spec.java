@@ -25,7 +25,7 @@ import jdave.junit4.JDaveRunner;
 public class Md5Spec extends Specification<Md5> {
 	public class WithMd5Helper {
 		public void Md5HexStringCanBeGenerated() {
-			specify(Md5.md5("foobar"), does.equal("3858F62230AC3C915F30C664312C63F"));
+			specify(Md5.md5("foobar"), does.equal("3858f62230ac3c915f300c664312c63f"));
 		}
 	}
 }

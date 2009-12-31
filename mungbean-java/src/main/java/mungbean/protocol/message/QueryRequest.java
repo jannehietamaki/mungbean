@@ -34,7 +34,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 	private final boolean closeCursor;
 	private final BSONCoder<ResponseType> coder;
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, Map<String, Object> order, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {		
+	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, Map<String, Object> order, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
 		super(collectionName);
 		this.builder = builder;
 		this.numberToSkip = numberToSkip;

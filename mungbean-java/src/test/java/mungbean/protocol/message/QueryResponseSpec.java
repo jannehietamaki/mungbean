@@ -29,7 +29,8 @@ import org.junit.runner.RunWith;
 public class QueryResponseSpec extends Specification<QueryResponse<Map<String, Object>>> {
 	public class WithCommandResponse {
 		public QueryResponse<Map<String, Object>> create() {
-			byte[] bytes = new byte[] { 65, 0, 0, 0, // length
+			byte[] bytes = new byte[] { //
+					65, 0, 0, 0, // length
 					70, 71, 94, 07,// reqid
 					12, 34, 32, 36, // responseTo
 					01, 0, 0, 0, // opCode =OP_REPLY

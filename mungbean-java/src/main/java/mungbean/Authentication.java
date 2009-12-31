@@ -16,6 +16,14 @@
 
 package mungbean;
 
+import static mungbean.Md5.md5;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import mungbean.protocol.DBConnection;
+import mungbean.protocol.message.CommandRequest;
+
 public class Authentication {
 	private final String user;
 	private final String password;
@@ -37,5 +45,28 @@ public class Authentication {
 
 	public String password() {
 		return password;
+	}
+
+	public void authenticate(DBConnection connection) {
+		final String nonce = (String) connection.execute(new CommandRequest(database(), "getnonce")).get("nonce");
+		LinkedHashMap<String, Object> authenticationParameters = authenticationRequest(nonce);
+		Map<String, Object> value = connection.execute(new CommandRequest(database(), authenticationParameters));
+		if (!value.get("ok").equals(1D)) {
+			throw new MongoException("Authentication failed for database " + database(), value);
+		}
+	}
+
+	LinkedHashMap<String, Object> authenticationRequest(final String nonce) {
+		final String passwordHash = md5(user() + ":mongo:" + password());
+		final String source = nonce + user() + passwordHash;
+		LinkedHashMap<String, Object> authenticationParameters = new LinkedHashMap<String, Object>() {
+			{
+				put("authenticate", 1D);
+				put("user", user());
+				put("nonce", nonce);
+				put("key", md5(source));
+			}
+		};
+		return authenticationParameters;
 	}
 }

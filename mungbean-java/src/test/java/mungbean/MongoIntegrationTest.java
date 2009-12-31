@@ -43,13 +43,19 @@ public class MongoIntegrationTest extends Specification<Database> {
 		private final Map<String, Object> idQuery = map("_id", id);
 
 		private final Map<String, Object> doc = newDoc(id, "bar");
+		private final boolean authenticate = false;
 
 		public Database create() {
+			if (authenticate) {
+				return new Mungbean(new Server("localhost", 27017, new Authentication("projectx", "joe", "passwordForJoe"))).openDatabase("projectx");
+			}
 			return new Mungbean(new Server("localhost", 27017)).openDatabase(new ObjectId().toHex());
 		}
 
 		public void destroy() {
-			context.dbAdmin().dropDatabase();
+			if (!authenticate) {
+				context.dbAdmin().dropDatabase();
+			}
 		}
 
 		public void databaseTests() {
@@ -70,7 +76,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 			specify(collection.command(new Count()), does.equal(initialCount));
 		}
 
-		private void runGroup(DBCollection<Map<String, Object>> collection) {
+		public void runGroup(DBCollection<Map<String, Object>> collection) {
 			HashMap<String, Double> initialValues = new HashMap<String, Double>();
 			initialValues.put("foo", 0D);
 			List<Map<String, Object>> result = collection.command(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"));
@@ -104,7 +110,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 		}
 
 		public void updatesCanBeDoneWithTheDsl() {
-			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+			final DBCollection<Map<String, Object>> collection = context.openCollection("foo2");
 			for (int a = 0; a < 10; a++) {
 				collection.save(newDoc(new ObjectId(), a));
 			}

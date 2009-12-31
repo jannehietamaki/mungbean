@@ -27,6 +27,7 @@ public class MongoResponse {
 	public MongoResponse(LittleEndianDataReader reader) {
 		messageLength = reader.readInt();
 		requestId = reader.readInt();
+		// TODO Assert responseTo id
 		responseTo = reader.readInt();
 		opCode = RequestOpCode.forId(reader.readInt());
 	}
