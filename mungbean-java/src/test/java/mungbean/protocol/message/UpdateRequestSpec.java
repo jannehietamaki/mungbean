@@ -28,12 +28,12 @@ import mungbean.protocol.bson.MapBSONCoders;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class UpdateRequestSpec extends Specification<DBTransaction<Void>> {
+public class UpdateRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
 	public class WithValidRequest {
-		public DBTransaction<Void> create() {
+		public DBTransaction<NoResponseExpected> create() {
 			Map<String, Object> selector = map("foo", "bar");
 			Map<String, Object> document = map("zoo", 5);
-			return new DBTransaction<Void>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new MapBSONCoders(), new MapBSONCoders()), 126);
+			return new DBTransaction<NoResponseExpected>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new MapBSONCoders(), new MapBSONCoders()), 126);
 		}
 
 		public void updateRequestCanBeSerializedToByteStream() {

@@ -15,11 +15,10 @@
  */
 package mungbean;
 
-import java.util.Map;
-
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.RuntimeIOException;
 import mungbean.protocol.message.CommandRequest;
+import mungbean.protocol.message.CommandResponse;
 
 public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements DBOperationExecutor {
 	private boolean shuttingDown = false;
@@ -86,8 +85,8 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 			return execute(new DBConversation<Boolean>() {
 				@Override
 				public Boolean execute(DBConnection connection) {
-					Map<String, Object> response = connection.execute(new CommandRequest("$cmd", "ismaster"));
-					return ((Number) response.get("ismaster")).intValue() == 1;
+					CommandResponse response = connection.execute(new CommandRequest("$cmd", "ismaster"));
+					return response.getLong("ismaster") == 1;
 				}
 			});
 		} catch (RuntimeIOException e) {

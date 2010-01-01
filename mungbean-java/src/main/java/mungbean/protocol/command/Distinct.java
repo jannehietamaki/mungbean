@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.protocol.message.CommandResponse;
 import mungbean.query.QueryBuilder;
 
 public class Distinct extends AbstractCommand<List<Object>> {
@@ -45,7 +46,7 @@ public class Distinct extends AbstractCommand<List<Object>> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> parseResponse(Map<String, Object> values) {
+	public List<Object> parseResponse(CommandResponse values) {
 		return (List<Object>) values.get("values");
 	}
 

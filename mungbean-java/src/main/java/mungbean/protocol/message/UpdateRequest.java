@@ -22,7 +22,7 @@ import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 
-public class UpdateRequest<Type> extends CollectionRequest<Void> {
+public class UpdateRequest<Type> extends CollectionRequest<NoResponseExpected> {
 	private final UpdateOptionsBuilder flags;
 	private final BSON selector;
 	private final BSON updates;
@@ -40,8 +40,8 @@ public class UpdateRequest<Type> extends CollectionRequest<Void> {
 	}
 
 	@Override
-	public Void readResponse(LittleEndianDataReader reader) {
-		return null;
+	public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+		return new NoResponseExpected();
 	}
 
 	@Override

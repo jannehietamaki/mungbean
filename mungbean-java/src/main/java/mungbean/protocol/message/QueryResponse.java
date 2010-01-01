@@ -23,7 +23,7 @@ import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.MapBSONCoders;
 
-public class QueryResponse<ResponseType> extends MongoResponse {
+public class QueryResponse<ResponseType> extends MongoResponse implements Response {
 	private static final AbstractBSONCoders BSON = new MapBSONCoders();
 	private final int responseFlag;
 	private final long cursorId;

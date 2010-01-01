@@ -28,10 +28,10 @@ import mungbean.protocol.bson.MapBSONCoders;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class DeleteRequestSpec extends Specification<DBTransaction<Void>> {
+public class DeleteRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
 	public class WithAny {
-		public DBTransaction<Void> create() {
-			return new DBTransaction<Void>(new DeleteRequest("foozbar.foo", new MapBSONCoders(), map("_id", new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }))), 123);
+		public DBTransaction<NoResponseExpected> create() {
+			return new DBTransaction<NoResponseExpected>(new DeleteRequest("foozbar.foo", new MapBSONCoders(), map("_id", new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }))), 123);
 		}
 
 		public void deleteRequestCanBeSerializedToByteStream() {

@@ -19,6 +19,7 @@ package mungbean.protocol.command;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.protocol.message.CommandResponse;
 
 public abstract class AbstractCommand<ResponseType> {
 	public abstract Map<String, Object> requestMap(DBCollection<?> collection);
@@ -26,7 +27,7 @@ public abstract class AbstractCommand<ResponseType> {
 	/**
 	 * @param values
 	 */
-	public ResponseType parseResponse(Map<String, Object> values) {
+	public ResponseType parseResponse(CommandResponse values) {
 		return null;
 	}
 

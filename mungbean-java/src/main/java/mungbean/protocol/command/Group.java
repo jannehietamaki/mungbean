@@ -22,6 +22,7 @@ import java.util.Map;
 
 import mungbean.DBCollection;
 import mungbean.protocol.bson.Code;
+import mungbean.protocol.message.CommandResponse;
 
 public class Group extends AbstractCommand<List<Map<String, Object>>> {
 	private final String[] keys;
@@ -55,7 +56,7 @@ public class Group extends AbstractCommand<List<Map<String, Object>>> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Map<String, Object>> parseResponse(Map<String, Object> values) {
+	public List<Map<String, Object>> parseResponse(CommandResponse values) {
 		return (List<Map<String, Object>>) values.get("retval");
 	}
 

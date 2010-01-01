@@ -25,10 +25,10 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 
 @RunWith(JDaveRunner.class)
-public class KillCursorsRequestSpec extends Specification<DBTransaction<Void>> {
+public class KillCursorsRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
 	public class WithAny {
-		public DBTransaction<Void> create() {
-			return new DBTransaction<Void>(new KillCursorsRequest(123L, 125L, 120L), 129);
+		public DBTransaction<NoResponseExpected> create() {
+			return new DBTransaction<NoResponseExpected>(new KillCursorsRequest(123L, 125L, 120L), 129);
 		}
 
 		public void requestCanBeSerialized() {

@@ -21,13 +21,14 @@ import static mungbean.CollectionUtil.map;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.protocol.message.CommandResponse;
 
 public class LastError extends AbstractCommand<Map<String, Object>> {
 	private final Map<String, Object> parameters = map("getlasterror", 1D);
 
 	@Override
-	public Map<String, Object> parseResponse(Map<String, Object> values) {
-		return values;
+	public Map<String, Object> parseResponse(CommandResponse response) {
+		return response.values();
 	}
 
 	@Override

@@ -17,6 +17,7 @@ package mungbean.protocol.message;
 
 import static mungbean.CollectionUtil.map;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,14 +26,14 @@ import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.protocol.bson.BSONMap;
 
-public class CommandRequest extends MongoRequest<Map<String, Object>> {
+public class CommandRequest extends MongoRequest<CommandResponse> {
 
 	private static final BSONMap RESPONSE_CODER = new BSONMap();
 	private static final MapBSONCoders CODERS = new MapBSONCoders();
 	private final QueryRequest<Map<String, Object>> query;
 
 	public CommandRequest(String dbName, Map<String, Object> content) {
-		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);		
+		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);
 	}
 
 	public CommandRequest(String dbName, String command) {
@@ -50,12 +51,12 @@ public class CommandRequest extends MongoRequest<Map<String, Object>> {
 	}
 
 	@Override
-	public Map<String, Object> readResponse(LittleEndianDataReader reader) {
+	public CommandResponse readResponse(LittleEndianDataReader reader) {
 		List<Map<String, Object>> values = query.readResponse(reader).values();
 		if (values.isEmpty()) {
-			return null;
+			return new CommandResponse(new HashMap<String, Object>());
 		}
-		return values.get(0);
+		return new CommandResponse(values.get(0));
 	}
 
 	@Override

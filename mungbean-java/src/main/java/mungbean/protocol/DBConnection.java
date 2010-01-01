@@ -27,6 +27,7 @@ import mungbean.Authentication;
 import mungbean.MongoException;
 import mungbean.Server;
 import mungbean.protocol.message.MongoRequest;
+import mungbean.protocol.message.Response;
 
 public class DBConnection {
 
@@ -56,7 +57,7 @@ public class DBConnection {
 		this.socket = null;
 	}
 
-	public <T> T execute(MongoRequest<T> message) {
+	public <T extends Response> T execute(MongoRequest<T> message) {
 		try {
 			DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter());
 			return transaction.call(outputStream, inputStream);

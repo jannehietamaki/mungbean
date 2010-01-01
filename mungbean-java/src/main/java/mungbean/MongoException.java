@@ -18,6 +18,7 @@ package mungbean;
 
 import java.util.Map;
 
+import mungbean.protocol.message.CommandResponse;
 import mungbean.protocol.message.MongoRequest;
 
 public class MongoException extends RuntimeException {
@@ -34,6 +35,10 @@ public class MongoException extends RuntimeException {
 	}
 
 	public MongoException(String message, Map<String, Object> response) {
+		this(message + ": " + response.toString());
+	}
+
+	public MongoException(String message, CommandResponse response) {
 		this(message + ": " + response.toString());
 	}
 

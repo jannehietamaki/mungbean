@@ -9,7 +9,7 @@ import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 import mungbean.protocol.bson.BSONCoder;
 
-public class InsertRequest<Type> extends CollectionRequest<Void> {
+public class InsertRequest<Type> extends CollectionRequest<NoResponseExpected> {
 	private final List<BSON> documents = new ArrayList<BSON>();
 
 	public InsertRequest(String collectionName, AbstractBSONCoders coders, Type... documents) {
@@ -44,7 +44,7 @@ public class InsertRequest<Type> extends CollectionRequest<Void> {
 	}
 
 	@Override
-	public Void readResponse(LittleEndianDataReader reader) {
-		return null;
+	public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+		return new NoResponseExpected();
 	}
 }

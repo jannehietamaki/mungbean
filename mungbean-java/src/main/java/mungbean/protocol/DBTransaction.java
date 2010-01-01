@@ -21,9 +21,9 @@ import java.io.OutputStream;
 
 import mungbean.MongoException;
 import mungbean.protocol.message.MongoRequest;
-import mungbean.protocol.message.QueryResponse;
+import mungbean.protocol.message.Response;
 
-public class DBTransaction<T> {
+public class DBTransaction<T extends Response> {
 	private final MongoRequest<T> message;
 	private final int requestId;
 	private final int responseTo = -1;
@@ -54,13 +54,17 @@ public class DBTransaction<T> {
 	public T call(OutputStream outputStream, InputStream inputStream) {
 		sendRequest(outputStream);
 		T response = readResponse(inputStream);
-		if (response instanceof QueryResponse) {
-			QueryResponse<?> receivedResponse = (QueryResponse<?>) response;
-			if (receivedResponse.responseTo() != requestId) {
-				throw new MongoException("Received response to unexpected request " + requestId + "!=" + receivedResponse.responseTo());
+		validateResponse(response);
+		return response;
+	}
+
+	private void validateResponse(T response) {
+		int responseId = response.responseTo();
+		if (responseId != -1) {
+			if (responseId != requestId) {
+				throw new MongoException("Received response to unexpected request " + requestId + "!=" + responseId);
 			}
 		}
-		return response;
 	}
 
 }

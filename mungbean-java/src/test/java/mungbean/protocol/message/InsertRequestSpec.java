@@ -28,12 +28,12 @@ import mungbean.protocol.bson.MapBSONCoders;
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class InsertRequestSpec extends Specification<DBTransaction<InsertRequest<Map<String, Object>>>> {
+public class InsertRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
 	public class WithValidRequest {
 		@SuppressWarnings("unchecked")
-		public DBTransaction<Void> create() {
+		public DBTransaction<NoResponseExpected> create() {
 			InsertRequest<Map<String, Object>> message = new InsertRequest<Map<String, Object>>("foozbar.foo", new MapBSONCoders(), map("foo", "bar"));
-			return new DBTransaction<Void>(message, 123);
+			return new DBTransaction<NoResponseExpected>(message, 123);
 		}
 
 		public void messageCanBeSerializedIntoByteStream() {

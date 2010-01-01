@@ -22,7 +22,7 @@ import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 
-public class DeleteRequest extends CollectionRequest<Void> {
+public class DeleteRequest extends CollectionRequest<NoResponseExpected> {
 	private final BSON query;
 
 	public DeleteRequest(String collectionName, AbstractBSONCoders coders, Map<String, Object> query) {
@@ -36,8 +36,8 @@ public class DeleteRequest extends CollectionRequest<Void> {
 	}
 
 	@Override
-	public Void readResponse(LittleEndianDataReader reader) {
-		return null;
+	public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+		return new NoResponseExpected();
 	}
 
 	@Override

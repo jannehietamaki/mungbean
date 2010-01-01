@@ -17,7 +17,7 @@ package mungbean.protocol.message;
 
 import mungbean.protocol.LittleEndianDataReader;
 
-public class MongoResponse {
+public abstract class MongoResponse {
 
 	private final int messageLength;
 	private final int requestId;

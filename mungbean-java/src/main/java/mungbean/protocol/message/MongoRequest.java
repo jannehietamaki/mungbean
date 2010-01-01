@@ -21,7 +21,7 @@ import sun.misc.HexDumpEncoder;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
-public abstract class MongoRequest<ResponseType> {
+public abstract class MongoRequest<ResponseType extends Response> {
 
 	public abstract void send(LittleEndianDataWriter writer);
 

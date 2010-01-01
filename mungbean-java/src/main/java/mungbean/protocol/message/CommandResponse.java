@@ -13,23 +13,32 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
 package mungbean.protocol.message;
 
-import mungbean.Utils;
-import mungbean.protocol.LittleEndianDataWriter;
+import java.util.Map;
 
-public abstract class CollectionRequest<ReturnType extends Response> extends MongoRequest<ReturnType> {
-	private final String collectionName;
+public class CommandResponse implements Response {
+	private final Map<String, Object> map;
 
-	public CollectionRequest(String collectionName) {
-		this.collectionName = collectionName;
+	public CommandResponse(Map<String, Object> map) {
+		this.map = map;
 	}
 
-	protected int collectionNameLength() {
-		return 1 + collectionName.getBytes(Utils.UTF8).length;
+	public Long getLong(String key) {
+		return ((Number) get(key)).longValue();
 	}
 
-	protected void writeCollectionName(LittleEndianDataWriter writer) {
-		writer.writeCString(collectionName);
+	public Object get(String key) {
+		return map.get(key);
+	}
+
+	public Map<String, Object> values() {
+		return map;
+	}
+
+	@Override
+	public int responseTo() {
+		return -1;
 	}
 }

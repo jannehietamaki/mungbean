@@ -19,10 +19,10 @@ package mungbean;
 import static mungbean.Md5.md5;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.message.CommandRequest;
+import mungbean.protocol.message.CommandResponse;
 
 public class Authentication {
 	private final String user;
@@ -50,7 +50,7 @@ public class Authentication {
 	public void authenticate(DBConnection connection) {
 		final String nonce = (String) connection.execute(new CommandRequest(database(), "getnonce")).get("nonce");
 		LinkedHashMap<String, Object> authenticationParameters = authenticationRequest(nonce);
-		Map<String, Object> value = connection.execute(new CommandRequest(database(), authenticationParameters));
+		CommandResponse value = connection.execute(new CommandRequest(database(), authenticationParameters));
 		if (!value.get("ok").equals(1D)) {
 			throw new MongoException("Authentication failed for database " + database(), value);
 		}

@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.protocol.message.CommandResponse;
 import mungbean.query.QueryBuilder;
 
 public class Count extends AbstractCommand<Long> {
@@ -39,8 +40,8 @@ public class Count extends AbstractCommand<Long> {
 	}
 
 	@Override
-	public Long parseResponse(Map<String, Object> values) {
-		return ((Double) values.get("n")).longValue();
+	public Long parseResponse(CommandResponse values) {
+		return values.getLong("n");
 	}
 
 	@Override
