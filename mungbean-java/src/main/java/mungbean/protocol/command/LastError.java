@@ -31,7 +31,7 @@ public class LastError extends AbstractCommand<Map<String, Object>> {
 	}
 
 	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		return parameters;
 	}
 }

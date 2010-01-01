@@ -21,7 +21,13 @@ import java.util.Map;
 import mungbean.DBCollection;
 
 public abstract class AbstractCommand<ResponseType> {
-	public abstract Map<String, Object> toMap(DBCollection<?> collection);
+	public abstract Map<String, Object> requestMap(DBCollection<?> collection);
 
-	public abstract ResponseType parseResponse(Map<String, Object> values);
+	/**
+	 * @param values
+	 */
+	public ResponseType parseResponse(Map<String, Object> values) {
+		return null;
+	}
+
 }

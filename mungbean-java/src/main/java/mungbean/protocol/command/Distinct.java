@@ -50,7 +50,7 @@ public class Distinct extends AbstractCommand<List<Object>> {
 	}
 
 	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("distinct", collection.collectionName());
 		map.put("key", field);

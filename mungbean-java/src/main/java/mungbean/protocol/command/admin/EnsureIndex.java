@@ -31,14 +31,9 @@ public class EnsureIndex extends AbstractCommand<Void> {
 		this.fields = fields;
 		this.builder = builder;
 	}
-
+	
 	@Override
-	public Void parseResponse(Map<String, Object> values) {
-		return null;
-	}
-
-	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.putAll(toMap());
 		map.putAll(builder.build());

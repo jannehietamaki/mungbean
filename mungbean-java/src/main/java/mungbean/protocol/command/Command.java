@@ -30,12 +30,7 @@ public class Command extends AbstractCommand<Void> {
 	}
 
 	@Override
-	public Void parseResponse(Map<String, Object> values) {
-		return null;
-	}
-
-	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		return map(command, 1D);
 	}
 }

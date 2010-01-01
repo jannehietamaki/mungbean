@@ -44,7 +44,7 @@ public class Count extends AbstractCommand<Long> {
 	}
 
 	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("count", collection.collectionName());
 		map.put("query", query);

@@ -60,7 +60,7 @@ public class Group extends AbstractCommand<List<Map<String, Object>>> {
 	}
 
 	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		Map<String, Object> group = new LinkedHashMap<String, Object>();
