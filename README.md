@@ -1,7 +1,5 @@
 Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages running on the Java Virtual Machine.
 
-**Warning, Mongbean is in alpha state, and will probably kill some kittens.**
-
 ## Language support so far
 
 ### Java
@@ -31,11 +29,10 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 * More code examples can be found [here](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/MongoIntegrationTest.java)
 
-
 #### Missing features
 
 * GridFS, cursors
-* Failover/replica pairs support is implemented but not yet ready for use
+* Failover/replica pairs support is implemented but not quite yet ready for real use.
 
 ### Clojure
 

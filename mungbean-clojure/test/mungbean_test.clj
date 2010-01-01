@@ -32,14 +32,14 @@
 (deftest generate-items-and-query
    (with-mungo "foo"
        (insert-test-data 10 "foo" "bar" "zoo")
-       (is (= 3 (count (mongo/query coll {:foo "bar"} 0 100))))
+       (is (= 3 (count (mongo/query coll :where {:foo "bar"}))))
    )
 )
 
 (deftest more-advanced-query
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)       
-       (is (= 6 (count (mongo/query coll {:foo {:$gt 2}} 0 100))))
+       (is (= 6 (count (mongo/query coll :where {:foo {:$gt 2}}))))
    )
 )
 
@@ -47,6 +47,6 @@
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)
        (mongo/update coll {} {:$inc {:foo 3}})
-       (is (= 3 (count (mongo/query coll {:foo 8} 0 100))))
+       (is (= 3 (count (mongo/query coll :where {:foo 8}))))
    )
 )
