@@ -21,7 +21,10 @@ import java.util.Map;
 import mungbean.query.Update;
 
 public class ClojureUpdate extends Update {
-	public ClojureUpdate(Map<String, Object> updates) {
+	public ClojureUpdate(Map<String, Object> updates, boolean multiple) {
 		super(updates);
+		if (multiple) {
+			options().multiUpdate();
+		}
 	}
 }

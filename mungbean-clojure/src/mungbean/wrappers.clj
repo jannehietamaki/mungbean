@@ -7,6 +7,6 @@
      (new mungbean.clojure.ClojureQuery where first items)
 )
 
-(defn wrap-update [updates]
-     (new mungbean.clojure.ClojureUpdate updates)
+(defn wrap-update [updates multiple]
+     (new mungbean.clojure.ClojureUpdate updates multiple)
 )

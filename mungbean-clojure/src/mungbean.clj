@@ -13,7 +13,7 @@
 
 (defn delete [collection id] (.delete collection id))
 
-(defnk update [collection updates :where {}] (.update collection (wrap-query where) (wrap-update updates)))
+(defnk update [collection updates :where {} :multiple false] (.update collection (wrap-query where) (wrap-update updates multiple)))
 
 (defnk query [collection :operation nil :where {} :first 0 :items 1000 :order {}]
 	(let [query (wrap-query where :first first :items items :order {})]
