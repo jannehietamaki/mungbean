@@ -23,7 +23,7 @@ import java.util.Map;
 import mungbean.DBCollection;
 import mungbean.query.QueryBuilder;
 
-public class Count extends Command<Long> {
+public class Count extends AbstractCommand<Long> {
 	private final Map<String, Object> query;
 
 	public Count() {

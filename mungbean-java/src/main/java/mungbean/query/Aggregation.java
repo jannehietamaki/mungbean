@@ -18,14 +18,14 @@ package mungbean.query;
 
 import java.util.List;
 
-import mungbean.protocol.command.Command;
+import mungbean.protocol.command.AbstractCommand;
 import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
 
 public class Aggregation<ReturnType> implements AggregationBuilder<ReturnType> {
-	private final Command<ReturnType> command;
+	private final AbstractCommand<ReturnType> command;
 
-	private Aggregation(Command<ReturnType> command) {
+	private Aggregation(AbstractCommand<ReturnType> command) {
 		this.command = command;
 	}
 
@@ -45,7 +45,7 @@ public class Aggregation<ReturnType> implements AggregationBuilder<ReturnType> {
 		return new Aggregation<Long>(new Count(query));
 	}
 
-	public Command<ReturnType> build() {
+	public AbstractCommand<ReturnType> build() {
 		return command;
 	}
 }

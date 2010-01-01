@@ -20,9 +20,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import mungbean.DBCollection;
-import mungbean.protocol.command.Command;
+import mungbean.protocol.command.AbstractCommand;
 
-public class EnsureIndex extends Command<Void> {
+public class EnsureIndex extends AbstractCommand<Void> {
 
 	private final String[] fields;
 	private final IndexOptionsBuilder builder;

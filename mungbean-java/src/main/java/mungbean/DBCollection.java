@@ -18,7 +18,7 @@ package mungbean;
 import java.util.List;
 import java.util.Map;
 
-import mungbean.protocol.command.Command;
+import mungbean.protocol.command.AbstractCommand;
 import mungbean.query.AggregationBuilder;
 import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
@@ -54,6 +54,6 @@ public interface DBCollection<T> {
 
 	void delete(Map<String, Object> query);
 
-	<ResponseType> ResponseType command(Command<ResponseType> command);
+	<ResponseType> ResponseType command(AbstractCommand<ResponseType> command);
 
 }

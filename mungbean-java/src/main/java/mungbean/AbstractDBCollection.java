@@ -24,7 +24,7 @@ import java.util.Map;
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
-import mungbean.protocol.command.Command;
+import mungbean.protocol.command.AbstractCommand;
 import mungbean.protocol.command.LastError;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.DeleteRequest;
@@ -171,7 +171,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	@Override
-	public <ResponseType> ResponseType command(final Command<ResponseType> command) {
+	public <ResponseType> ResponseType command(final AbstractCommand<ResponseType> command) {
 		return executeWrite(new DBConversation<ResponseType>() {
 			@Override
 			public ResponseType execute(DBConnection connection) {
@@ -180,7 +180,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		});
 	}
 
-	private <ResponseType> ResponseType executeCommand(Command<ResponseType> command, DBConnection connection) {
+	private <ResponseType> ResponseType executeCommand(AbstractCommand<ResponseType> command, DBConnection connection) {
 		Map<String, Object> response = connection.execute(new CommandRequest(dbName, command.toMap(AbstractDBCollection.this)));
 		if (response == null) {
 			throw new NotFoundException("Value not returned for command: " + command);

@@ -22,7 +22,7 @@ import java.util.Map;
 
 import mungbean.DBCollection;
 
-public class LastError extends Command<Map<String, Object>> {
+public class LastError extends AbstractCommand<Map<String, Object>> {
 	private final Map<String, Object> parameters = map("getlasterror", 1D);
 
 	@Override

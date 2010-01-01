@@ -23,7 +23,7 @@ import java.util.Map;
 import mungbean.DBCollection;
 import mungbean.protocol.bson.Code;
 
-public class Group extends Command<List<Map<String, Object>>> {
+public class Group extends AbstractCommand<List<Map<String, Object>>> {
 	private final String[] keys;
 	private final Map<String, Double> initialValues;
 	private Map<String, Object> query = null;

@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import mungbean.protocol.command.DummyCommand;
+import mungbean.protocol.command.Command;
 import mungbean.query.Query;
 
 public class DatabaseAdmin {
@@ -32,7 +32,7 @@ public class DatabaseAdmin {
 	}
 
 	public void dropDatabase() {
-		database.mapCollection("$cmd").command(new DummyCommand("dropDatabase"));
+		database.mapCollection("$cmd").command(new Command("dropDatabase"));
 	}
 
 	public Collection<String> getCollectionNames() {

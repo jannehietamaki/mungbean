@@ -16,26 +16,12 @@
 
 package mungbean.protocol.command;
 
-import static mungbean.CollectionUtil.map;
-
 import java.util.Map;
 
 import mungbean.DBCollection;
 
-public class DummyCommand extends Command<Void> {
-	private final String command;
+public abstract class AbstractCommand<ResponseType> {
+	public abstract Map<String, Object> toMap(DBCollection<?> collection);
 
-	public DummyCommand(String command) {
-		this.command = command;
-	}
-
-	@Override
-	public Void parseResponse(Map<String, Object> values) {
-		return null;
-	}
-
-	@Override
-	public Map<String, Object> toMap(DBCollection<?> collection) {
-		return map(command, 1D);
-	}
+	public abstract ResponseType parseResponse(Map<String, Object> values);
 }

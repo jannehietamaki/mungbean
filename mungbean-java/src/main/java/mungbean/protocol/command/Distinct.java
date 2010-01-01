@@ -24,7 +24,7 @@ import java.util.Map;
 import mungbean.DBCollection;
 import mungbean.query.QueryBuilder;
 
-public class Distinct extends Command<List<Object>> {
+public class Distinct extends AbstractCommand<List<Object>> {
 	private final Map<String, Object> query;
 	private final String field;
 

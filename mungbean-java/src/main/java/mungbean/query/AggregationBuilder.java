@@ -16,9 +16,9 @@
 
 package mungbean.query;
 
-import mungbean.protocol.command.Command;
+import mungbean.protocol.command.AbstractCommand;
 
 public interface AggregationBuilder<ReturnType> {
-	public Command<ReturnType> build();
+	public AbstractCommand<ReturnType> build();
 
 }
