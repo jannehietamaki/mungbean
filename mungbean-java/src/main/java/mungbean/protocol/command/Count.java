@@ -16,7 +16,6 @@
 
 package mungbean.protocol.command;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,20 +23,7 @@ import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
 import mungbean.query.QueryBuilder;
 
-public class Count extends AbstractCommand<Long> {
-	private final Map<String, Object> query;
-
-	public Count() {
-		this.query = Collections.emptyMap();
-	}
-
-	public Count(Map<String, Object> query) {
-		this.query = query;
-	}
-
-	public Count(QueryBuilder query) {
-		this.query = query.build();
-	}
+public class Count extends Aggregation<Long> {
 
 	@Override
 	public Long parseResponse(CommandResponse values) {
@@ -45,10 +31,10 @@ public class Count extends AbstractCommand<Long> {
 	}
 
 	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("count", collection.collectionName());
-		map.put("query", query);
+		map.put("query", query.build());
 		return map;
 	}
 }

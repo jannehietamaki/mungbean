@@ -24,16 +24,20 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.MapBSONCoders;
+import mungbean.query.Query;
+import mungbean.query.QueryBuilder;
 
 import org.junit.runner.RunWith;
+
+import sun.misc.HexDumpEncoder;
 
 @RunWith(JDaveRunner.class)
 public class UpdateRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
 	public class WithValidRequest {
 		public DBTransaction<NoResponseExpected> create() {
-			Map<String, Object> selector = map("foo", "bar");
+			QueryBuilder selector = new Query().field("foo").is("bar");
 			Map<String, Object> document = map("zoo", 5);
-			return new DBTransaction<NoResponseExpected>(new UpdateRequest<Map<String, Object>>("foozbar.foo", new UpdateOptionsBuilder(), selector, document, new MapBSONCoders(), new MapBSONCoders()), 126);
+			return new DBTransaction<NoResponseExpected>(new UpdateRequest<Map<String, Object>>("foozbar.foo", selector, new UpdateOptionsBuilder(), document, new MapBSONCoders(), new MapBSONCoders()), 126);
 		}
 
 		public void updateRequestCanBeSerializedToByteStream() {

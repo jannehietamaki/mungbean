@@ -1,6 +1,8 @@
 (ns mungbean_test
   (:use [clojure.test])
-  (:require [mungbean :as mongo])   
+  (:require [mungbean :as mongo]
+  	        [mungbean.aggregation :as aggregation] 
+  )   
 )
 
 (declare coll)
@@ -36,6 +38,14 @@
    )
 )
 
+(deftest generate-items-and-get-count
+   (with-mungo "foo"
+       (insert-test-data 10 "foo" "bar" "zoo")
+       (is (= 3 (mongo/query coll :operation (aggregation/get-count) :where {:foo "bar"})))
+   )
+)
+
+
 (deftest more-advanced-query
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)       
@@ -46,7 +56,7 @@
 (deftest update-in-place
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)
-       (mongo/update coll {} {:$inc {:foo 3}})
+       (mongo/update coll {:$inc {:foo 3}})
        (is (= 3 (count (mongo/query coll :where {:foo 8}))))
    )
 )

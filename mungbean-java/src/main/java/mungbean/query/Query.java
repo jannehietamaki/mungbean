@@ -20,13 +20,25 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Query implements QueryBuilder {
-	private final Map<String, Object> map = new LinkedHashMap<String, Object>();
-	private final Map<String, Object> orderMap = new LinkedHashMap<String, Object>();
+	private final Map<String, Object> query;
+	private final Map<String, Object> orderMap;
 	private int skip;
 	private int limit;
 
+	public Query() {
+		query = new LinkedHashMap<String, Object>();
+		orderMap = new LinkedHashMap<String, Object>();
+	}
+
+	protected Query(Map<String, Object> query, int skip, int limit) {
+		this.query = query;
+		orderMap = new LinkedHashMap<String, Object>();
+		this.skip = skip;
+		this.limit = limit;
+	}
+
 	public QueryField field(String key) {
-		return new QueryField(this, map, orderMap, key);
+		return new QueryField(this, query, orderMap, key);
 	}
 
 	public Query setSkip(int skip) {
@@ -40,7 +52,7 @@ public class Query implements QueryBuilder {
 	}
 
 	public Map<String, Object> build() {
-		return map;
+		return query;
 	}
 
 	@Override

@@ -15,19 +15,18 @@
  */
 package mungbean.protocol.message;
 
-import java.util.Map;
-
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
+import mungbean.query.QueryBuilder;
 
 public class DeleteRequest extends CollectionRequest<NoResponseExpected> {
 	private final BSON query;
 
-	public DeleteRequest(String collectionName, AbstractBSONCoders coders, Map<String, Object> query) {
+	public DeleteRequest(String collectionName, AbstractBSONCoders coders, QueryBuilder query) {
 		super(collectionName);
-		this.query = coders.forValue(query).write(coders, query);
+		this.query = coders.forValue(query.build()).write(coders, query.build());
 	}
 
 	@Override

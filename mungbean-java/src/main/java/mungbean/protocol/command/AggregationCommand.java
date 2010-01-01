@@ -20,9 +20,25 @@ import java.util.Map;
 
 import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
+import mungbean.query.QueryBuilder;
 
-public abstract class AbstractCommand<ResponseType> {
-	public abstract Map<String, Object> requestMap(DBCollection<?> collection);
+public class AggregationCommand<ResponseType> extends AbstractCommand<ResponseType> {
+	private final Aggregation<ResponseType> aggregation;
+	private final QueryBuilder query;
 
-	public abstract ResponseType parseResponse(CommandResponse values);
+	public AggregationCommand(Aggregation<ResponseType> aggregation, QueryBuilder query) {
+		this.aggregation = aggregation;
+		this.query = query;
+	}
+
+	@Override
+	public ResponseType parseResponse(CommandResponse values) {
+		return aggregation.parseResponse(values);
+	}
+
+	@Override
+	public Map<String, Object> requestMap(DBCollection<?> collection) {
+		return aggregation.requestMap(collection, query);
+	}
+
 }

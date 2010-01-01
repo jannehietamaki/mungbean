@@ -21,8 +21,10 @@ import static mungbean.CollectionUtil.map;
 import java.util.Map;
 
 import mungbean.DBCollection;
+import mungbean.protocol.message.CommandResponse;
+import mungbean.protocol.message.NoResponseExpected;
 
-public class Command extends AbstractCommand<Void> {
+public class Command extends AbstractCommand<NoResponseExpected> {
 	private final String command;
 
 	public Command(String command) {
@@ -32,5 +34,10 @@ public class Command extends AbstractCommand<Void> {
 	@Override
 	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		return map(command, 1D);
+	}
+
+	@Override
+	public NoResponseExpected parseResponse(CommandResponse values) {
+		return new NoResponseExpected();
 	}
 }

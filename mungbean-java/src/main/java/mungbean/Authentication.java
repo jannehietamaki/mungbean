@@ -50,7 +50,7 @@ public class Authentication {
 	public void authenticate(DBConnection connection) {
 		final String nonce = (String) connection.execute(new CommandRequest(database(), "getnonce")).get("nonce");
 		LinkedHashMap<String, Object> authenticationParameters = authenticationRequest(nonce);
-		CommandResponse value = connection.execute(new CommandRequest(database(), authenticationParameters));
+		CommandResponse value = connection.execute(new CommandRequest(database(), authenticationParameters, CommandRequest.DEFAULT_CODERS));
 		if (!value.get("ok").equals(1D)) {
 			throw new MongoException("Authentication failed for database " + database(), value);
 		}

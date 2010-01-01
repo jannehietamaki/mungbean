@@ -24,6 +24,7 @@ import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.BSONMap;
+import mungbean.query.QueryBuilder;
 
 public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<ResponseType>> {
 
@@ -34,13 +35,23 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 	private final boolean closeCursor;
 	private final BSONCoder<ResponseType> coder;
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, int numberToSkip, int numberToReturn, boolean closeCursor, Map<String, Object> query, Map<String, Object> order, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+	public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, boolean closeCursor, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
 		super(collectionName);
 		this.builder = builder;
-		this.numberToSkip = numberToSkip;
-		this.numberToReturn = Math.abs(numberToReturn);
+		this.numberToSkip = query.skip();
+		this.numberToReturn = query.limit();
 		this.closeCursor = closeCursor;
-		this.query = buildQuery(coders, query, order);
+		this.query = buildQuery(coders, query.build(), query.order());
+		this.coder = coder;
+	}
+
+	public QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+		super(collectionName);
+		this.builder = builder;
+		this.numberToSkip = 0;
+		this.numberToReturn = 1;
+		this.closeCursor = true;
+		this.query = buildQuery(coders, params, orders);
 		this.coder = coder;
 	}
 
@@ -63,7 +74,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 
 	@Override
 	public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
-		return new QueryResponse<ResponseType>(reader, coder);		
+		return new QueryResponse<ResponseType>(reader, coder);
 	}
 
 	@Override

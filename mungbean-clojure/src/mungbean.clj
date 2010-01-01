@@ -1,6 +1,9 @@
-(ns mungbean
-	(:use clojure.contrib.def)
+(ns mungbean 
+	(:use [clojure.contrib.def :only [defnk]]
+	      [mungbean.wrappers :only [wrap-query wrap-update]]
+	)
 )
+            
 
 (defnk get-db [name :host "localhost" :port 27017] (.openDatabase (new mungbean.clojure.ClojureMungbean host port) name))
 
@@ -8,12 +11,20 @@
 
 (defn insert [collection doc] (.save collection doc))
 
-(defn delete [collection query] (.delete collection query))
+(defn delete [collection id] (.delete collection id))
 
-(defn update [collection query updates] (.update collection query updates))
+(defnk update [collection updates :where {}] (.update collection (wrap-query where) (wrap-update updates)))
 
-(defnk query [collection :where {} :first 0 :items 1000] (.query collection where first items))
+(defnk query [collection :operation nil :where {} :first 0 :items 1000 :order {}]
+	(let [query (wrap-query where :first first :items items :order {})]
+    	(if-not (nil? operation)
+			(.query collection operation query)
+			(.query collection query)	
+    	)
+	)
+)
 
 (defn find-one [collection id] (.find collection id))
 
 (defn command [db cmd] (.command db cmd))
+

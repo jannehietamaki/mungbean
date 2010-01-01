@@ -15,22 +15,26 @@
  */
 package mungbean.protocol.message;
 
-import java.util.Map;
-
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSON;
+import mungbean.query.QueryBuilder;
+import mungbean.query.UpdateBuilder;
 
 public class UpdateRequest<Type> extends CollectionRequest<NoResponseExpected> {
 	private final UpdateOptionsBuilder flags;
 	private final BSON selector;
 	private final BSON updates;
 
-	public UpdateRequest(String collectionName, UpdateOptionsBuilder flags, Map<String, Object> selector, Object updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
+	public UpdateRequest(String collectionName, QueryBuilder selector, UpdateBuilder updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
+		this(collectionName, selector, updates.options(), updates.build(), coders, selectorCoders);
+	}
+
+	public UpdateRequest(String collectionName, QueryBuilder selector, UpdateOptionsBuilder updateOptions, Object updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
 		super(collectionName);
-		this.flags = flags;
-		this.selector = selectorCoders.forValue(selector).write(coders, selector);
+		this.flags = updateOptions;
+		this.selector = selectorCoders.forValue(selector.build()).write(coders, selector.build());
 		this.updates = coders.forValue(updates).write(coders, updates);
 	}
 

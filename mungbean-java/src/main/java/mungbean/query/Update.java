@@ -22,8 +22,18 @@ import java.util.Map;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 
 public class Update implements UpdateBuilder {
-	private final Map<String, Object> map = new LinkedHashMap<String, Object>();
-	private final UpdateOptionsBuilder options = new UpdateOptionsBuilder();
+	private final Map<String, Object> map;
+	private final UpdateOptionsBuilder options;
+
+	public Update() {
+		map = new LinkedHashMap<String, Object>();
+		options = new UpdateOptionsBuilder();
+	}
+
+	protected Update(Map<String, Object> updates) {
+		this.map = updates;
+		this.options = new UpdateOptionsBuilder();
+	}
 
 	public UpdateField field(String key) {
 		return new UpdateField(this, map, key);

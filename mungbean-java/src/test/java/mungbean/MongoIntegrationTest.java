@@ -29,8 +29,8 @@ import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
-import mungbean.query.Aggregation;
 import mungbean.query.Query;
+import mungbean.query.QueryBuilder;
 import mungbean.query.Update;
 
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ import org.junit.runner.RunWith;
 public class MongoIntegrationTest extends Specification<Database> {
 	public class WithDatabase {
 		final ObjectId id = new ObjectId();
-		private final Map<String, Object> idQuery = map("_id", id);
+		private final QueryBuilder idQuery = new Query().field("_id").is(id);
 
 		private final Map<String, Object> doc = newDoc(id, "bar");
 		private final boolean authenticate = false;
@@ -60,26 +60,26 @@ public class MongoIntegrationTest extends Specification<Database> {
 
 		public void databaseTests() {
 			DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-			long initialCount = collection.command(new Count());
+			long initialCount = collection.query(new Count(), new Query());
 			collection.save(doc);
 
-			List<Map<String, Object>> results = collection.query(idQuery, 0, 100);
+			List<Map<String, Object>> results = collection.query(idQuery);
 			specify(results.size(), does.equal(1));
 			specify(results.get(0).get("foo"), does.equal("bar"));
-			collection.command(new Distinct("foo")).contains("bar");
-			specify(collection.command(new Count()), does.equal(initialCount + 1));
+			collection.query(new Distinct("foo"), new Query()).contains("bar");
+			specify(collection.query(new Count(), new Query()), does.equal(initialCount + 1));
 			runGroup(collection);
-			specify(collection.command(new Count(idQuery)), does.equal(1));
+			specify(collection.query(new Count(), idQuery), does.equal(1));
 			collection.delete(idQuery);
-			specify(collection.query(idQuery, 0, 100).size(), does.equal(0));
+			specify(collection.query(idQuery).size(), does.equal(0));
 			specify(context.dbAdmin().getCollectionNames(), containsExactly("foo"));
-			specify(collection.command(new Count()), does.equal(initialCount));
+			specify(collection.query(new Count(), new Query()), does.equal(initialCount));
 		}
 
 		public void runGroup(DBCollection<Map<String, Object>> collection) {
 			HashMap<String, Double> initialValues = new HashMap<String, Double>();
 			initialValues.put("foo", 0D);
-			List<Map<String, Object>> result = collection.command(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"));
+			List<Map<String, Object>> result = collection.query(new Group(new String[] { "foo" }, initialValues, "function(obj, prev){ prev.csum=5; }"), new Query());
 			specify(result.get(0).get("csum"), does.equal(5D));
 		}
 
@@ -101,7 +101,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 				collection.save(newDoc(new ObjectId(), a));
 			}
 
-			specify(collection.query(Aggregation.distinct("foo", new Query().field("foo").greaterThan(5))), containsExactly(6, 7, 8, 9));
+			specify(collection.query(new Distinct("foo"), new Query().field("foo").greaterThan(5)), containsExactly(6, 7, 8, 9));
 
 			List<Map<String, Object>> values = collection.query(new Query().field("foo").orderDescending().greaterThan(3).lessThan(8));
 			specify(values.size(), does.equal(4));

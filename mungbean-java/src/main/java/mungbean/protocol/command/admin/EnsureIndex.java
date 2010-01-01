@@ -21,8 +21,10 @@ import java.util.Map;
 
 import mungbean.DBCollection;
 import mungbean.protocol.command.AbstractCommand;
+import mungbean.protocol.message.CommandResponse;
+import mungbean.protocol.message.NoResponseExpected;
 
-public class EnsureIndex extends AbstractCommand<Void> {
+public class EnsureIndex extends AbstractCommand<NoResponseExpected> {
 
 	private final String[] fields;
 	private final IndexOptionsBuilder builder;
@@ -31,7 +33,7 @@ public class EnsureIndex extends AbstractCommand<Void> {
 		this.fields = fields;
 		this.builder = builder;
 	}
-	
+
 	@Override
 	public Map<String, Object> requestMap(DBCollection<?> collection) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
@@ -48,6 +50,11 @@ public class EnsureIndex extends AbstractCommand<Void> {
 			value = -1D;
 		}
 		return map;
+	}
+
+	@Override
+	public NoResponseExpected parseResponse(CommandResponse values) {
+		return new NoResponseExpected();
 	}
 
 }

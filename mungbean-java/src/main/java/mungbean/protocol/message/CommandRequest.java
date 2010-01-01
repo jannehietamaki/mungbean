@@ -23,25 +23,28 @@ import java.util.Map;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
-import mungbean.protocol.bson.MapBSONCoders;
+import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONMap;
+import mungbean.protocol.bson.MapBSONCoders;
+import mungbean.query.Query;
 
 public class CommandRequest extends MongoRequest<CommandResponse> {
 
+	public static final AbstractBSONCoders DEFAULT_CODERS = new MapBSONCoders();
 	private static final BSONMap RESPONSE_CODER = new BSONMap();
-	private static final MapBSONCoders CODERS = new MapBSONCoders();
 	private final QueryRequest<Map<String, Object>> query;
 
-	public CommandRequest(String dbName, Map<String, Object> content) {
-		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), 0, 1, true, content, null, CODERS, RESPONSE_CODER);
+	public CommandRequest(String dbName, Map<String, Object> params, AbstractBSONCoders coders) {
+		HashMap<String, Object> orders = new HashMap<String, Object>();
+		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), params, orders, coders, RESPONSE_CODER);
 	}
 
 	public CommandRequest(String dbName, String command) {
-		this(dbName, map(command, 1D));
+		this(dbName, map(command, 1D), DEFAULT_CODERS);
 	}
 
 	public CommandRequest(String command) {
-		query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), 0, 1, true, map(command, 1D), null, CODERS, RESPONSE_CODER);
+		query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), new Query().setLimit(1).field(command).is(1D), true, DEFAULT_CODERS, RESPONSE_CODER);
 
 	}
 

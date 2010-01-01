@@ -15,8 +15,6 @@
  */
 package mungbean.protocol.message;
 
-import static mungbean.CollectionUtil.map;
-
 import java.io.ByteArrayOutputStream;
 
 import jdave.Specification;
@@ -24,6 +22,7 @@ import jdave.junit4.JDaveRunner;
 import mungbean.ObjectId;
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.MapBSONCoders;
+import mungbean.query.Query;
 
 import org.junit.runner.RunWith;
 
@@ -31,14 +30,13 @@ import org.junit.runner.RunWith;
 public class DeleteRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
 	public class WithAny {
 		public DBTransaction<NoResponseExpected> create() {
-			return new DBTransaction<NoResponseExpected>(new DeleteRequest("foozbar.foo", new MapBSONCoders(), map("_id", new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }))), 123);
+			return new DBTransaction<NoResponseExpected>(new DeleteRequest("foozbar.foo", new MapBSONCoders(), new Query().field("_id").is(new ObjectId(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }))), 123);
 		}
 
 		public void deleteRequestCanBeSerializedToByteStream() {
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 
-					58, 0, 0, 0, // message_lenght
+			specify(output.toByteArray(), does.containExactly(new byte[] { 58, 0, 0, 0, // message_lenght
 					123, 0, 0, 0, // requestId
 					-1, -1, -1, -1, // responseTo
 					-42, 7, 0, 0, // opCode

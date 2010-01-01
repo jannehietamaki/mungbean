@@ -16,8 +16,6 @@
 
 package mungbean;
 
-import static mungbean.CollectionUtil.map;
-
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +23,8 @@ import mungbean.protocol.DBConnection;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.command.AbstractCommand;
+import mungbean.protocol.command.Aggregation;
+import mungbean.protocol.command.AggregationCommand;
 import mungbean.protocol.command.LastError;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.CommandResponse;
@@ -34,7 +34,7 @@ import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 import mungbean.protocol.message.UpdateRequest;
-import mungbean.query.AggregationBuilder;
+import mungbean.query.Query;
 import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
@@ -79,29 +79,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
 	protected abstract T injectId(T doc);
 
-	public void update(final ObjectId id, final UpdateBuilder update) {
-		doUpdateOne(id, update.build());
-	}
-
-	public void update(final ObjectId id, final T doc) {
-		doUpdateOne(id, doc);
-	}
-
-	private void doUpdateOne(final ObjectId id, final Object update) {
-		executeWrite(new ErrorCheckingDBConversation() {
-			@Override
-			public T doExecute(DBConnection connection) {
-				connection.execute(new UpdateRequest<T>(dbName(), new UpdateOptionsBuilder(), map("_id", id), update, documentCoders, queryCoders));
-				return null;
-			};
-		});
-	}
-
-	public void delete(QueryBuilder query) {
-		delete(query.build());
-	}
-
-	public void delete(final Map<String, Object> query) {
+	public void delete(final QueryBuilder query) {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
@@ -111,44 +89,38 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 		});
 	}
 
-	public void update(QueryBuilder query, UpdateBuilder update) {
-		doUpdate(query.build(), update.build(), update.options());
-	}
-
-	public void update(Map<String, Object> query, Map<String, Object> updates) {
-		doUpdate(query, updates, new UpdateOptionsBuilder().multiUpdate());
-	}
-
-	private void doUpdate(final Map<String, Object> query, final Object updates, final UpdateOptionsBuilder updateOptions) {
+	public void update(final ObjectId id, final T doc) {
 		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
 			public T doExecute(DBConnection connection) {
-				connection.execute(new UpdateRequest<T>(dbName(), updateOptions, query, updates, documentCoders, queryCoders));
+				connection.execute(new UpdateRequest<T>(dbName(), idQuery(id), new UpdateOptionsBuilder(), doc, documentCoders, queryCoders));
 				return null;
 			};
 		});
 	}
 
-	public List<T> query(QueryBuilder query) {
-		return query(query.build(), query.order(), query.skip(), query.limit());
-	}
-
-	public List<T> query(final Map<String, Object> rules, final int first, final int items) {
-		return query(rules, null, first, items);
-	}
-
-	public List<T> query(final Map<String, Object> rules, final Map<String, Object> order, final int first, final int items) {
-		final QueryOptionsBuilder options = new QueryOptionsBuilder();
-		return execute(new DBConversation<List<T>>() {
+	public void update(final QueryBuilder query, final UpdateBuilder update) {
+		executeWrite(new ErrorCheckingDBConversation() {
 			@Override
-			public List<T> execute(DBConnection connection) {
-				return connection.execute(new QueryRequest<T>(dbName(), options, first, items, true, rules, order, queryCoders, defaultEncoder())).values();
+			public T doExecute(DBConnection connection) {
+				connection.execute(new UpdateRequest<T>(dbName(), query, update, documentCoders, queryCoders));
+				return null;
 			};
 		});
 	}
 
-	public <ResponseType> ResponseType query(AggregationBuilder<ResponseType> builder) {
-		return command(builder.build());
+	public List<T> query(final QueryBuilder query) {
+		final QueryOptionsBuilder options = new QueryOptionsBuilder();
+		return execute(new DBConversation<List<T>>() {
+			@Override
+			public List<T> execute(DBConnection connection) {
+				return connection.execute(new QueryRequest<T>(dbName(), options, query, true, queryCoders, defaultEncoder())).values();
+			};
+		});
+	}
+
+	public <ReturnType> ReturnType query(Aggregation<ReturnType> aggregation, QueryBuilder query) {
+		return command(new AggregationCommand<ReturnType>(aggregation, query));
 	}
 
 	String dbName() {
@@ -156,15 +128,15 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	public T find(final ObjectId id) {
-		List<T> results = query(idQuery(id), 0, 1);
+		List<T> results = query(idQuery(id));
 		if (results.isEmpty()) {
 			throw new NotFoundException("Item with id " + id + " was not found");
 		}
 		return results.get(0);
 	}
 
-	private Map<String, Object> idQuery(final ObjectId id) {
-		return map("_id", id);
+	private QueryBuilder idQuery(final ObjectId id) {
+		return new Query().setLimit(1).field("_id").is(id);
 	}
 
 	public void delete(ObjectId id) {
@@ -182,7 +154,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 	}
 
 	private <ResponseType> ResponseType executeCommand(AbstractCommand<ResponseType> command, DBConnection connection) {
-		CommandResponse response = connection.execute(new CommandRequest(dbName, command.requestMap(AbstractDBCollection.this)));
+		CommandResponse response = connection.execute(new CommandRequest(dbName, command.requestMap(AbstractDBCollection.this), queryCoders));
 		if (response == null) {
 			throw new NotFoundException("Value not returned for command: " + command);
 		}

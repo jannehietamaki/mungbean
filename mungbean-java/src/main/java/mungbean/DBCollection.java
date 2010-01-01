@@ -16,10 +16,9 @@
 package mungbean;
 
 import java.util.List;
-import java.util.Map;
 
 import mungbean.protocol.command.AbstractCommand;
-import mungbean.query.AggregationBuilder;
+import mungbean.protocol.command.Aggregation;
 import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
@@ -32,27 +31,17 @@ public interface DBCollection<T> {
 
 	void update(ObjectId id, T doc);
 
-	void update(ObjectId id, UpdateBuilder update);
-
-	void update(Map<String, Object> query, Map<String, Object> updates);
-
 	void update(QueryBuilder query, UpdateBuilder update);
-
-	List<T> query(Map<String, Object> rules, int first, int items);
-
-	List<T> query(Map<String, Object> rules, Map<String, Object> order, int first, int items);
 
 	List<T> query(QueryBuilder query);
 
-	<ResponseType> ResponseType query(AggregationBuilder<ResponseType> builder);
+	<ResponseType> ResponseType query(Aggregation<ResponseType> aggregation, QueryBuilder query);
 
 	T find(ObjectId id);
 
 	void delete(ObjectId id);
 
 	void delete(QueryBuilder query);
-
-	void delete(Map<String, Object> query);
 
 	<ResponseType> ResponseType command(AbstractCommand<ResponseType> command);
 

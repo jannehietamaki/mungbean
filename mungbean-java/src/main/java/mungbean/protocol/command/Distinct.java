@@ -16,7 +16,6 @@
 
 package mungbean.protocol.command;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,22 +24,10 @@ import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
 import mungbean.query.QueryBuilder;
 
-public class Distinct extends AbstractCommand<List<Object>> {
-	private final Map<String, Object> query;
+public class Distinct extends Aggregation<List<Object>> {
 	private final String field;
 
 	public Distinct(String field) {
-		this.query = Collections.emptyMap();
-		this.field = field;
-	}
-
-	public Distinct(String field, Map<String, Object> query) {
-		this.query = query;
-		this.field = field;
-	}
-
-	public Distinct(String field, QueryBuilder query) {
-		this.query = query.build();
 		this.field = field;
 	}
 
@@ -51,11 +38,11 @@ public class Distinct extends AbstractCommand<List<Object>> {
 	}
 
 	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query) {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("distinct", collection.collectionName());
 		map.put("key", field);
-		map.put("query", query);
+		map.put("query", query.build());
 		return map;
 	}
 }

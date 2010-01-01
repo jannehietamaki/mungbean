@@ -23,11 +23,11 @@ import java.util.Map;
 import mungbean.DBCollection;
 import mungbean.protocol.bson.Code;
 import mungbean.protocol.message.CommandResponse;
+import mungbean.query.QueryBuilder;
 
-public class Group extends AbstractCommand<List<Map<String, Object>>> {
+public class Group extends Aggregation<List<Map<String, Object>>> {
 	private final String[] keys;
 	private final Map<String, Double> initialValues;
-	private Map<String, Object> query = null;
 	private final String reduceScript;
 	private String finalizeScript = null;
 	private final String keyFunction;
@@ -46,10 +46,6 @@ public class Group extends AbstractCommand<List<Map<String, Object>>> {
 		this.reduceScript = reduceScript;
 	}
 
-	public void setQuery(Map<String, Object> query) {
-		this.query = query;
-	}
-
 	public void setFinalizeScript(String script) {
 		finalizeScript = script;
 	}
@@ -61,13 +57,14 @@ public class Group extends AbstractCommand<List<Map<String, Object>>> {
 	}
 
 	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection) {
+	public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder queryBuilder) {
+		Map<String, Object> query = queryBuilder.build();
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		Map<String, Object> group = new LinkedHashMap<String, Object>();
 		map.put("group", group);
 		group.put("initial", initialValues);
-		if (query != null) {
+		if (query != null && !query.isEmpty()) {
 			group.put("cond", query);
 		}
 		group.put("ns", collection.collectionName());
@@ -92,4 +89,5 @@ public class Group extends AbstractCommand<List<Map<String, Object>>> {
 		}
 		return map;
 	}
+
 }

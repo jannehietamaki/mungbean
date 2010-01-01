@@ -14,11 +14,18 @@
    limitations under the License.
  */
 
-package mungbean.query;
+package mungbean.protocol.command;
 
-import mungbean.protocol.command.AbstractCommand;
+import java.util.Map;
 
-public interface AggregationBuilder<ReturnType> {
-	public AbstractCommand<ReturnType> build();
+import mungbean.DBCollection;
+import mungbean.protocol.message.CommandResponse;
+import mungbean.query.QueryBuilder;
+
+public abstract class Aggregation<ResponseType> {
+
+	public abstract ResponseType parseResponse(CommandResponse values);
+
+	public abstract Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query);
 
 }

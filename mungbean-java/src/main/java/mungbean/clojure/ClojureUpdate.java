@@ -14,15 +14,14 @@
    limitations under the License.
  */
 
-package mungbean.protocol.command;
+package mungbean.clojure;
 
 import java.util.Map;
 
-import mungbean.DBCollection;
-import mungbean.protocol.message.CommandResponse;
+import mungbean.query.Update;
 
-public abstract class AbstractCommand<ResponseType> {
-	public abstract Map<String, Object> requestMap(DBCollection<?> collection);
-
-	public abstract ResponseType parseResponse(CommandResponse values);
+public class ClojureUpdate extends Update {
+	public ClojureUpdate(Map<String, Object> updates) {
+		super(updates);
+	}
 }
