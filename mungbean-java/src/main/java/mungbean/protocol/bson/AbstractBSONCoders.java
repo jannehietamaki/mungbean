@@ -22,28 +22,28 @@ import java.util.List;
 
 public abstract class AbstractBSONCoders {
 
-	private final List<BSONCoder<?>> encoders = new ArrayList<BSONCoder<?>>();
+    private final List<BSONCoder<?>> encoders = new ArrayList<BSONCoder<?>>();
 
-	protected void addEncoder(BSONCoder<?> coder) {
-		encoders.add(coder);
-	}
+    protected void addEncoder(BSONCoder<?> coder) {
+        encoders.add(coder);
+    }
 
-	public BSONCoder<?> forType(byte type) {
-		for (BSONCoder<?> bson : encoders) {
-			if (bson.type() == type) {
-				return bson;
-			}
-		}
-		throw new IllegalArgumentException("Unsupported BSON type " + type);
-	}
+    public BSONCoder<?> forType(byte type) {
+        for (BSONCoder<?> bson : encoders) {
+            if (bson.type() == type) {
+                return bson;
+            }
+        }
+        throw new IllegalArgumentException("Unsupported BSON type " + type);
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> BSONCoder<T> forValue(T val) {
-		for (BSONCoder<?> bson : encoders) {
-			if (bson.canEncode(val)) {
-				return (BSONCoder<T>) bson;
-			}
-		}
-		throw new IllegalArgumentException(getClass().getSimpleName() + ": Unable to find encoder for object " + val + " (" + val.getClass().getName() + "/" + Arrays.asList(val.getClass().getInterfaces()) + ")");
-	}
+    @SuppressWarnings("unchecked")
+    public <T> BSONCoder<T> forValue(T val) {
+        for (BSONCoder<?> bson : encoders) {
+            if (bson.canEncode(val)) {
+                return (BSONCoder<T>) bson;
+            }
+        }
+        throw new IllegalArgumentException(getClass().getSimpleName() + ": Unable to find encoder for object " + val + " (" + val.getClass().getName() + "/" + Arrays.asList(val.getClass().getInterfaces()) + ")");
+    }
 }

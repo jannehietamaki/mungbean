@@ -20,13 +20,22 @@ import java.nio.charset.Charset;
 
 public class Utils {
 
-	public static final Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset UTF8 = Charset.forName("UTF-8");
 
-	public static String toHex(byte[] content) {
-		StringBuilder hexString = new StringBuilder();
-		for (byte b : content) {
-			hexString.append(String.format("%02x", (0xFF & b)));
-		}
-		return hexString.toString().toLowerCase();
-	}
+    public static String toHex(byte[] content) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : content) {
+            hexString.append(String.format("%02x", (0xFF & b)));
+        }
+        return hexString.toString().toLowerCase();
+    }
+
+    public static byte[] hexStringToBytes(String input) {
+        int len = input.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(input.charAt(i), 16) << 4) + Character.digit(input.charAt(i + 1), 16));
+        }
+        return data;
+    }
 }

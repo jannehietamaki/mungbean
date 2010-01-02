@@ -18,11 +18,10 @@ package mungbean;
 
 public interface DBOperationExecutor {
 
-	<T> T execute(DBConversation<T> conversation);
+    <T> T execute(DBConversation<T> conversation);
 
-	<T> T executeWrite(DBConversation<T> conversation);
+    <T> T executeWrite(DBConversation<T> conversation);
 
-
-	void close();
+    void close();
 
 }

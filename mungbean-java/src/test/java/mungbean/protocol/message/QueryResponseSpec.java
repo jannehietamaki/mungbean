@@ -27,37 +27,37 @@ import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class QueryResponseSpec extends Specification<QueryResponse<Map<String, Object>>> {
-	public class WithCommandResponse {
-		public QueryResponse<Map<String, Object>> create() {
-			byte[] bytes = new byte[] { //
-					65, 0, 0, 0, // length
-					70, 71, 94, 07,// reqid
-					12, 34, 32, 36, // responseTo
-					01, 0, 0, 0, // opCode =OP_REPLY
-					0, 0, 0, 0, // responseFlag
-					0, 0, 0, 0, 0, 0, 0, 0, // cursorId
-					0, 0, 0, 0, // startingFrom
-					01, 0, 0, 0, // numberReturned
-					29, 0, 0, 0, // bson_length
-					10, // null
-					'e', 'r', 'r', 0, // 'err'
-					16, // data_int
-					'n', 0, // 'n'
-					0, 0, 0, 0, // 0
-					01, // data_number
-					'o', 'k', 0, // 'ok'
-					0, 0, 0, 0, 0, 0, -16, 63, // 1
-					0 // eoo
-			};
-			return new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap());
-		}
+    public class WithCommandResponse {
+        public QueryResponse<Map<String, Object>> create() {
+            byte[] bytes = new byte[] { //
+            65, 0, 0, 0, // length
+                    70, 71, 94, 07,// reqid
+                    12, 34, 32, 36, // responseTo
+                    01, 0, 0, 0, // opCode =OP_REPLY
+                    0, 0, 0, 0, // responseFlag
+                    0, 0, 0, 0, 0, 0, 0, 0, // cursorId
+                    0, 0, 0, 0, // startingFrom
+                    01, 0, 0, 0, // numberReturned
+                    29, 0, 0, 0, // bson_length
+                    10, // null
+                    'e', 'r', 'r', 0, // 'err'
+                    16, // data_int
+                    'n', 0, // 'n'
+                    0, 0, 0, 0, // 0
+                    01, // data_number
+                    'o', 'k', 0, // 'ok'
+                    0, 0, 0, 0, 0, 0, -16, 63, // 1
+                    0 // eoo
+            };
+            return new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap());
+        }
 
-		public void responseCanBeParsed() {
-			specify(context.values().size(), does.equal(1));
-			Map<String, Object> obj = context.values().get(0);
-			specify(obj.get("err"), does.equal(null));
-			specify(obj.get("n"), does.equal(0));
-			specify(obj.get("ok"), does.equal(1D));
-		}
-	}
+        public void responseCanBeParsed() {
+            specify(context.values().size(), does.equal(1));
+            Map<String, Object> obj = context.values().get(0);
+            specify(obj.get("err"), does.equal(null));
+            specify(obj.get("n"), does.equal(0));
+            specify(obj.get("ok"), does.equal(1D));
+        }
+    }
 }

@@ -19,8 +19,8 @@ package mungbean.cluster;
 import mungbean.DBConversation;
 
 public interface ServerResolverStrategy {
-	<T> T execute(DBConversation<T> conversation);
+    <T> T execute(DBConversation<T> conversation);
 
-	void close();
+    void close();
 
 }

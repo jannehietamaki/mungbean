@@ -20,18 +20,18 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONCodeWithScope extends BSONCoder<Void> {
 
-	protected BSONCodeWithScope() {
-		super(15, Void.class);
-	}
+    protected BSONCodeWithScope() {
+        super(15, Void.class);
+    }
 
-	@Override
-	protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		throw new UnsupportedOperationException("CODE_W_SCOPE is not supported");
-	}
+    @Override
+    protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        throw new UnsupportedOperationException("CODE_W_SCOPE is not supported");
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
+    @Override
+    protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
 
-	}
+    }
 
 }

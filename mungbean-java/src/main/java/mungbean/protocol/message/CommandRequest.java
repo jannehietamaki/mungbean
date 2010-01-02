@@ -30,45 +30,45 @@ import mungbean.query.Query;
 
 public class CommandRequest extends MongoRequest<CommandResponse> {
 
-	public static final AbstractBSONCoders DEFAULT_CODERS = new MapBSONCoders();
-	private static final BSONMap RESPONSE_CODER = new BSONMap();
-	private final QueryRequest<Map<String, Object>> query;
+    public static final AbstractBSONCoders DEFAULT_CODERS = new MapBSONCoders();
+    private static final BSONMap RESPONSE_CODER = new BSONMap();
+    private final QueryRequest<Map<String, Object>> query;
 
-	public CommandRequest(String dbName, Map<String, Object> params, AbstractBSONCoders coders) {
-		HashMap<String, Object> orders = new HashMap<String, Object>();
-		query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), params, orders, coders, RESPONSE_CODER);
-	}
+    public CommandRequest(String dbName, Map<String, Object> params, AbstractBSONCoders coders) {
+        HashMap<String, Object> orders = new HashMap<String, Object>();
+        query = new QueryRequest<Map<String, Object>>(dbName + ".$cmd", new QueryOptionsBuilder(), params, orders, coders, RESPONSE_CODER);
+    }
 
-	public CommandRequest(String dbName, String command) {
-		this(dbName, map(command, 1D), DEFAULT_CODERS);
-	}
+    public CommandRequest(String dbName, String command) {
+        this(dbName, map(command, 1D), DEFAULT_CODERS);
+    }
 
-	public CommandRequest(String command) {
-		query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), new Query().setLimit(1).field(command).is(1D), true, DEFAULT_CODERS, RESPONSE_CODER);
+    public CommandRequest(String command) {
+        query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), new Query().setLimit(1).field(command).is(1D), true, DEFAULT_CODERS, RESPONSE_CODER);
 
-	}
+    }
 
-	@Override
-	public int length() {
-		return query.length();
-	}
+    @Override
+    public int length() {
+        return query.length();
+    }
 
-	@Override
-	public CommandResponse readResponse(LittleEndianDataReader reader) {
-		List<Map<String, Object>> values = query.readResponse(reader).values();
-		if (values.isEmpty()) {
-			return new CommandResponse(new HashMap<String, Object>());
-		}
-		return new CommandResponse(values.get(0));
-	}
+    @Override
+    public CommandResponse readResponse(LittleEndianDataReader reader) {
+        List<Map<String, Object>> values = query.readResponse(reader).values();
+        if (values.isEmpty()) {
+            return new CommandResponse(new HashMap<String, Object>());
+        }
+        return new CommandResponse(values.get(0));
+    }
 
-	@Override
-	public void send(LittleEndianDataWriter writer) {
-		query.send(writer);
-	}
+    @Override
+    public void send(LittleEndianDataWriter writer) {
+        query.send(writer);
+    }
 
-	@Override
-	public RequestOpCode type() {
-		return query.type();
-	}
+    @Override
+    public RequestOpCode type() {
+        return query.type();
+    }
 }

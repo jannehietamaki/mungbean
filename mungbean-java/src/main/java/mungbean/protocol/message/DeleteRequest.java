@@ -22,33 +22,33 @@ import mungbean.protocol.bson.BSON;
 import mungbean.query.QueryBuilder;
 
 public class DeleteRequest extends CollectionRequest<NoResponseExpected> {
-	private final BSON query;
+    private final BSON query;
 
-	public DeleteRequest(String collectionName, AbstractBSONCoders coders, QueryBuilder query) {
-		super(collectionName);
-		this.query = coders.forValue(query.build()).write(coders, query.build());
-	}
+    public DeleteRequest(String collectionName, AbstractBSONCoders coders, QueryBuilder query) {
+        super(collectionName);
+        this.query = coders.forValue(query.build()).write(coders, query.build());
+    }
 
-	@Override
-	public int length() {
-		return 8 + collectionNameLength() + query.length();
-	}
+    @Override
+    public int length() {
+        return 8 + collectionNameLength() + query.length();
+    }
 
-	@Override
-	public NoResponseExpected readResponse(LittleEndianDataReader reader) {
-		return new NoResponseExpected();
-	}
+    @Override
+    public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+        return new NoResponseExpected();
+    }
 
-	@Override
-	public void send(LittleEndianDataWriter writer) {
-		writer.writeInt(0); // RESERVED
-		writeCollectionName(writer);
-		writer.writeInt(0); // RESERVED
-		writer.write(query.bytes());
-	}
+    @Override
+    public void send(LittleEndianDataWriter writer) {
+        writer.writeInt(0); // RESERVED
+        writeCollectionName(writer);
+        writer.writeInt(0); // RESERVED
+        writer.write(query.bytes());
+    }
 
-	@Override
-	public RequestOpCode type() {
-		return RequestOpCode.OP_DELETE;
-	}
+    @Override
+    public RequestOpCode type() {
+        return RequestOpCode.OP_DELETE;
+    }
 }

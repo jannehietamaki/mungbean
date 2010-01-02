@@ -28,20 +28,20 @@ import static mungbean.CollectionUtil.*;
 
 @RunWith(JDaveRunner.class)
 public class ClusterManualTest extends Specification<Void> {
-	public class WithCluster {
-		public void writeOperationCanBeDone() throws InterruptedException {
-			Mungbean mung = new Mungbean(new Server("localhost", 10000), new Server("localhost", 10001));
-			DBCollection<Map<String, Object>> collection = mung.openDatabase(new ObjectId().toHex()).openCollection("bar");
-			int counter = 0;
-			while (true) {
-				try {
-					collection.save(map("foo", counter++));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				System.out.println(collection.query(new Query().setLimit(1).field("foo").orderDescending()));
-				Thread.sleep(100);
-			}
-		}
-	}
+    public class WithCluster {
+        public void writeOperationCanBeDone() throws InterruptedException {
+            Mungbean mung = new Mungbean(new Server("localhost", 10000), new Server("localhost", 10001));
+            DBCollection<Map<String, Object>> collection = mung.openDatabase(new ObjectId().toHex()).openCollection("bar");
+            int counter = 0;
+            while (true) {
+                try {
+                    collection.save(map("foo", counter++));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println(collection.query(new Query().setLimit(1).field("foo").orderDescending()));
+                Thread.sleep(100);
+            }
+        }
+    }
 }

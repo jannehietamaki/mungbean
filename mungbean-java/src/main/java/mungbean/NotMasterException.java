@@ -18,8 +18,8 @@ package mungbean;
 
 public class NotMasterException extends MongoException {
 
-	public NotMasterException(String message) {
-		super(message);
-	}
+    public NotMasterException(String message) {
+        super(message);
+    }
 
 }

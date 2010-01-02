@@ -33,76 +33,76 @@ import org.junit.runner.RunWith;
 @RunWith(JDaveRunner.class)
 public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
 
-	public class WithoutQueryRules {
-		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), new Query(), true, new MapBSONCoders(), new BSONMap());
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
-		}
+    public class WithoutQueryRules {
+        public DBTransaction<QueryResponse<Map<String, Object>>> create() {
+            QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), new Query(), true, new MapBSONCoders(), new BSONMap());
+            return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
+        }
 
-		public void messageCanBeSerializedIntoByteStream() {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { //
-					45, 0, 0, 0, // message_lenght
-							124, 0, 0, 0, // requestID
-							-1, -1, -1, -1, // responseTo
-							-44, 7, 0, 0, // opCode
-							0, 0, 0, 0, // opts
-							'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // fullCollectionName
-							00, 00, 00, 00, // numberToSkip
-							00, 00, 00, -128, // NumberToReturn
-							05, 00, 00, 00, // ObjSize
-							00 // EOO
-					}));
-		}
-	}
+        public void messageCanBeSerializedIntoByteStream() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            specify(output.toByteArray(), does.containExactly(new byte[] { //
+                    45, 0, 0, 0, // message_lenght
+                            124, 0, 0, 0, // requestID
+                            -1, -1, -1, -1, // responseTo
+                            -44, 7, 0, 0, // opCode
+                            0, 0, 0, 0, // opts
+                            'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // fullCollectionName
+                            00, 00, 00, 00, // numberToSkip
+                            00, 00, 00, -128, // NumberToReturn
+                            05, 00, 00, 00, // ObjSize
+                            00 // EOO
+                    }));
+        }
+    }
 
-	public class WithQueryContaingingRules {
-		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), new Query().field("foo").is("bar"), false, new MapBSONCoders(), new BSONMap());
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
-		}
+    public class WithQueryContaingingRules {
+        public DBTransaction<QueryResponse<Map<String, Object>>> create() {
+            QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), new Query().field("foo").is("bar"), false, new MapBSONCoders(), new BSONMap());
+            return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
+        }
 
-		public void messageCanBeSerializedIntoByteStream() {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 58, 0, 0, 0, // messageLength
-					124, 0, 0, 0, // requestID
-					-1, -1, -1, -1, // responseTo
-					-44, 7, 0, 0, // opCode
-					4, 0, 0, 0, // opts
-					'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // fullCollectionName
-					0, 0, 0, 0, // numberToSkip
-					0, 0, 0, 0, // numberToReturn
-					// query BSON
-					18, 0, 0, 0, // obj_size
-					2, // element type = string
-					'f', 'o', 'o', 0,// element name
-					4, 0, 0, 0, // data_size
-					'b', 'a', 'r', 0, // element_data
-					0 // eoo
-					}));
-		}
+        public void messageCanBeSerializedIntoByteStream() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            specify(output.toByteArray(), does.containExactly(new byte[] { 58, 0, 0, 0, // messageLength
+                    124, 0, 0, 0, // requestID
+                    -1, -1, -1, -1, // responseTo
+                    -44, 7, 0, 0, // opCode
+                    4, 0, 0, 0, // opts
+                    'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // fullCollectionName
+                    0, 0, 0, 0, // numberToSkip
+                    0, 0, 0, 0, // numberToReturn
+                    // query BSON
+                    18, 0, 0, 0, // obj_size
+                    2, // element type = string
+                    'f', 'o', 'o', 0,// element name
+                    4, 0, 0, 0, // data_size
+                    'b', 'a', 'r', 0, // element_data
+                    0 // eoo
+                    }));
+        }
 
-		public void responseCanBeDeserializedFromByteStream() {
-			ByteArrayInputStream input = new ByteArrayInputStream(new byte[] { 49, 0, 0, 0, // messageLength
-					125, 0, 0, 0, // requestID
-					124, 0, 0, 0, // responseTo
-					1, 0, 0, 0, // opCode
-					0, 0, 0, 0, // responseFlag
-					1, 0, 0, 0, 0, 0, 0, 0, // cursorID
-					0, 0, 0, 0, // startingFrom
-					1, 0, 0, 0, // numberReturned
-					14, 0, 0, 0, // obj_size
-					2, // element_type = string
-					'f', 'o', 'o', 0, // name
-					8, 0, 0, 0, // data_size
-					'b', 'a', 'r', 0, // value
-					0 // eoo
-					});
-			QueryResponse<Map<String, Object>> response = context.readResponse(input);
-			specify(response.opCode(), does.equal(RequestOpCode.OP_REPLY));
-			specify(response.values().get(0), does.equal(map("foo", "bar")));
-		}
-	}
+        public void responseCanBeDeserializedFromByteStream() {
+            ByteArrayInputStream input = new ByteArrayInputStream(new byte[] { 49, 0, 0, 0, // messageLength
+                    125, 0, 0, 0, // requestID
+                    124, 0, 0, 0, // responseTo
+                    1, 0, 0, 0, // opCode
+                    0, 0, 0, 0, // responseFlag
+                    1, 0, 0, 0, 0, 0, 0, 0, // cursorID
+                    0, 0, 0, 0, // startingFrom
+                    1, 0, 0, 0, // numberReturned
+                    14, 0, 0, 0, // obj_size
+                    2, // element_type = string
+                    'f', 'o', 'o', 0, // name
+                    8, 0, 0, 0, // data_size
+                    'b', 'a', 'r', 0, // value
+                    0 // eoo
+                    });
+            QueryResponse<Map<String, Object>> response = context.readResponse(input);
+            specify(response.opCode(), does.equal(RequestOpCode.OP_REPLY));
+            specify(response.values().get(0), does.equal(map("foo", "bar")));
+        }
+    }
 }

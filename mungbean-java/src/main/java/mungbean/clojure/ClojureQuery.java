@@ -21,7 +21,7 @@ import java.util.Map;
 import mungbean.query.Query;
 
 public class ClojureQuery extends Query {
-	public ClojureQuery(Map<String, Object> query, int skip, int limit) {
-		super(query, skip, limit);
-	}
+    public ClojureQuery(Map<String, Object> query, int skip, int limit) {
+        super(query, skip, limit);
+    }
 }

@@ -20,18 +20,18 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONMaxKey extends BSONCoder<Void> {
 
-	protected BSONMaxKey() {
-		super(127, Void.class);
-	}
+    protected BSONMaxKey() {
+        super(127, Void.class);
+    }
 
-	@Override
-	protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return null;
-	}
+    @Override
+    protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return null;
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
+    @Override
+    protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
 
-	}
+    }
 
 }

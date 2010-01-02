@@ -24,15 +24,15 @@ import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
 
 public class LastError extends AbstractCommand<Map<String, Object>> {
-	private final Map<String, Object> parameters = map("getlasterror", 1D);
+    private final Map<String, Object> parameters = map("getlasterror", 1D);
 
-	@Override
-	public Map<String, Object> parseResponse(CommandResponse response) {
-		return response.values();
-	}
+    @Override
+    public Map<String, Object> parseResponse(CommandResponse response) {
+        return response.values();
+    }
 
-	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection) {
-		return parameters;
-	}
+    @Override
+    public Map<String, Object> requestMap(DBCollection<?> collection) {
+        return parameters;
+    }
 }

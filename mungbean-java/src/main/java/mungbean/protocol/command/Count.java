@@ -25,16 +25,16 @@ import mungbean.query.QueryBuilder;
 
 public class Count extends Aggregation<Long> {
 
-	@Override
-	public Long parseResponse(CommandResponse values) {
-		return values.getLong("n");
-	}
+    @Override
+    public Long parseResponse(CommandResponse values) {
+        return values.getLong("n");
+    }
 
-	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query) {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("count", collection.collectionName());
-		map.put("query", query.build());
-		return map;
-	}
+    @Override
+    public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("count", collection.collectionName());
+        map.put("query", query.build());
+        return map;
+    }
 }

@@ -22,51 +22,51 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public abstract class BSONCoder<JavaType> {
 
-	private final byte bsonType;
-	private final Class<?> javaType;
+    private final byte bsonType;
+    private final Class<?> javaType;
 
-	protected BSONCoder(int typeId, Class<?> javaType) {
-		this.bsonType = (byte) typeId;
-		this.javaType = javaType;
-	}
+    protected BSONCoder(int typeId, Class<?> javaType) {
+        this.bsonType = (byte) typeId;
+        this.javaType = javaType;
+    }
 
-	public byte type() {
-		return bsonType;
-	}
+    public byte type() {
+        return bsonType;
+    }
 
-	public boolean canEncode(Object val) {
-		return val != null && javaType.isAssignableFrom(val.getClass());
-	}
+    public boolean canEncode(Object val) {
+        return val != null && javaType.isAssignableFrom(val.getClass());
+    }
 
-	protected abstract JavaType decode(AbstractBSONCoders bson, LittleEndianDataReader reader);
+    protected abstract JavaType decode(AbstractBSONCoders bson, LittleEndianDataReader reader);
 
-	protected abstract void encode(AbstractBSONCoders bson, JavaType o, LittleEndianDataWriter writer);
+    protected abstract void encode(AbstractBSONCoders bson, JavaType o, LittleEndianDataWriter writer);
 
-	public JavaType read(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return decode(bson, reader);
-	}
+    public JavaType read(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return decode(bson, reader);
+    }
 
-	public void write(AbstractBSONCoders bson, String name, JavaType o, LittleEndianDataWriter writer) {
-		writer.writeByte(type());
-		writer.writeCString(name);
-		encode(bson, o, writer);
-	}
+    public void write(AbstractBSONCoders bson, String name, JavaType o, LittleEndianDataWriter writer) {
+        writer.writeByte(type());
+        writer.writeCString(name);
+        encode(bson, o, writer);
+    }
 
-	public String readPath(LittleEndianDataReader reader, String path) {
-		String name = reader.readCString();
-		if (path.isEmpty()) {
-			return name;
-		}
-		return path + "." + name;
-	}
+    public String readPath(LittleEndianDataReader reader, String path) {
+        String name = reader.readCString();
+        if (path.isEmpty()) {
+            return name;
+        }
+        return path + "." + name;
+    }
 
-	public boolean isEndMarker() {
-		return false;
-	}
+    public boolean isEndMarker() {
+        return false;
+    }
 
-	public BSON write(AbstractBSONCoders bson, JavaType o) {
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		encode(bson, o, new LittleEndianDataWriter(byteOut));
-		return new BSON(byteOut.toByteArray());
-	}
+    public BSON write(AbstractBSONCoders bson, JavaType o) {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        encode(bson, o, new LittleEndianDataWriter(byteOut));
+        return new BSON(byteOut.toByteArray());
+    }
 }

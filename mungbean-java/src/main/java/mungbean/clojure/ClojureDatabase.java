@@ -21,12 +21,12 @@ import mungbean.DBOperationExecutor;
 
 public class ClojureDatabase extends AbstractDatabase {
 
-	public ClojureDatabase(DBOperationExecutor executor, String name) {
-		super(executor, name);
-	}
+    public ClojureDatabase(DBOperationExecutor executor, String name) {
+        super(executor, name);
+    }
 
-	public ClojureDBCollection openCollection(String name) {
-		return new ClojureDBCollection(executor(), dbName(), name);
-	}
+    public ClojureDBCollection openCollection(String name) {
+        return new ClojureDBCollection(executor(), dbName(), name);
+    }
 
 }

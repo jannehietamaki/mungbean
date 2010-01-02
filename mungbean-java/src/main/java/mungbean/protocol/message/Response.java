@@ -17,6 +17,6 @@
 package mungbean.protocol.message;
 
 public interface Response {
-	public int responseTo();
+    public int responseTo();
 
 }

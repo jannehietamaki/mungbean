@@ -20,16 +20,16 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONUndefined extends BSONCoder<Void> {
 
-	protected BSONUndefined() {
-		super(6, Void.class);
-	}
+    protected BSONUndefined() {
+        super(6, Void.class);
+    }
 
-	@Override
-	protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return null;
-	}
+    @Override
+    protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return null;
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
+    }
 }

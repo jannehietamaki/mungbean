@@ -25,29 +25,29 @@ import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class CommandRequestSpec extends Specification<DBTransaction<CommandResponse>> {
-	public class WithValidCommandQuery {
-		public DBTransaction<CommandResponse> create() {
-			return new DBTransaction<CommandResponse>(new CommandRequest("foobar", "getlasterror"), 123);
-		}
+    public class WithValidCommandQuery {
+        public DBTransaction<CommandResponse> create() {
+            return new DBTransaction<CommandResponse>(new CommandRequest("foobar", "getlasterror"), 123);
+        }
 
-		public void commandQueryCanBeSerialized() {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 67, 0, 0, 0, // message_lenght
-					123, 0, 0, 0, // requestID
-					-1, -1, -1, -1, // responseTo
-					-44, 7, 0, 0, // opCode
-					0, 0, 0, 0, // opts
-					'f', 'o', 'o', 'b', 'a', 'r', '.', '$', 'c', 'm', 'd', 0, // fullCollectionName
-					0, 0, 0, 0, // numberToSkip
-					-1, -1, -1, -1, // NumberToReturn
-					27, 0, 0, 0, // ObjSize
-					01, // data_type = number
-					'g', 'e', 't', 'l', 'a', 's', 't', 'e', 'r', 'r', 'o', 'r', 0, // command
-					0, 0, 0, 0, 0, 0, -16, 63, // value == 1 (double)
-					0 // EOO
-					}));
-		}
-	}
+        public void commandQueryCanBeSerialized() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            specify(output.toByteArray(), does.containExactly(new byte[] { 67, 0, 0, 0, // message_lenght
+                    123, 0, 0, 0, // requestID
+                    -1, -1, -1, -1, // responseTo
+                    -44, 7, 0, 0, // opCode
+                    0, 0, 0, 0, // opts
+                    'f', 'o', 'o', 'b', 'a', 'r', '.', '$', 'c', 'm', 'd', 0, // fullCollectionName
+                    0, 0, 0, 0, // numberToSkip
+                    -1, -1, -1, -1, // NumberToReturn
+                    27, 0, 0, 0, // ObjSize
+                    01, // data_type = number
+                    'g', 'e', 't', 'l', 'a', 's', 't', 'e', 'r', 'r', 'o', 'r', 0, // command
+                    0, 0, 0, 0, 0, 0, -16, 63, // value == 1 (double)
+                    0 // EOO
+                    }));
+        }
+    }
 
 }

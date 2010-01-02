@@ -19,27 +19,27 @@ package mungbean;
 import java.util.Map;
 
 public abstract class AbstractDatabase {
-	private final String dbName;
-	private final DBOperationExecutor executor;
+    private final String dbName;
+    private final DBOperationExecutor executor;
 
-	public AbstractDatabase(DBOperationExecutor executor, String name) {
-		this.dbName = name;
-		this.executor = executor;
-	}
+    public AbstractDatabase(DBOperationExecutor executor, String name) {
+        this.dbName = name;
+        this.executor = executor;
+    }
 
-	protected String dbName() {
-		return dbName;
-	}
+    protected String dbName() {
+        return dbName;
+    }
 
-	protected DBOperationExecutor executor() {
-		return executor;
-	}
+    protected DBOperationExecutor executor() {
+        return executor;
+    }
 
-	public DatabaseAdmin dbAdmin() {
-		return new DatabaseAdmin(this);
-	}
+    public DatabaseAdmin dbAdmin() {
+        return new DatabaseAdmin(this);
+    }
 
-	DBCollection<Map<String, Object>> mapCollection(String name) {
-		return new MapDBCollection(executor(), dbName(), name);
-	}
+    DBCollection<Map<String, Object>> mapCollection(String name) {
+        return new MapDBCollection(executor(), dbName(), name);
+    }
 }

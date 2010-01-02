@@ -26,68 +26,68 @@ import mungbean.protocol.message.CommandResponse;
 import mungbean.query.QueryBuilder;
 
 public class Group extends Aggregation<List<Map<String, Object>>> {
-	private final String[] keys;
-	private final Map<String, Double> initialValues;
-	private final String reduceScript;
-	private String finalizeScript = null;
-	private final String keyFunction;
+    private final String[] keys;
+    private final Map<String, Double> initialValues;
+    private final String reduceScript;
+    private String finalizeScript = null;
+    private final String keyFunction;
 
-	public Group(String[] keys, Map<String, Double> initialValues, String reduceScript) {
-		this.keys = keys;
-		this.keyFunction = null;
-		this.initialValues = initialValues;
-		this.reduceScript = reduceScript;
-	}
+    public Group(String[] keys, Map<String, Double> initialValues, String reduceScript) {
+        this.keys = keys;
+        this.keyFunction = null;
+        this.initialValues = initialValues;
+        this.reduceScript = reduceScript;
+    }
 
-	public Group(String keyFunction, Map<String, Double> initialValues, String reduceScript) {
-		this.keys = null;
-		this.keyFunction = keyFunction;
-		this.initialValues = initialValues;
-		this.reduceScript = reduceScript;
-	}
+    public Group(String keyFunction, Map<String, Double> initialValues, String reduceScript) {
+        this.keys = null;
+        this.keyFunction = keyFunction;
+        this.initialValues = initialValues;
+        this.reduceScript = reduceScript;
+    }
 
-	public void setFinalizeScript(String script) {
-		finalizeScript = script;
-	}
+    public void setFinalizeScript(String script) {
+        finalizeScript = script;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Map<String, Object>> parseResponse(CommandResponse values) {
-		return (List<Map<String, Object>>) values.get("retval");
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Map<String, Object>> parseResponse(CommandResponse values) {
+        return (List<Map<String, Object>>) values.get("retval");
+    }
 
-	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder queryBuilder) {
-		Map<String, Object> query = queryBuilder.build();
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
+    @Override
+    public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder queryBuilder) {
+        Map<String, Object> query = queryBuilder.build();
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
 
-		Map<String, Object> group = new LinkedHashMap<String, Object>();
-		map.put("group", group);
-		group.put("initial", initialValues);
-		if (query != null && !query.isEmpty()) {
-			group.put("cond", query);
-		}
-		group.put("ns", collection.collectionName());
-		if (keys != null) {
-			group.put("key", keyMap());
-		}
-		if (keyFunction != null) {
-			group.put("keys", new Code(keyFunction));
-		}
-		group.put("$reduce", new Code(reduceScript));
-		if (finalizeScript != null) {
-			group.put("finallize", new Code(finalizeScript));
-		}
-		return map;
+        Map<String, Object> group = new LinkedHashMap<String, Object>();
+        map.put("group", group);
+        group.put("initial", initialValues);
+        if (query != null && !query.isEmpty()) {
+            group.put("cond", query);
+        }
+        group.put("ns", collection.collectionName());
+        if (keys != null) {
+            group.put("key", keyMap());
+        }
+        if (keyFunction != null) {
+            group.put("keys", new Code(keyFunction));
+        }
+        group.put("$reduce", new Code(reduceScript));
+        if (finalizeScript != null) {
+            group.put("finallize", new Code(finalizeScript));
+        }
+        return map;
 
-	}
+    }
 
-	private Map<String, Object> keyMap() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		for (String key : keys) {
-			map.put(key, true);
-		}
-		return map;
-	}
+    private Map<String, Object> keyMap() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+        for (String key : keys) {
+            map.put(key, true);
+        }
+        return map;
+    }
 
 }

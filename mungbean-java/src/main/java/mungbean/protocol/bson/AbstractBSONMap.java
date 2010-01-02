@@ -23,39 +23,39 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public abstract class AbstractBSONMap<T> extends BSONCoder<T> {
 
-	public AbstractBSONMap(Class<T> javaType) {
-		super(3, javaType);
-	}
+    public AbstractBSONMap(Class<T> javaType) {
+        super(3, javaType);
+    }
 
-	@Override
-	protected T decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		reader.readInt(); // Skip length
-		T ret = newInstance();
-		BSONCoder<?> b;
-		while (!(b = bson.forType((byte) reader.readByte())).isEndMarker()) {
-			String name = b.readPath(reader, "");
-			Object value = b.read(bson, reader);
-			ret = setValue(ret, name, value);
-		}
-		return ret;
-	}
+    @Override
+    protected T decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        reader.readInt(); // Skip length
+        T ret = newInstance();
+        BSONCoder<?> b;
+        while (!(b = bson.forType((byte) reader.readByte())).isEndMarker()) {
+            String name = b.readPath(reader, "");
+            Object value = b.read(bson, reader);
+            ret = setValue(ret, name, value);
+        }
+        return ret;
+    }
 
-	protected abstract T newInstance();
+    protected abstract T newInstance();
 
-	protected abstract T setValue(T item, String key, Object value);
+    protected abstract T setValue(T item, String key, Object value);
 
-	protected abstract Iterable<KeyValuePair<String, Object>> entriesOf(T item);
+    protected abstract Iterable<KeyValuePair<String, Object>> entriesOf(T item);
 
-	@Override
-	public void encode(AbstractBSONCoders bson, T o, LittleEndianDataWriter writer) {
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		LittleEndianDataWriter localWriter = new LittleEndianDataWriter(byteOut);
-		for (KeyValuePair<String, Object> entry : entriesOf(o)) {
-			bson.forValue(entry.value()).write(bson, entry.key(), entry.value(), localWriter);
-		}
-		byte[] bytes = byteOut.toByteArray();
-		writer.writeInt(bytes.length + 4 + 1);
-		writer.write(bytes);
-		writer.writeByte(BSONEndMarker.instance().type());
-	}
+    @Override
+    public void encode(AbstractBSONCoders bson, T o, LittleEndianDataWriter writer) {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        LittleEndianDataWriter localWriter = new LittleEndianDataWriter(byteOut);
+        for (KeyValuePair<String, Object> entry : entriesOf(o)) {
+            bson.forValue(entry.value()).write(bson, entry.key(), entry.value(), localWriter);
+        }
+        byte[] bytes = byteOut.toByteArray();
+        writer.writeInt(bytes.length + 4 + 1);
+        writer.write(bytes);
+        writer.writeByte(BSONEndMarker.instance().type());
+    }
 }

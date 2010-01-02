@@ -23,42 +23,42 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public abstract class AbstractBSONArray<Type, ItemType> extends BSONCoder<Type> {
 
-	public AbstractBSONArray(Class<Type> javaType) {
-		super(4, javaType);
-	}
+    public AbstractBSONArray(Class<Type> javaType) {
+        super(4, javaType);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Type decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		reader.readInt(); // skip size
-		Type ret = newInstance();
-		BSONCoder<?> b;
-		while (!(b = bson.forType((byte) reader.readByte())).isEndMarker()) {
-			reader.readCString(); // Skip name = index
-			ItemType value = (ItemType) b.read(bson, reader);
-			ret = addValue(ret, value);
-		}
-		return ret;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Type decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        reader.readInt(); // skip size
+        Type ret = newInstance();
+        BSONCoder<?> b;
+        while (!(b = bson.forType((byte) reader.readByte())).isEndMarker()) {
+            reader.readCString(); // Skip name = index
+            ItemType value = (ItemType) b.read(bson, reader);
+            ret = addValue(ret, value);
+        }
+        return ret;
+    }
 
-	protected abstract Type addValue(Type ret, ItemType value);
+    protected abstract Type addValue(Type ret, ItemType value);
 
-	protected abstract Iterable<KeyValuePair<Integer, ItemType>> valuesOf(Type l);
+    protected abstract Iterable<KeyValuePair<Integer, ItemType>> valuesOf(Type l);
 
-	protected abstract Type newInstance();
+    protected abstract Type newInstance();
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Type l, LittleEndianDataWriter writer) {
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		LittleEndianDataWriter out = new LittleEndianDataWriter(byteOut);
-		Iterable<KeyValuePair<Integer, ItemType>> values = valuesOf(l);
-		for (KeyValuePair<Integer, ItemType> pair : values) {
-			ItemType value = pair.value();
-			bson.forValue(value).write(bson, String.valueOf(pair.key()), value, out);
-		}
-		byte[] bytes = byteOut.toByteArray();
-		writer.writeInt(bytes.length + 4);
-		writer.write(bytes);
-		writer.writeByte(BSONEndMarker.instance().type());
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, Type l, LittleEndianDataWriter writer) {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        LittleEndianDataWriter out = new LittleEndianDataWriter(byteOut);
+        Iterable<KeyValuePair<Integer, ItemType>> values = valuesOf(l);
+        for (KeyValuePair<Integer, ItemType> pair : values) {
+            ItemType value = pair.value();
+            bson.forValue(value).write(bson, String.valueOf(pair.key()), value, out);
+        }
+        byte[] bytes = byteOut.toByteArray();
+        writer.writeInt(bytes.length + 4);
+        writer.write(bytes);
+        writer.writeByte(BSONEndMarker.instance().type());
+    }
 }

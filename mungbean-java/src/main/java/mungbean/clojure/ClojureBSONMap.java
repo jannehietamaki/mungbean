@@ -30,37 +30,37 @@ import clojure.lang.Symbol;
 
 public class ClojureBSONMap extends AbstractBSONMap<IPersistentMap> {
 
-	public ClojureBSONMap() {
-		super(IPersistentMap.class);
-	}
+    public ClojureBSONMap() {
+        super(IPersistentMap.class);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Iterable<KeyValuePair<String, Object>> entriesOf(IPersistentMap item) {
-		Iterator<MapEntry> entries = item.iterator();
-		List<KeyValuePair<String, Object>> returnValue = new ArrayList<KeyValuePair<String, Object>>();
-		while (entries.hasNext()) {
-			MapEntry entry = entries.next();
-			returnValue.add(new KeyValuePair<String, Object>(toString(entry.getKey()), entry.getValue()));
-		}
-		return returnValue;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected Iterable<KeyValuePair<String, Object>> entriesOf(IPersistentMap item) {
+        Iterator<MapEntry> entries = item.iterator();
+        List<KeyValuePair<String, Object>> returnValue = new ArrayList<KeyValuePair<String, Object>>();
+        while (entries.hasNext()) {
+            MapEntry entry = entries.next();
+            returnValue.add(new KeyValuePair<String, Object>(toString(entry.getKey()), entry.getValue()));
+        }
+        return returnValue;
+    }
 
-	private String toString(Object key) {
-		if (key instanceof Keyword) {
-			Keyword keyword = (Keyword) key;
-			return keyword.getName();
-		}
-		return key.toString();
-	}
+    private String toString(Object key) {
+        if (key instanceof Keyword) {
+            Keyword keyword = (Keyword) key;
+            return keyword.getName();
+        }
+        return key.toString();
+    }
 
-	@Override
-	protected IPersistentMap newInstance() {
-		return PersistentHashMap.create();
-	}
+    @Override
+    protected IPersistentMap newInstance() {
+        return PersistentHashMap.create();
+    }
 
-	@Override
-	protected IPersistentMap setValue(IPersistentMap item, String key, Object value) {
-		return item.assoc(Keyword.intern(Symbol.intern(key)), value);
-	}
+    @Override
+    protected IPersistentMap setValue(IPersistentMap item, String key, Object value) {
+        return item.assoc(Keyword.intern(Symbol.intern(key)), value);
+    }
 }

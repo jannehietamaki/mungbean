@@ -25,19 +25,19 @@ import mungbean.protocol.message.CommandResponse;
 import mungbean.protocol.message.NoResponseExpected;
 
 public class Command extends AbstractCommand<NoResponseExpected> {
-	private final String command;
+    private final String command;
 
-	public Command(String command) {
-		this.command = command;
-	}
+    public Command(String command) {
+        this.command = command;
+    }
 
-	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection) {
-		return map(command, 1D);
-	}
+    @Override
+    public Map<String, Object> requestMap(DBCollection<?> collection) {
+        return map(command, 1D);
+    }
 
-	@Override
-	public NoResponseExpected parseResponse(CommandResponse values) {
-		return new NoResponseExpected();
-	}
+    @Override
+    public NoResponseExpected parseResponse(CommandResponse values) {
+        return new NoResponseExpected();
+    }
 }

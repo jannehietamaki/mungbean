@@ -25,30 +25,30 @@ import scala.actors.threadpool.Arrays;
 
 public class CollectionUtil {
 
-	public static Map<String, Object> map(final String key, final Object value) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put(key, value);
-		return map;
-	}
+    public static Map<String, Object> map(final String key, final Object value) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put(key, value);
+        return map;
+    }
 
-	public static Map<String, Object> merge(Map<String, Object>... maps) {
-		Map<String, Object> ret = new LinkedHashMap<String, Object>();
-		for (Map<String, Object> map : maps) {
-			ret.putAll(map);
-		}
-		return ret;
-	}
+    public static Map<String, Object> merge(Map<String, Object>... maps) {
+        Map<String, Object> ret = new LinkedHashMap<String, Object>();
+        for (Map<String, Object> map : maps) {
+            ret.putAll(map);
+        }
+        return ret;
+    }
 
-	@SuppressWarnings("unchecked")
-	public static List<Object> list(Object... items) {
-		return Arrays.asList(items);
-	}
+    @SuppressWarnings("unchecked")
+    public static List<Object> list(Object... items) {
+        return Arrays.asList(items);
+    }
 
-	public static List<Object> merge(List<Object>... lists) {
-		List<Object> ret = new ArrayList<Object>();
-		for (List<Object> list : lists) {
-			ret.addAll(list);
-		}
-		return ret;
-	}
+    public static List<Object> merge(List<Object>... lists) {
+        List<Object> ret = new ArrayList<Object>();
+        for (List<Object> list : lists) {
+            ret.addAll(list);
+        }
+        return ret;
+    }
 }

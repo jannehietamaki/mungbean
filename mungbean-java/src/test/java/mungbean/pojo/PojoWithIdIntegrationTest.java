@@ -30,30 +30,30 @@ import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class PojoWithIdIntegrationTest extends Specification<Database> {
-	public class WithDatabase {
-		public Database create() {
-			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
-		}
+    public class WithDatabase {
+        public Database create() {
+            return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
+        }
 
-		public void destroy() {
-			context.dbAdmin().dropDatabase();
-		}
+        public void destroy() {
+            context.dbAdmin().dropDatabase();
+        }
 
-		public void objectWithIdCanBeStored() {
-			final DBCollection<TestObjectWithId> collection = context.openCollection("foo", TestObjectWithId.class);
-			final TestObjectWithId item = collection.save(new TestObjectWithId("foo", 123));
-			TestObjectWithId itemFromDb = collection.find(item.id());
+        public void objectWithIdCanBeStored() {
+            final DBCollection<TestObjectWithId> collection = context.openCollection("foo", TestObjectWithId.class);
+            final TestObjectWithId item = collection.save(new TestObjectWithId("foo", 123));
+            TestObjectWithId itemFromDb = collection.find(item.id());
 
-			specify(collection.query(new Query().field("name").is("foo")).get(0).value(), does.equal(123));
+            specify(collection.query(new Query().field("name").is("foo")).get(0).value(), does.equal(123));
 
-			specify(itemFromDb.id(), does.equal(item.id()));
-			collection.delete(item.id());
-			specify(new Block() {
-				@Override
-				public void run() throws Throwable {
-					collection.find(item.id());
-				}
-			}, does.raise(NotFoundException.class));
-		}
-	}
+            specify(itemFromDb.id(), does.equal(item.id()));
+            collection.delete(item.id());
+            specify(new Block() {
+                @Override
+                public void run() throws Throwable {
+                    collection.find(item.id());
+                }
+            }, does.raise(NotFoundException.class));
+        }
+    }
 }

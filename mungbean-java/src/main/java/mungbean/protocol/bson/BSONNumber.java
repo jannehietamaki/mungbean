@@ -19,18 +19,18 @@ import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONNumber extends BSONCoder<Double> {
-	public BSONNumber() {
-		super(1, Double.class);
-	}
+    public BSONNumber() {
+        super(1, Double.class);
+    }
 
-	@Override
-	protected Double decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return Double.longBitsToDouble(reader.readLong());
-	}
+    @Override
+    protected Double decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return Double.longBitsToDouble(reader.readLong());
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Double value, LittleEndianDataWriter writer) {
-		writer.writeDouble(value);
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, Double value, LittleEndianDataWriter writer) {
+        writer.writeDouble(value);
+    }
 
 }

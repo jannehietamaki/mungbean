@@ -21,19 +21,19 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONOid extends BSONCoder<ObjectId> {
 
-	public BSONOid() {
-		super(7, ObjectId.class);
-	}
+    public BSONOid() {
+        super(7, ObjectId.class);
+    }
 
-	@Override
-	protected ObjectId decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		byte[] bytes = new byte[12];
-		reader.read(bytes);
-		return new ObjectId(bytes);
-	}
+    @Override
+    protected ObjectId decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        byte[] bytes = new byte[12];
+        reader.read(bytes);
+        return new ObjectId(bytes);
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, ObjectId oid, LittleEndianDataWriter writer) {
-		writer.write(oid.toByteArray());
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, ObjectId oid, LittleEndianDataWriter writer) {
+        writer.write(oid.toByteArray());
+    }
 }

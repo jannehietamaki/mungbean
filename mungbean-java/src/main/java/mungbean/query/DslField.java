@@ -19,41 +19,41 @@ package mungbean.query;
 import java.util.Map;
 
 public class DslField {
-	private final Map<String, Object> result;
-	private final String key;
+    private final Map<String, Object> result;
+    private final String key;
 
-	public DslField(String key, Map<String, Object> result) {
-		this.key = key;
-		this.result = result;
-	}
+    public DslField(String key, Map<String, Object> result) {
+        this.key = key;
+        this.result = result;
+    }
 
-	protected void putResult(Object value) {
-		result.put(key, value);
-	}
+    protected void putResult(Object value) {
+        result.put(key, value);
+    }
 
-	protected String key() {
-		return key;
-	}
+    protected String key() {
+        return key;
+    }
 
-	protected void put(Map<String, Object> value) {
-		put(key, value);
-	}
+    protected void put(Map<String, Object> value) {
+        put(key, value);
+    }
 
-	@SuppressWarnings("unchecked")
-	protected void put(String mapKey, Map<String, Object> value) {
-		Object val = result.get(mapKey);
-		if (val != null) {
-			if (!(val instanceof Map)) {
-				throw new IllegalArgumentException("Invalid combination of arguments");
-			}
-			Map<String, Object> valueMap = (Map<String, Object>) val;
-			valueMap.putAll(value);
-		} else {
-			result.put(mapKey, value);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    protected void put(String mapKey, Map<String, Object> value) {
+        Object val = result.get(mapKey);
+        if (val != null) {
+            if (!(val instanceof Map)) {
+                throw new IllegalArgumentException("Invalid combination of arguments");
+            }
+            Map<String, Object> valueMap = (Map<String, Object>) val;
+            valueMap.putAll(value);
+        } else {
+            result.put(mapKey, value);
+        }
+    }
 
-	public Map<String, Object> build() {
-		return result;
-	}
+    public Map<String, Object> build() {
+        return result;
+    }
 }

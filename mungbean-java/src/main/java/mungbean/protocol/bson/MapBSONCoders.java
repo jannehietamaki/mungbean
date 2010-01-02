@@ -17,18 +17,18 @@ package mungbean.protocol.bson;
 
 public class MapBSONCoders extends AbstractBSONCoders {
 
-	public MapBSONCoders() {
-		addEncoder(new BSONEndMarker());
-		addEncoder(new BSONNull());
-		addEncoder(new BSONArray<Object>());
-		addEncoder(new BSONInteger());
-		addEncoder(new BSONNumber());
-		addEncoder(new BSONString());
-		addEncoder(new BSONMap());
-		addEncoder(new BSONOid());
-		addEncoder(new BSONPattern());
-		addEncoder(new BSONDate());
-		addEncoder(new BSONBoolean());
-		addEncoder(new BSONCode());
-	}
+    public MapBSONCoders() {
+        addEncoder(new BSONEndMarker());
+        addEncoder(new BSONNull());
+        addEncoder(new BSONArray<Object>());
+        addEncoder(new BSONInteger());
+        addEncoder(new BSONNumber());
+        addEncoder(new BSONString());
+        addEncoder(new BSONMap());
+        addEncoder(new BSONOid());
+        addEncoder(new BSONPattern());
+        addEncoder(new BSONDate());
+        addEncoder(new BSONBoolean());
+        addEncoder(new BSONCode());
+    }
 }

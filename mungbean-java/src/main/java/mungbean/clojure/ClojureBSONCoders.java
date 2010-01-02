@@ -30,19 +30,19 @@ import mungbean.protocol.bson.BSONPattern;
 import mungbean.protocol.bson.BSONString;
 
 public class ClojureBSONCoders extends AbstractBSONCoders {
-	public ClojureBSONCoders() {
-		addEncoder(new BSONEndMarker());
-		addEncoder(new BSONNull());
-		addEncoder(new ClojureBSONSeq<Object>());
-		addEncoder(new BSONArray<Object>());
-		addEncoder(new BSONInteger());
-		addEncoder(new BSONNumber());
-		addEncoder(new BSONString());
-		addEncoder(new ClojureBSONMap());
-		addEncoder(new BSONMap());
-		addEncoder(new BSONOid());
-		addEncoder(new BSONPattern());
-		addEncoder(new BSONDate());
-		addEncoder(new BSONBoolean());
-	}
+    public ClojureBSONCoders() {
+        addEncoder(new BSONEndMarker());
+        addEncoder(new BSONNull());
+        addEncoder(new ClojureBSONSeq<Object>());
+        addEncoder(new BSONArray<Object>());
+        addEncoder(new BSONInteger());
+        addEncoder(new BSONNumber());
+        addEncoder(new BSONString());
+        addEncoder(new ClojureBSONMap());
+        addEncoder(new BSONMap());
+        addEncoder(new BSONOid());
+        addEncoder(new BSONPattern());
+        addEncoder(new BSONDate());
+        addEncoder(new BSONBoolean());
+    }
 }

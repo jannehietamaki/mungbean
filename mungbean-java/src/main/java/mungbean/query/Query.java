@@ -20,51 +20,51 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Query implements QueryBuilder {
-	private final Map<String, Object> query;
-	private final Map<String, Object> orderMap;
-	private int skip;
-	private int limit;
+    private final Map<String, Object> query;
+    private final Map<String, Object> orderMap;
+    private int skip;
+    private int limit;
 
-	public Query() {
-		query = new LinkedHashMap<String, Object>();
-		orderMap = new LinkedHashMap<String, Object>();
-	}
+    public Query() {
+        query = new LinkedHashMap<String, Object>();
+        orderMap = new LinkedHashMap<String, Object>();
+    }
 
-	protected Query(Map<String, Object> query, int skip, int limit) {
-		this.query = query;
-		orderMap = new LinkedHashMap<String, Object>();
-		this.skip = skip;
-		this.limit = limit;
-	}
+    protected Query(Map<String, Object> query, int skip, int limit) {
+        this.query = query;
+        orderMap = new LinkedHashMap<String, Object>();
+        this.skip = skip;
+        this.limit = limit;
+    }
 
-	public QueryField field(String key) {
-		return new QueryField(this, query, orderMap, key);
-	}
+    public QueryField field(String key) {
+        return new QueryField(this, query, orderMap, key);
+    }
 
-	public Query setSkip(int skip) {
-		this.skip = skip;
-		return this;
-	}
+    public Query setSkip(int skip) {
+        this.skip = skip;
+        return this;
+    }
 
-	public Query setLimit(int limit) {
-		this.limit = limit;
-		return this;
-	}
+    public Query setLimit(int limit) {
+        this.limit = limit;
+        return this;
+    }
 
-	public Map<String, Object> build() {
-		return query;
-	}
+    public Map<String, Object> build() {
+        return query;
+    }
 
-	@Override
-	public Map<String, Object> order() {
-		return orderMap;
-	}
+    @Override
+    public Map<String, Object> order() {
+        return orderMap;
+    }
 
-	public int limit() {
-		return limit;
-	}
+    public int limit() {
+        return limit;
+    }
 
-	public int skip() {
-		return skip;
-	}
+    public int skip() {
+        return skip;
+    }
 }

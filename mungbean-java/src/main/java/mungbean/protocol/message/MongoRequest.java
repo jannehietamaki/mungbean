@@ -23,17 +23,17 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public abstract class MongoRequest<ResponseType extends Response> {
 
-	public abstract void send(LittleEndianDataWriter writer);
+    public abstract void send(LittleEndianDataWriter writer);
 
-	public abstract ResponseType readResponse(LittleEndianDataReader reader);
+    public abstract ResponseType readResponse(LittleEndianDataReader reader);
 
-	public abstract RequestOpCode type();
+    public abstract RequestOpCode type();
 
-	public abstract int length();
+    public abstract int length();
 
-	public String debugInfo() {
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		send(new LittleEndianDataWriter(output));
-		return "[MongoRequest: opCode= " + type() + " data:\n" + new HexDumpEncoder().encode(output.toByteArray()) + "]";
-	}
+    public String debugInfo() {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        send(new LittleEndianDataWriter(output));
+        return "[MongoRequest: opCode= " + type() + " data:\n" + new HexDumpEncoder().encode(output.toByteArray()) + "]";
+    }
 }

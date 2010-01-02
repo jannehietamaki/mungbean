@@ -19,26 +19,26 @@ package mungbean.protocol.message;
 import java.util.Map;
 
 public class CommandResponse implements Response {
-	private final Map<String, Object> map;
+    private final Map<String, Object> map;
 
-	public CommandResponse(Map<String, Object> map) {
-		this.map = map;
-	}
+    public CommandResponse(Map<String, Object> map) {
+        this.map = map;
+    }
 
-	public Long getLong(String key) {
-		return ((Number) get(key)).longValue();
-	}
+    public Long getLong(String key) {
+        return ((Number) get(key)).longValue();
+    }
 
-	public Object get(String key) {
-		return map.get(key);
-	}
+    public Object get(String key) {
+        return map.get(key);
+    }
 
-	public Map<String, Object> values() {
-		return map;
-	}
+    public Map<String, Object> values() {
+        return map;
+    }
 
-	@Override
-	public int responseTo() {
-		return -1;
-	}
+    @Override
+    public int responseTo() {
+        return -1;
+    }
 }

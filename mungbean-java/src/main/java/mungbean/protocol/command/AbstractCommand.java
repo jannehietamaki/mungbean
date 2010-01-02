@@ -22,7 +22,7 @@ import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
 
 public abstract class AbstractCommand<ResponseType> {
-	public abstract Map<String, Object> requestMap(DBCollection<?> collection);
+    public abstract Map<String, Object> requestMap(DBCollection<?> collection);
 
-	public abstract ResponseType parseResponse(CommandResponse values);
+    public abstract ResponseType parseResponse(CommandResponse values);
 }

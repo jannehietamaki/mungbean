@@ -20,18 +20,18 @@ import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONMongoTimestamp extends BSONCoder<MongoTimestamp> {
-	protected BSONMongoTimestamp() {
-		super(18, MongoTimestamp.class);
-	}
+    protected BSONMongoTimestamp() {
+        super(18, MongoTimestamp.class);
+    }
 
-	@Override
-	protected MongoTimestamp decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return new MongoTimestamp(reader.readInt(), reader.readInt());
-	}
+    @Override
+    protected MongoTimestamp decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return new MongoTimestamp(reader.readInt(), reader.readInt());
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, MongoTimestamp ts, LittleEndianDataWriter writer) {
-		writer.writeInt(ts.time());
-		writer.writeInt(ts.incrementedField());
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, MongoTimestamp ts, LittleEndianDataWriter writer) {
+        writer.writeInt(ts.time());
+        writer.writeInt(ts.incrementedField());
+    }
 }

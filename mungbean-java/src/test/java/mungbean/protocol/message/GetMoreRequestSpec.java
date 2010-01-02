@@ -28,23 +28,23 @@ import jdave.junit4.JDaveRunner;
 
 @RunWith(JDaveRunner.class)
 public class GetMoreRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
-	public class WithValidRequest {
-		public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-			return new DBTransaction<QueryResponse<Map<String, Object>>>(new GetMoreRequest<Map<String, Object>>("foozbar.foo", 123123L, 0, new BSONMap()), 127);
-		}
+    public class WithValidRequest {
+        public DBTransaction<QueryResponse<Map<String, Object>>> create() {
+            return new DBTransaction<QueryResponse<Map<String, Object>>>(new GetMoreRequest<Map<String, Object>>("foozbar.foo", 123123L, 0, new BSONMap()), 127);
+        }
 
-		public void requestCanBeSerialized() {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 44, 0, 0, 0, // message_lenght
-					127, 0, 0, 0, // requestId
-					-1, -1, -1, -1, // responseTo
-					-43, 7, 0, 0, // opCode
-					0, 0, 0, 0, // RESERVED
-					'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // collectionName
-					0, 0, 0, 0, // numberToReturn
-					-13, -32, 1, 0, 0, 0, 0, 0 // CursorID
-					}));
-		}
-	}
+        public void requestCanBeSerialized() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            specify(output.toByteArray(), does.containExactly(new byte[] { 44, 0, 0, 0, // message_lenght
+                    127, 0, 0, 0, // requestId
+                    -1, -1, -1, -1, // responseTo
+                    -43, 7, 0, 0, // opCode
+                    0, 0, 0, 0, // RESERVED
+                    'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // collectionName
+                    0, 0, 0, 0, // numberToReturn
+                    -13, -32, 1, 0, 0, 0, 0, 0 // CursorID
+                    }));
+        }
+    }
 }

@@ -27,48 +27,48 @@ import mungbean.Server;
 import mungbean.SingleNodeDbOperationExecutor;
 
 public class MasterResolverStrategy implements ServerResolverStrategy {
-	private final AtomicReference<SingleNodeDbOperationExecutor> currentMaster = new AtomicReference<SingleNodeDbOperationExecutor>();
-	private final List<SingleNodeDbOperationExecutor> allServers;
+    private final AtomicReference<SingleNodeDbOperationExecutor> currentMaster = new AtomicReference<SingleNodeDbOperationExecutor>();
+    private final List<SingleNodeDbOperationExecutor> allServers;
 
-	public MasterResolverStrategy(Server[] servers) {
-		allServers = new ArrayList<SingleNodeDbOperationExecutor>();
-		for (Server server : servers) {
-			allServers.add(new SingleNodeDbOperationExecutor(server));
-		}
-		findNewMaster();
-	}
+    public MasterResolverStrategy(Server[] servers) {
+        allServers = new ArrayList<SingleNodeDbOperationExecutor>();
+        for (Server server : servers) {
+            allServers.add(new SingleNodeDbOperationExecutor(server));
+        }
+        findNewMaster();
+    }
 
-	@Override
-	public <T> T execute(DBConversation<T> conversation) {
-		try {
-			return getWriteTarget().execute(conversation);
-		} catch (Exception e) {
-			return findNewMaster().execute(conversation);
-		}
-	}
+    @Override
+    public <T> T execute(DBConversation<T> conversation) {
+        try {
+            return getWriteTarget().execute(conversation);
+        } catch (Exception e) {
+            return findNewMaster().execute(conversation);
+        }
+    }
 
-	private SingleNodeDbOperationExecutor getWriteTarget() {
-		SingleNodeDbOperationExecutor server = currentMaster.get();
-		if (server.isAlive() && server.isMaster()) {
-			return server;
-		}
-		return findNewMaster();
-	}
+    private SingleNodeDbOperationExecutor getWriteTarget() {
+        SingleNodeDbOperationExecutor server = currentMaster.get();
+        if (server.isAlive() && server.isMaster()) {
+            return server;
+        }
+        return findNewMaster();
+    }
 
-	private SingleNodeDbOperationExecutor findNewMaster() {
-		for (SingleNodeDbOperationExecutor server : allServers) {
-			if (server.isMaster() && server.isAlive()) {
-				currentMaster.set(server);
-				return server;
-			}
-		}
-		throw new MongoException("Unable to find master!");
-	}
+    private SingleNodeDbOperationExecutor findNewMaster() {
+        for (SingleNodeDbOperationExecutor server : allServers) {
+            if (server.isMaster() && server.isAlive()) {
+                currentMaster.set(server);
+                return server;
+            }
+        }
+        throw new MongoException("Unable to find master!");
+    }
 
-	@Override
-	public void close() {
-		for (DBOperationExecutor server : allServers) {
-			server.close();
-		}
-	}
+    @Override
+    public void close() {
+        for (DBOperationExecutor server : allServers) {
+            server.close();
+        }
+    }
 }

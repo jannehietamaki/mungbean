@@ -25,23 +25,23 @@ import mungbean.protocol.command.Command;
 import mungbean.query.Query;
 
 public class DatabaseAdmin {
-	private final AbstractDatabase database;
+    private final AbstractDatabase database;
 
-	public DatabaseAdmin(AbstractDatabase database) {
-		this.database = database;
-	}
+    public DatabaseAdmin(AbstractDatabase database) {
+        this.database = database;
+    }
 
-	public void dropDatabase() {
-		database.mapCollection("$cmd").command(new Command("dropDatabase"));
-	}
+    public void dropDatabase() {
+        database.mapCollection("$cmd").command(new Command("dropDatabase"));
+    }
 
-	public Collection<String> getCollectionNames() {
-		List<Map<String, Object>> names = database.mapCollection("system.namespaces").query(new Query());
-		HashSet<String> result = new HashSet<String>();
-		for (Map<String, Object> name : names) {
-			result.add(String.valueOf(name.get("name")).split("\\.")[1]);
-		}
-		result.remove("system");
-		return result;
-	}
+    public Collection<String> getCollectionNames() {
+        List<Map<String, Object>> names = database.mapCollection("system.namespaces").query(new Query());
+        HashSet<String> result = new HashSet<String>();
+        for (Map<String, Object> name : names) {
+            result.add(String.valueOf(name.get("name")).split("\\.")[1]);
+        }
+        result.remove("system");
+        return result;
+    }
 }

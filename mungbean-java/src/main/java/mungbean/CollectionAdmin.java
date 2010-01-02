@@ -25,36 +25,36 @@ import mungbean.protocol.command.admin.IndexOptionsBuilder;
 import mungbean.protocol.message.InsertRequest;
 
 public class CollectionAdmin {
-	private final AbstractDBCollection<?> collection;
+    private final AbstractDBCollection<?> collection;
 
-	public CollectionAdmin(AbstractDBCollection<?> collection) {
-		this.collection = collection;
-	}
+    public CollectionAdmin(AbstractDBCollection<?> collection) {
+        this.collection = collection;
+    }
 
-	public void ensureIndex(String[] fields, IndexOptionsBuilder builder) {
-		final Map<String, Object> doc = new LinkedHashMap<String, Object>();
-		final Map<String, Object> key = new LinkedHashMap<String, Object>();
-		doc.put("ns", collection.dbName());
-		doc.put("key", key);
-		StringBuilder name = new StringBuilder();
-		double value = 1D;
-		for (String field : fields) {
-			key.put(field, value);
-			if (name.length() > 0) {
-				name.append("_");
-			}
-			name.append(field + "_" + value);
-			value = -1D;
-		}
-		doc.put("name", name.toString());
-		doc.putAll(builder.build());
-		collection.execute(new DBConversation<Void>() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public Void execute(DBConnection connection) {
-				connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new MapBSONCoders(), doc));
-				return null;
-			}
-		});
-	}
+    public void ensureIndex(String[] fields, IndexOptionsBuilder builder) {
+        final Map<String, Object> doc = new LinkedHashMap<String, Object>();
+        final Map<String, Object> key = new LinkedHashMap<String, Object>();
+        doc.put("ns", collection.dbName());
+        doc.put("key", key);
+        StringBuilder name = new StringBuilder();
+        double value = 1D;
+        for (String field : fields) {
+            key.put(field, value);
+            if (name.length() > 0) {
+                name.append("_");
+            }
+            name.append(field + "_" + value);
+            value = -1D;
+        }
+        doc.put("name", name.toString());
+        doc.putAll(builder.build());
+        collection.execute(new DBConversation<Void>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Void execute(DBConnection connection) {
+                connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new MapBSONCoders(), doc));
+                return null;
+            }
+        });
+    }
 }

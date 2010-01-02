@@ -20,25 +20,25 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class IndexOptionsBuilder {
-	private boolean unique = false;
-	private boolean dropDups = false;
+    private boolean unique = false;
+    private boolean dropDups = false;
 
-	public IndexOptionsBuilder unique() {
-		unique = true;
-		return this;
-	}
+    public IndexOptionsBuilder unique() {
+        unique = true;
+        return this;
+    }
 
-	public IndexOptionsBuilder dropDups() {
-		dropDups = true;
-		return this;
-	}
+    public IndexOptionsBuilder dropDups() {
+        dropDups = true;
+        return this;
+    }
 
-	public Map<String, Object> build() {
-		return new LinkedHashMap<String, Object>() {
-			{
-				put("unique", unique);
-				put("dropDups", dropDups);
-			}
-		};
-	}
+    public Map<String, Object> build() {
+        return new LinkedHashMap<String, Object>() {
+            {
+                put("unique", unique);
+                put("dropDups", dropDups);
+            }
+        };
+    }
 }

@@ -28,74 +28,74 @@ import mungbean.query.QueryBuilder;
 
 public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<ResponseType>> {
 
-	private final QueryOptionsBuilder builder;
-	private final int numberToSkip;
-	private final int numberToReturn;
-	private final BSON query;
-	private final boolean closeCursor;
-	private final BSONCoder<ResponseType> coder;
+    private final QueryOptionsBuilder builder;
+    private final int numberToSkip;
+    private final int numberToReturn;
+    private final BSON query;
+    private final boolean closeCursor;
+    private final BSONCoder<ResponseType> coder;
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, boolean closeCursor, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
-		super(collectionName);
-		this.builder = builder;
-		this.numberToSkip = query.skip();
-		this.numberToReturn = query.limit();
-		this.closeCursor = closeCursor;
-		this.query = buildQuery(coders, query.build(), query.order());
-		this.coder = coder;
-	}
+    public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, boolean closeCursor, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+        super(collectionName);
+        this.builder = builder;
+        this.numberToSkip = query.skip();
+        this.numberToReturn = query.limit();
+        this.closeCursor = closeCursor;
+        this.query = buildQuery(coders, query.build(), query.order());
+        this.coder = coder;
+    }
 
-	public QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
-		super(collectionName);
-		this.builder = builder;
-		this.numberToSkip = 0;
-		this.numberToReturn = 1;
-		this.closeCursor = true;
-		this.query = buildQuery(coders, params, orders);
-		this.coder = coder;
-	}
+    public QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+        super(collectionName);
+        this.builder = builder;
+        this.numberToSkip = 0;
+        this.numberToReturn = 1;
+        this.closeCursor = true;
+        this.query = buildQuery(coders, params, orders);
+        this.coder = coder;
+    }
 
-	private BSON buildQuery(AbstractBSONCoders coders, final Map<String, Object> query, final Map<String, Object> order) {
-		if (order == null || order.isEmpty()) {
-			return coders.forValue(query).write(coders, query);
-		}
-		return new BSONMap().write(coders, new LinkedHashMap<String, Object>() {
-			{
-				put("query", query);
-				put("orderby", order);
-			}
-		});
-	}
+    private BSON buildQuery(AbstractBSONCoders coders, final Map<String, Object> query, final Map<String, Object> order) {
+        if (order == null || order.isEmpty()) {
+            return coders.forValue(query).write(coders, query);
+        }
+        return new BSONMap().write(coders, new LinkedHashMap<String, Object>() {
+            {
+                put("query", query);
+                put("orderby", order);
+            }
+        });
+    }
 
-	@Override
-	public int length() {
-		return 4 + collectionNameLength() + 4 + 4 + query.length();
-	}
+    @Override
+    public int length() {
+        return 4 + collectionNameLength() + 4 + 4 + query.length();
+    }
 
-	@Override
-	public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
-		return new QueryResponse<ResponseType>(reader, coder);
-	}
+    @Override
+    public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
+        return new QueryResponse<ResponseType>(reader, coder);
+    }
 
-	@Override
-	public void send(LittleEndianDataWriter writer) {
-		writer.writeInt(builder.build());
-		writeCollectionName(writer);
-		writer.writeInt(numberToSkip);
-		if (closeCursor) {
-			if (numberToReturn > 0) {
-				writer.writeInt(-numberToReturn);
-			} else {
-				writer.writeInt(Integer.MIN_VALUE);
-			}
-		} else {
-			writer.writeInt(numberToReturn);
-		}
-		writer.write(query.bytes());
-	}
+    @Override
+    public void send(LittleEndianDataWriter writer) {
+        writer.writeInt(builder.build());
+        writeCollectionName(writer);
+        writer.writeInt(numberToSkip);
+        if (closeCursor) {
+            if (numberToReturn > 0) {
+                writer.writeInt(-numberToReturn);
+            } else {
+                writer.writeInt(Integer.MIN_VALUE);
+            }
+        } else {
+            writer.writeInt(numberToReturn);
+        }
+        writer.write(query.bytes());
+    }
 
-	@Override
-	public RequestOpCode type() {
-		return RequestOpCode.OP_QUERY;
-	}
+    @Override
+    public RequestOpCode type() {
+        return RequestOpCode.OP_QUERY;
+    }
 }

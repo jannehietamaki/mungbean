@@ -27,38 +27,38 @@ import mungbean.Server;
 import mungbean.SingleNodeDbOperationExecutor;
 
 public class RoundRobinResolverStrategy implements ServerResolverStrategy {
-	private final AtomicInteger roundRobinCount = new AtomicInteger(0);
+    private final AtomicInteger roundRobinCount = new AtomicInteger(0);
 
-	private final List<SingleNodeDbOperationExecutor> allServers;
+    private final List<SingleNodeDbOperationExecutor> allServers;
 
-	public RoundRobinResolverStrategy(Server[] servers) {
-		allServers = new ArrayList<SingleNodeDbOperationExecutor>();
-		for (Server server : servers) {
-			allServers.add(new SingleNodeDbOperationExecutor(server));
-		}
-	}
+    public RoundRobinResolverStrategy(Server[] servers) {
+        allServers = new ArrayList<SingleNodeDbOperationExecutor>();
+        for (Server server : servers) {
+            allServers.add(new SingleNodeDbOperationExecutor(server));
+        }
+    }
 
-	@Override
-	public void close() {
-		for (DBOperationExecutor server : allServers) {
-			server.close();
-		}
-	}
+    @Override
+    public void close() {
+        for (DBOperationExecutor server : allServers) {
+            server.close();
+        }
+    }
 
-	@Override
-	public <T> T execute(DBConversation<T> conversation) {
-		return getReadTarget().execute(conversation);
-	}
+    @Override
+    public <T> T execute(DBConversation<T> conversation) {
+        return getReadTarget().execute(conversation);
+    }
 
-	private SingleNodeDbOperationExecutor getReadTarget() {
-		int numberOfServersAvailable = allServers.size();
-		for (int a = 0; a < numberOfServersAvailable; a++) {
-			SingleNodeDbOperationExecutor server = allServers.get(roundRobinCount.incrementAndGet() % numberOfServersAvailable);
-			if (server.isAlive()) {
-				return server;
-			}
-		}
-		throw new MongoException("No servers available for read!");
-	}
+    private SingleNodeDbOperationExecutor getReadTarget() {
+        int numberOfServersAvailable = allServers.size();
+        for (int a = 0; a < numberOfServersAvailable; a++) {
+            SingleNodeDbOperationExecutor server = allServers.get(roundRobinCount.incrementAndGet() % numberOfServersAvailable);
+            if (server.isAlive()) {
+                return server;
+            }
+        }
+        throw new MongoException("No servers available for read!");
+    }
 
 }

@@ -19,33 +19,33 @@ import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
 public class KillCursorsRequest extends MongoRequest<NoResponseExpected> {
-	private final long[] cursorIds;
+    private final long[] cursorIds;
 
-	public KillCursorsRequest(long... cursorIds) {
-		this.cursorIds = cursorIds;
-	}
+    public KillCursorsRequest(long... cursorIds) {
+        this.cursorIds = cursorIds;
+    }
 
-	@Override
-	public int length() {
-		return 4 + 4 + cursorIds.length * 8;
-	}
+    @Override
+    public int length() {
+        return 4 + 4 + cursorIds.length * 8;
+    }
 
-	@Override
-	public NoResponseExpected readResponse(LittleEndianDataReader reader) {
-		return new NoResponseExpected();
-	}
+    @Override
+    public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+        return new NoResponseExpected();
+    }
 
-	@Override
-	public void send(LittleEndianDataWriter writer) {
-		writer.writeInt(0); // RESERVED
-		writer.writeInt(cursorIds.length);
-		for (long cursorId : cursorIds) {
-			writer.writeLong(cursorId);
-		}
-	}
+    @Override
+    public void send(LittleEndianDataWriter writer) {
+        writer.writeInt(0); // RESERVED
+        writer.writeInt(cursorIds.length);
+        for (long cursorId : cursorIds) {
+            writer.writeLong(cursorId);
+        }
+    }
 
-	@Override
-	public RequestOpCode type() {
-		return RequestOpCode.OP_KILL_CURSORS;
-	}
+    @Override
+    public RequestOpCode type() {
+        return RequestOpCode.OP_KILL_CURSORS;
+    }
 }

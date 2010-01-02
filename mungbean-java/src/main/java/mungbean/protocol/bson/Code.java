@@ -17,32 +17,32 @@
 package mungbean.protocol.bson;
 
 public class Code {
-	private final String code;
+    private final String code;
 
-	public Code(String code) {
-		this.code = code;
-	}
+    public Code(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public String toString() {
-		return code();
-	}
+    @Override
+    public String toString() {
+        return code();
+    }
 
-	public String code() {
-		return code;
-	}
+    public String code() {
+        return code;
+    }
 
-	@Override
-	public int hashCode() {
-		return code.hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return code.hashCode();
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o != null && o.getClass().equals(getClass())) {
-			Code other = (Code) o;
-			return other.code().equals(code());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o.getClass().equals(getClass())) {
+            Code other = (Code) o;
+            return other.code().equals(code());
+        }
+        return false;
+    }
 }

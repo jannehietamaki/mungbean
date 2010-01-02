@@ -23,43 +23,43 @@ import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
 public class UpdateRequest<Type> extends CollectionRequest<NoResponseExpected> {
-	private final UpdateOptionsBuilder flags;
-	private final BSON selector;
-	private final BSON updates;
+    private final UpdateOptionsBuilder flags;
+    private final BSON selector;
+    private final BSON updates;
 
-	public UpdateRequest(String collectionName, QueryBuilder selector, UpdateBuilder updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
-		this(collectionName, selector, updates.options(), updates.build(), coders, selectorCoders);
-	}
+    public UpdateRequest(String collectionName, QueryBuilder selector, UpdateBuilder updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
+        this(collectionName, selector, updates.options(), updates.build(), coders, selectorCoders);
+    }
 
-	public UpdateRequest(String collectionName, QueryBuilder selector, UpdateOptionsBuilder updateOptions, Object updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
-		super(collectionName);
-		this.flags = updateOptions;
-		this.selector = selectorCoders.forValue(selector.build()).write(coders, selector.build());
-		this.updates = coders.forValue(updates).write(coders, updates);
-	}
+    public UpdateRequest(String collectionName, QueryBuilder selector, UpdateOptionsBuilder updateOptions, Object updates, AbstractBSONCoders coders, AbstractBSONCoders selectorCoders) {
+        super(collectionName);
+        this.flags = updateOptions;
+        this.selector = selectorCoders.forValue(selector.build()).write(coders, selector.build());
+        this.updates = coders.forValue(updates).write(coders, updates);
+    }
 
-	@Override
-	public int length() {
-		return 4 + collectionNameLength() + 4 + selector.length() + updates.length();
-	}
+    @Override
+    public int length() {
+        return 4 + collectionNameLength() + 4 + selector.length() + updates.length();
+    }
 
-	@Override
-	public NoResponseExpected readResponse(LittleEndianDataReader reader) {
-		return new NoResponseExpected();
-	}
+    @Override
+    public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+        return new NoResponseExpected();
+    }
 
-	@Override
-	public void send(LittleEndianDataWriter writer) {
-		writer.writeInt(0); // RESERVED
-		writeCollectionName(writer);
-		writer.writeInt(flags.value());
-		writer.write(selector.bytes());
-		writer.write(updates.bytes());
-	}
+    @Override
+    public void send(LittleEndianDataWriter writer) {
+        writer.writeInt(0); // RESERVED
+        writeCollectionName(writer);
+        writer.writeInt(flags.value());
+        writer.write(selector.bytes());
+        writer.write(updates.bytes());
+    }
 
-	@Override
-	public RequestOpCode type() {
-		return RequestOpCode.OP_UPDATE;
-	}
+    @Override
+    public RequestOpCode type() {
+        return RequestOpCode.OP_UPDATE;
+    }
 
 }

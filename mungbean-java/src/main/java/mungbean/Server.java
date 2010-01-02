@@ -17,26 +17,26 @@
 package mungbean;
 
 public class Server {
-	private final String host;
-	private final int port;
-	private final Authentication[] authentication;
+    private final String host;
+    private final int port;
+    private final Authentication[] authentication;
 
-	public Server(String host, int port, Authentication... authentication) {
-		this.host = host;
-		this.port = port;
-		this.authentication = authentication;
-	}
+    public Server(String host, int port, Authentication... authentication) {
+        this.host = host;
+        this.port = port;
+        this.authentication = authentication;
+    }
 
-	public String host() {
-		return host;
-	}
+    public String host() {
+        return host;
+    }
 
-	public int port() {
-		return port;
-	}
+    public int port() {
+        return port;
+    }
 
-	public Authentication[] authentication() {
-		return authentication;
-	}
+    public Authentication[] authentication() {
+        return authentication;
+    }
 
 }

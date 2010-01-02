@@ -22,30 +22,30 @@ import mungbean.protocol.message.CommandResponse;
 import mungbean.protocol.message.MongoRequest;
 
 public class MongoException extends RuntimeException {
-	public MongoException(String message) {
-		super(message);
-	}
+    public MongoException(String message) {
+        super(message);
+    }
 
-	private MongoException(String message, Throwable reason) {
-		super(message, reason);
-	}
+    private MongoException(String message, Throwable reason) {
+        super(message, reason);
+    }
 
-	public MongoException(String message, Throwable reason, MongoRequest<?> request) {
-		this(message + request.debugInfo(), reason);
-	}
+    public MongoException(String message, Throwable reason, MongoRequest<?> request) {
+        this(message + request.debugInfo(), reason);
+    }
 
-	public MongoException(String message, Map<String, Object> response) {
-		this(message + ": " + response.toString());
-	}
+    public MongoException(String message, Map<String, Object> response) {
+        this(message + ": " + response.toString());
+    }
 
-	public MongoException(String message, CommandResponse response) {
-		this(message + ": " + response.toString());
-	}
+    public MongoException(String message, CommandResponse response) {
+        this(message + ": " + response.toString());
+    }
 
-	public static MongoException forResponse(Map<String, Object> message) {
-		if ("unauthorized".equals(message.get("err"))) {
-			throw new MongoException("Not authorized", message);
-		}
-		throw new MongoException("Operation failed", message);
-	}
+    public static MongoException forResponse(Map<String, Object> message) {
+        if ("unauthorized".equals(message.get("err"))) {
+            throw new MongoException("Not authorized", message);
+        }
+        throw new MongoException("Operation failed", message);
+    }
 }

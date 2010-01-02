@@ -25,40 +25,40 @@ import mungbean.protocol.bson.MapBSONCoders;
 
 public class PojoDBCollection<T> extends AbstractDBCollection<T> {
 
-	private final Class<T> typeClass;
+    private final Class<T> typeClass;
 
-	public PojoDBCollection(DBOperationExecutor executor, String dbName, String collectionName, final Class<T> typeClass) {
-		super(executor, dbName, collectionName, new MapBSONCoders() {
-			{
-				addEncoder(new PojoEncoder<T>(typeClass));
-			}
-		}, new MapBSONCoders());
-		this.typeClass = typeClass;
-	}
+    public PojoDBCollection(DBOperationExecutor executor, String dbName, String collectionName, final Class<T> typeClass) {
+        super(executor, dbName, collectionName, new MapBSONCoders() {
+            {
+                addEncoder(new PojoEncoder<T>(typeClass));
+            }
+        }, new MapBSONCoders());
+        this.typeClass = typeClass;
+    }
 
-	@Override
-	public BSONCoder<T> defaultEncoder() {
-		return new PojoEncoder<T>(typeClass);
-	}
+    @Override
+    public BSONCoder<T> defaultEncoder() {
+        return new PojoEncoder<T>(typeClass);
+    }
 
-	@Override
-	protected T injectId(T doc) {
-		try {
-			Field field = doc.getClass().getField("_id");
-			field.setAccessible(true);
-			if (field.get(doc) == null) {
-				field.set(doc, new ObjectId());
-			}
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (SecurityException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (NoSuchFieldException e) {
-			// Ignore
-		}
-		return doc;
-	}
+    @Override
+    protected T injectId(T doc) {
+        try {
+            Field field = doc.getClass().getField("_id");
+            field.setAccessible(true);
+            if (field.get(doc) == null) {
+                field.set(doc, new ObjectId());
+            }
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        } catch (SecurityException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            // Ignore
+        }
+        return doc;
+    }
 
 }

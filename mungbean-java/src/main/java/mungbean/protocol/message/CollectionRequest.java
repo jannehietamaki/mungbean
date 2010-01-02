@@ -19,17 +19,17 @@ import mungbean.Utils;
 import mungbean.protocol.LittleEndianDataWriter;
 
 public abstract class CollectionRequest<ReturnType extends Response> extends MongoRequest<ReturnType> {
-	private final String collectionName;
+    private final String collectionName;
 
-	public CollectionRequest(String collectionName) {
-		this.collectionName = collectionName;
-	}
+    public CollectionRequest(String collectionName) {
+        this.collectionName = collectionName;
+    }
 
-	protected int collectionNameLength() {
-		return 1 + collectionName.getBytes(Utils.UTF8).length;
-	}
+    protected int collectionNameLength() {
+        return 1 + collectionName.getBytes(Utils.UTF8).length;
+    }
 
-	protected void writeCollectionName(LittleEndianDataWriter writer) {
-		writer.writeCString(collectionName);
-	}
+    protected void writeCollectionName(LittleEndianDataWriter writer) {
+        writer.writeCString(collectionName);
+    }
 }

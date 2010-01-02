@@ -23,22 +23,22 @@ import mungbean.protocol.message.CommandResponse;
 import mungbean.query.QueryBuilder;
 
 public class AggregationCommand<ResponseType> extends AbstractCommand<ResponseType> {
-	private final Aggregation<ResponseType> aggregation;
-	private final QueryBuilder query;
+    private final Aggregation<ResponseType> aggregation;
+    private final QueryBuilder query;
 
-	public AggregationCommand(Aggregation<ResponseType> aggregation, QueryBuilder query) {
-		this.aggregation = aggregation;
-		this.query = query;
-	}
+    public AggregationCommand(Aggregation<ResponseType> aggregation, QueryBuilder query) {
+        this.aggregation = aggregation;
+        this.query = query;
+    }
 
-	@Override
-	public ResponseType parseResponse(CommandResponse values) {
-		return aggregation.parseResponse(values);
-	}
+    @Override
+    public ResponseType parseResponse(CommandResponse values) {
+        return aggregation.parseResponse(values);
+    }
 
-	@Override
-	public Map<String, Object> requestMap(DBCollection<?> collection) {
-		return aggregation.requestMap(collection, query);
-	}
+    @Override
+    public Map<String, Object> requestMap(DBCollection<?> collection) {
+        return aggregation.requestMap(collection, query);
+    }
 
 }

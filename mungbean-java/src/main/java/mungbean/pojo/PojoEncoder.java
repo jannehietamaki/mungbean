@@ -29,35 +29,35 @@ import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
 public class PojoEncoder<T> extends BSONCoder<T> {
-	private final BSONMap mapCoder = new BSONMap();
-	private final static Objenesis objenesis = new ObjenesisStd();
-	private final Class<T> typeClass;
+    private final BSONMap mapCoder = new BSONMap();
+    private final static Objenesis objenesis = new ObjenesisStd();
+    private final Class<T> typeClass;
 
-	public PojoEncoder(Class<T> typeClass) {
-		super(3, Object.class);
-		this.typeClass = typeClass;
-	}
+    public PojoEncoder(Class<T> typeClass) {
+        super(3, Object.class);
+        this.typeClass = typeClass;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected T decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		Map<String, Object> map = mapCoder.read(bson, reader);
-		T ret = (T) objenesis.newInstance(typeClass);
-		FieldDefinition[] fields = ReflectionUtil.fieldsOf(typeClass);
-		for (FieldDefinition field : fields) {
-			field.set(ret, map.get(field.name()));
-		}
-		return ret;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected T decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        Map<String, Object> map = mapCoder.read(bson, reader);
+        T ret = (T) objenesis.newInstance(typeClass);
+        FieldDefinition[] fields = ReflectionUtil.fieldsOf(typeClass);
+        for (FieldDefinition field : fields) {
+            field.set(ret, map.get(field.name()));
+        }
+        return ret;
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, T o, LittleEndianDataWriter writer) {
-		Map<String, Object> ret = new HashMap<String, Object>();
-		FieldDefinition[] fields = ReflectionUtil.fieldsOf(typeClass);
-		for (FieldDefinition field : fields) {
-			ret.put(field.name(), field.get(o));
-		}
-		mapCoder.encode(bson, ret, writer);
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, T o, LittleEndianDataWriter writer) {
+        Map<String, Object> ret = new HashMap<String, Object>();
+        FieldDefinition[] fields = ReflectionUtil.fieldsOf(typeClass);
+        for (FieldDefinition field : fields) {
+            ret.put(field.name(), field.get(o));
+        }
+        mapCoder.encode(bson, ret, writer);
+    }
 
 }

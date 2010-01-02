@@ -21,8 +21,8 @@ import java.util.Map;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 
 public interface UpdateBuilder {
-	Map<String, Object> build();
+    Map<String, Object> build();
 
-	UpdateOptionsBuilder options();
+    UpdateOptionsBuilder options();
 
 }

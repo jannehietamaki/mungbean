@@ -20,19 +20,19 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONString extends BSONCoder<String> {
 
-	public BSONString() {
-		super(2, String.class);
-	}
+    public BSONString() {
+        super(2, String.class);
+    }
 
-	@Override
-	protected String decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		reader.readInt(); // Skip length
-		return reader.readCString();
-	}
+    @Override
+    protected String decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        reader.readInt(); // Skip length
+        return reader.readCString();
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, String value, LittleEndianDataWriter writer) {
-		writer.writeCStringWithLength(value);
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, String value, LittleEndianDataWriter writer) {
+        writer.writeCStringWithLength(value);
+    }
 
 }

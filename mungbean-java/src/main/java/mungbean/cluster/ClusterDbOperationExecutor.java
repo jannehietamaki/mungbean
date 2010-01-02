@@ -21,30 +21,30 @@ import mungbean.DBOperationExecutor;
 import mungbean.Server;
 
 public class ClusterDbOperationExecutor implements DBOperationExecutor {
-	// TODO need a mechanism to specify if it's ok to run the query against
-	// slave/passive-master
-	private final ServerResolverStrategy writeResolver;
-	private final ServerResolverStrategy readResolver;
+    // TODO need a mechanism to specify if it's ok to run the query against
+    // slave/passive-master
+    private final ServerResolverStrategy writeResolver;
+    private final ServerResolverStrategy readResolver;
 
-	public ClusterDbOperationExecutor(Server... servers) {
-		writeResolver = new MasterResolverStrategy(servers);
-		readResolver = writeResolver;
-	}
+    public ClusterDbOperationExecutor(Server... servers) {
+        writeResolver = new MasterResolverStrategy(servers);
+        readResolver = writeResolver;
+    }
 
-	@Override
-	public void close() {
-		writeResolver.close();
-		readResolver.close();
-	}
+    @Override
+    public void close() {
+        writeResolver.close();
+        readResolver.close();
+    }
 
-	@Override
-	public <T> T executeWrite(DBConversation<T> conversation) {
-		return writeResolver.execute(conversation);
-	}
+    @Override
+    public <T> T executeWrite(DBConversation<T> conversation) {
+        return writeResolver.execute(conversation);
+    }
 
-	@Override
-	public <T> T execute(DBConversation<T> conversation) {
-		return readResolver.execute(conversation);
-	}
+    @Override
+    public <T> T execute(DBConversation<T> conversation) {
+        return readResolver.execute(conversation);
+    }
 
 }

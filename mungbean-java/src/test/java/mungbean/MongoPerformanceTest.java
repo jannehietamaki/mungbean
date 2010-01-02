@@ -29,44 +29,44 @@ import static mungbean.CollectionUtil.map;
 
 @RunWith(JDaveRunner.class)
 public class MongoPerformanceTest extends Specification<Database> {
-	public class WithDatabase {
-		Mungbean db;
+    public class WithDatabase {
+        Mungbean db;
 
-		public Database create() {
-			db = new Mungbean("localhost", 27017);
-			return db.openDatabase(new ObjectId().toHex());
-		}
+        public Database create() {
+            db = new Mungbean("localhost", 27017);
+            return db.openDatabase(new ObjectId().toHex());
+        }
 
-		public void destroy() {
-			context.dbAdmin().dropDatabase();
-			db.close();
-		}
+        public void destroy() {
+            context.dbAdmin().dropDatabase();
+            db.close();
+        }
 
-		public void databaseCanBeAccessed() throws InterruptedException {
-			final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-			collection.save(map("foo", "bar"));
-			ExecutorService executor = Executors.newFixedThreadPool(10);
-			StopWatch timer = new StopWatch();
-			long total = 500000;
-			for (int a = 0; a < total; a++) {
-				executor.submit(new Runnable() {
-					@Override
-					public void run() {
-						final ObjectId id = new ObjectId();
-						collection.save(new HashMap<String, Object>() {
-							{
-								put("foo", "bar");
-								put("_id", id);
-							}
-						});
-						collection.delete(id);
-					}
-				});
-			}
-			executor.shutdown();
-			executor.awaitTermination(10, TimeUnit.SECONDS);
-			long time = timer.millisecondsSinceStart();
-			System.out.println("Insert+delete time for " + total + " items was " + time + "ms -> " + (total / (time / 1000)) + " operations per second.");
-		}
-	}
+        public void databaseCanBeAccessed() throws InterruptedException {
+            final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
+            collection.save(map("foo", "bar"));
+            ExecutorService executor = Executors.newFixedThreadPool(10);
+            StopWatch timer = new StopWatch();
+            long total = 500000;
+            for (int a = 0; a < total; a++) {
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ObjectId id = new ObjectId();
+                        collection.save(new HashMap<String, Object>() {
+                            {
+                                put("foo", "bar");
+                                put("_id", id);
+                            }
+                        });
+                        collection.delete(id);
+                    }
+                });
+            }
+            executor.shutdown();
+            executor.awaitTermination(10, TimeUnit.SECONDS);
+            long time = timer.millisecondsSinceStart();
+            System.out.println("Insert+delete time for " + total + " items was " + time + "ms -> " + (total / (time / 1000)) + " operations per second.");
+        }
+    }
 }

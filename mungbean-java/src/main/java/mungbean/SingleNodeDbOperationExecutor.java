@@ -21,85 +21,85 @@ import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.CommandResponse;
 
 public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements DBOperationExecutor {
-	private boolean shuttingDown = false;
-	private final Server server;
+    private boolean shuttingDown = false;
+    private final Server server;
 
-	public SingleNodeDbOperationExecutor(Server server) {
-		this.server = server;
-	}
+    public SingleNodeDbOperationExecutor(Server server) {
+        this.server = server;
+    }
 
-	@Override
-	protected DBConnection createNew() {
-		if (shuttingDown) {
-			throw new IllegalStateException("Db connection is shut down.");
-		}
-		return new DBConnection(server);
-	}
+    @Override
+    protected DBConnection createNew() {
+        if (shuttingDown) {
+            throw new IllegalStateException("Db connection is shut down.");
+        }
+        return new DBConnection(server);
+    }
 
-	public <T> T execute(DBConversation<T> conversation) {
-		if (shuttingDown) {
-			throw new IllegalStateException("Db connection is shut down.");
-		}
-		DBConnection connection = null;
-		try {
-			connection = borrow();
-			return conversation.execute(connection);
-		} finally {
-			giveBack(connection);
-		}
-	}
+    public <T> T execute(DBConversation<T> conversation) {
+        if (shuttingDown) {
+            throw new IllegalStateException("Db connection is shut down.");
+        }
+        DBConnection connection = null;
+        try {
+            connection = borrow();
+            return conversation.execute(connection);
+        } finally {
+            giveBack(connection);
+        }
+    }
 
-	@Override
-	public <T> T executeWrite(DBConversation<T> conversation) {
-		return execute(conversation);
-	}
+    @Override
+    public <T> T executeWrite(DBConversation<T> conversation) {
+        return execute(conversation);
+    }
 
-	public void close() {
-		shuttingDown = true;
-		DBConnection connection;
-		while ((connection = poll()) != null) {
-			connection.close();
-		}
-	}
+    public void close() {
+        shuttingDown = true;
+        DBConnection connection;
+        while ((connection = poll()) != null) {
+            connection.close();
+        }
+    }
 
-	public boolean isAlive() {
-		try {
-			return execute(new DBConversation<Boolean>() {
-				@Override
-				public Boolean execute(DBConnection connection) {
-					return doIsAlive(connection);
-				}
-			});
-		} catch (RuntimeIOException e) {
-			return false;
-		}
-	}
+    public boolean isAlive() {
+        try {
+            return execute(new DBConversation<Boolean>() {
+                @Override
+                public Boolean execute(DBConnection connection) {
+                    return doIsAlive(connection);
+                }
+            });
+        } catch (RuntimeIOException e) {
+            return false;
+        }
+    }
 
-	private boolean doIsAlive(DBConnection connection) {
-		connection.execute(new CommandRequest("ismaster"));
-		return true;
-	}
+    private boolean doIsAlive(DBConnection connection) {
+        connection.execute(new CommandRequest("ismaster"));
+        return true;
+    }
 
-	public boolean isMaster() {
-		try {
-			return execute(new DBConversation<Boolean>() {
-				@Override
-				public Boolean execute(DBConnection connection) {
-					CommandResponse response = connection.execute(new CommandRequest("$cmd", "ismaster"));
-					return response.getLong("ismaster") == 1;
-				}
-			});
-		} catch (RuntimeIOException e) {
-			return false;
-		}
-	}
+    public boolean isMaster() {
+        try {
+            return execute(new DBConversation<Boolean>() {
+                @Override
+                public Boolean execute(DBConnection connection) {
+                    CommandResponse response = connection.execute(new CommandRequest("$cmd", "ismaster"));
+                    return response.getLong("ismaster") == 1;
+                }
+            });
+        } catch (RuntimeIOException e) {
+            return false;
+        }
+    }
 
-	public Server server() {
-		return server;
-	}
+    public Server server() {
+        return server;
+    }
 
-	@Override
-	protected boolean isValid(DBConnection item) {
-		return doIsAlive(item);
-	}
+    @Override
+    protected boolean isValid(DBConnection item) {
+        return doIsAlive(item);
+    }
 }

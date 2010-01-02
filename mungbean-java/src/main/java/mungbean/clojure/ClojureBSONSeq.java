@@ -26,28 +26,28 @@ import clojure.lang.PersistentList;
 
 public class ClojureBSONSeq<T> extends AbstractBSONArray<ISeq, T> {
 
-	public ClojureBSONSeq() {
-		super(ISeq.class);
-	}
+    public ClojureBSONSeq() {
+        super(ISeq.class);
+    }
 
-	@Override
-	protected ISeq addValue(ISeq ret, T value) {
-		return ret.cons(ret);
-	}
+    @Override
+    protected ISeq addValue(ISeq ret, T value) {
+        return ret.cons(ret);
+    }
 
-	@Override
-	protected ISeq newInstance() {
-		return PersistentList.EMPTY;
-	}
+    @Override
+    protected ISeq newInstance() {
+        return PersistentList.EMPTY;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Iterable<KeyValuePair<Integer, T>> valuesOf(ISeq l) {
-		List<KeyValuePair<Integer, T>> returnValues = new ArrayList<KeyValuePair<Integer, T>>();
-		for (int i = 0; i < l.count(); i++) {
-			returnValues.add(new KeyValuePair<Integer, T>(i, (T) l.first()));
-			l = l.next();
-		}
-		return returnValues;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected Iterable<KeyValuePair<Integer, T>> valuesOf(ISeq l) {
+        List<KeyValuePair<Integer, T>> returnValues = new ArrayList<KeyValuePair<Integer, T>>();
+        for (int i = 0; i < l.count(); i++) {
+            returnValues.add(new KeyValuePair<Integer, T>(i, (T) l.first()));
+            l = l.next();
+        }
+        return returnValues;
+    }
 }

@@ -31,21 +31,21 @@ import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class PojoIntegrationTest extends Specification<Database> {
-	public class WithDatabase {
-		public Database create() {
-			return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
-		}
+    public class WithDatabase {
+        public Database create() {
+            return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
+        }
 
-		public void destroy() {
-			context.dbAdmin().dropDatabase();
-		}
+        public void destroy() {
+            context.dbAdmin().dropDatabase();
+        }
 
-		public void objectWithoutIdCanBeStoredAndRetrieved() {
-			DBCollection<TestObject> collection = context.openCollection("foo", TestObject.class);
-			collection.save(new TestObject("foo", 123));
-			List<TestObject> objs = collection.query(new Query().field("name").is("foo"));
-			specify(objs.size(), does.equal(1));
-			specify(objs.get(0).name(), does.equal("foo"));
-		}
-	}
+        public void objectWithoutIdCanBeStoredAndRetrieved() {
+            DBCollection<TestObject> collection = context.openCollection("foo", TestObject.class);
+            collection.save(new TestObject("foo", 123));
+            List<TestObject> objs = collection.query(new Query().field("name").is("foo"));
+            specify(objs.size(), does.equal(1));
+            specify(objs.get(0).name(), does.equal("foo"));
+        }
+    }
 }

@@ -20,17 +20,17 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONBoolean extends BSONCoder<Boolean> {
 
-	public BSONBoolean() {
-		super(8, Boolean.class);
-	}
+    public BSONBoolean() {
+        super(8, Boolean.class);
+    }
 
-	@Override
-	protected Boolean decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return reader.readByte() > 0;
-	}
+    @Override
+    protected Boolean decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return reader.readByte() > 0;
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Boolean value, LittleEndianDataWriter writer) {
-		writer.writeByte((byte) (value ? 1 : 0));
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, Boolean value, LittleEndianDataWriter writer) {
+        writer.writeByte((byte) (value ? 1 : 0));
+    }
 }

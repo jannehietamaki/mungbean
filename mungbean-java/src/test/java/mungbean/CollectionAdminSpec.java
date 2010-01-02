@@ -27,19 +27,19 @@ import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class CollectionAdminSpec extends Specification<CollectionAdmin> {
-	private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-	private final ByteArrayInputStream input = new ByteArrayInputStream(new byte[0]);
+    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
+    private final ByteArrayInputStream input = new ByteArrayInputStream(new byte[0]);
 
-	MapDBCollection collection = new MapDBCollection(new TestDbOperationExecutor(input, output), "dbName", "collectionName");
+    MapDBCollection collection = new MapDBCollection(new TestDbOperationExecutor(input, output), "dbName", "collectionName");
 
-	public class WhenCreatingIndex {
-		public CollectionAdmin create() {
-			return new CollectionAdmin(collection);
-		}
+    public class WhenCreatingIndex {
+        public CollectionAdmin create() {
+            return new CollectionAdmin(collection);
+        }
 
-		public void messageIsSerializedToByteStream() {
-			context.ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().dropDups().unique());
-			specify(output.toByteArray().length, does.equal(153));
-		}
-	}
+        public void messageIsSerializedToByteStream() {
+            context.ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().dropDups().unique());
+            specify(output.toByteArray().length, does.equal(153));
+        }
+    }
 }

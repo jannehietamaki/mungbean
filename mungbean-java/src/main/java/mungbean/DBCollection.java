@@ -23,26 +23,26 @@ import mungbean.query.QueryBuilder;
 import mungbean.query.UpdateBuilder;
 
 public interface DBCollection<T> {
-	CollectionAdmin collectionAdmin();
+    CollectionAdmin collectionAdmin();
 
-	String collectionName();
+    String collectionName();
 
-	T save(T doc);
+    T save(T doc);
 
-	void update(ObjectId id, T doc);
+    void update(ObjectId id, T doc);
 
-	void update(QueryBuilder query, UpdateBuilder update);
+    void update(QueryBuilder query, UpdateBuilder update);
 
-	List<T> query(QueryBuilder query);
+    List<T> query(QueryBuilder query);
 
-	<ResponseType> ResponseType query(Aggregation<ResponseType> aggregation, QueryBuilder query);
+    <ResponseType> ResponseType query(Aggregation<ResponseType> aggregation, QueryBuilder query);
 
-	T find(ObjectId id);
+    T find(ObjectId id);
 
-	void delete(ObjectId id);
+    void delete(ObjectId id);
 
-	void delete(QueryBuilder query);
+    void delete(QueryBuilder query);
 
-	<ResponseType> ResponseType command(AbstractCommand<ResponseType> command);
+    <ResponseType> ResponseType command(AbstractCommand<ResponseType> command);
 
 }

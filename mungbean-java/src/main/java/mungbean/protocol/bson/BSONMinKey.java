@@ -20,17 +20,17 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONMinKey extends BSONCoder<Void> {
 
-	protected BSONMinKey() {
-		super(-1, Void.class);
-	}
+    protected BSONMinKey() {
+        super(-1, Void.class);
+    }
 
-	@Override
-	protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return null;
-	}
+    @Override
+    protected Void decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return null;
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
+    @Override
+    protected void encode(AbstractBSONCoders bson, Void o, LittleEndianDataWriter writer) {
 
-	}
+    }
 }

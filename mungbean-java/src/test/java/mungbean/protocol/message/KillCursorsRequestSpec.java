@@ -26,25 +26,25 @@ import jdave.junit4.JDaveRunner;
 
 @RunWith(JDaveRunner.class)
 public class KillCursorsRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
-	public class WithAny {
-		public DBTransaction<NoResponseExpected> create() {
-			return new DBTransaction<NoResponseExpected>(new KillCursorsRequest(123L, 125L, 120L), 129);
-		}
+    public class WithAny {
+        public DBTransaction<NoResponseExpected> create() {
+            return new DBTransaction<NoResponseExpected>(new KillCursorsRequest(123L, 125L, 120L), 129);
+        }
 
-		public void requestCanBeSerialized() {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 48, 0, 0, 0, // message_lenght
-					-127, 0, 0, 0, // requestId
-					-1, -1, -1, -1, // responseTo
-					-41, 7, 0, 0, // opCode
-					0, 0, 0, 0, // RESERVED
-					3, 0, 0, 0, // numberOfCursorIDs
-					123, 0, 0, 0, 0, 0, 0, 0, // id1
-					125, 0, 0, 0, 0, 0, 0, 0, // id2
-					120, 0, 0, 0, 0, 0, 0, 0 // id3
-					}));
-		}
-	}
+        public void requestCanBeSerialized() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            specify(output.toByteArray(), does.containExactly(new byte[] { 48, 0, 0, 0, // message_lenght
+                    -127, 0, 0, 0, // requestId
+                    -1, -1, -1, -1, // responseTo
+                    -41, 7, 0, 0, // opCode
+                    0, 0, 0, 0, // RESERVED
+                    3, 0, 0, 0, // numberOfCursorIDs
+                    123, 0, 0, 0, 0, 0, 0, 0, // id1
+                    125, 0, 0, 0, 0, 0, 0, 0, // id2
+                    120, 0, 0, 0, 0, 0, 0, 0 // id3
+                    }));
+        }
+    }
 
 }

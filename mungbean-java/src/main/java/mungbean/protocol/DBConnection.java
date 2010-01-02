@@ -31,58 +31,58 @@ import mungbean.protocol.message.Response;
 
 public class DBConnection {
 
-	private static final int CONNECTION_TIMEOUT = 5000;
-	private int requestIdCounter = 0;
-	private final Socket socket;
-	private final InputStream inputStream;
-	private final OutputStream outputStream;
+    private static final int CONNECTION_TIMEOUT = 5000;
+    private int requestIdCounter = 0;
+    private final Socket socket;
+    private final InputStream inputStream;
+    private final OutputStream outputStream;
 
-	public DBConnection(Server server) {
-		try {
-			socket = new Socket();
-			socket.connect(new InetSocketAddress(server.host(), server.port()), CONNECTION_TIMEOUT);
-			inputStream = new BufferedInputStream(socket.getInputStream());
-			outputStream = new BufferedOutputStream(socket.getOutputStream());
-			for (Authentication authentication : server.authentication()) {
-				authentication.authenticate(this);
-			}
-		} catch (IOException e) {
-			throw new RuntimeIOException(e);
-		}
-	}
+    public DBConnection(Server server) {
+        try {
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(server.host(), server.port()), CONNECTION_TIMEOUT);
+            inputStream = new BufferedInputStream(socket.getInputStream());
+            outputStream = new BufferedOutputStream(socket.getOutputStream());
+            for (Authentication authentication : server.authentication()) {
+                authentication.authenticate(this);
+            }
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        }
+    }
 
-	public DBConnection(InputStream input, OutputStream output) {
-		this.inputStream = input;
-		this.outputStream = output;
-		this.socket = null;
-	}
+    public DBConnection(InputStream input, OutputStream output) {
+        this.inputStream = input;
+        this.outputStream = output;
+        this.socket = null;
+    }
 
-	public <T extends Response> T execute(MongoRequest<T> message) {
-		try {
-			DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter());
-			return transaction.call(outputStream, inputStream);
-		} catch (Exception e) {
-			// TODO We should probably close this connection as it's state might
-			// be wrong
-			throw new MongoException("Error communicating with server", e, message);
-		}
-	}
+    public <T extends Response> T execute(MongoRequest<T> message) {
+        try {
+            DBTransaction<T> transaction = new DBTransaction<T>(message, incrementAndGetCounter());
+            return transaction.call(outputStream, inputStream);
+        } catch (Exception e) {
+            // TODO We should probably close this connection as it's state might
+            // be wrong
+            throw new MongoException("Error communicating with server", e, message);
+        }
+    }
 
-	private int incrementAndGetCounter() {
-		requestIdCounter++;
-		if (requestIdCounter == Integer.MAX_VALUE) {
-			requestIdCounter = 1;
-		}
-		return requestIdCounter;
-	}
+    private int incrementAndGetCounter() {
+        requestIdCounter++;
+        if (requestIdCounter == Integer.MAX_VALUE) {
+            requestIdCounter = 1;
+        }
+        return requestIdCounter;
+    }
 
-	public void close() {
-		try {
-			if (socket != null) {
-				socket.close();
-			}
-		} catch (IOException e) {
-			throw new RuntimeIOException(e);
-		}
-	}
+    public void close() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        }
+    }
 }

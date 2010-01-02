@@ -22,18 +22,18 @@ import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONPattern extends BSONCoder<Pattern> {
 
-	public BSONPattern() {
-		super(11, Pattern.class);
-	}
+    public BSONPattern() {
+        super(11, Pattern.class);
+    }
 
-	@Override
-	protected Pattern decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return Pattern.compile(reader.readCString(), RegexPatternFlag.patternFlags(reader.readCString()));
-	}
+    @Override
+    protected Pattern decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return Pattern.compile(reader.readCString(), RegexPatternFlag.patternFlags(reader.readCString()));
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Pattern pattern, LittleEndianDataWriter writer) {
-		writer.writeCString(pattern.pattern());
-		writer.writeCString(RegexPatternFlag.patternFlags(pattern.flags()));
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, Pattern pattern, LittleEndianDataWriter writer) {
+        writer.writeCString(pattern.pattern());
+        writer.writeCString(RegexPatternFlag.patternFlags(pattern.flags()));
+    }
 }

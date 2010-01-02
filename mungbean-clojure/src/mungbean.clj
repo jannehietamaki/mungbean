@@ -1,17 +1,16 @@
 (ns mungbean 
 	(:use [clojure.contrib.def :only [defnk]]
-	      [mungbean.wrappers :only [wrap-query wrap-update]]
+	      [mungbean.wrappers :only [wrap-query wrap-update string-to-id]]
 	)
 )
             
-
 (defnk get-db [name :host "localhost" :port 27017] (.openDatabase (new mungbean.clojure.ClojureMungbean host port) name))
 
 (defn get-collection [db name] (.openCollection db name))
 
 (defn insert [collection doc] (.save collection doc))
 
-(defn delete [collection id] (.delete collection id))
+(defn delete [collection id] (.delete collection (string-to-id id)))
 
 (defnk update [collection updates :where {} :multiple false] (.update collection (wrap-query where) (wrap-update updates multiple)))
 
@@ -24,7 +23,6 @@
 	)
 )
 
-(defn find-one [collection id] (.find collection id))
+(defn find-one [collection id] (.find collection (string-to-id id)))
 
-(defn command [db cmd] (.command db cmd))
-
+(defn get-id [item] (.toHex (item :_id)))

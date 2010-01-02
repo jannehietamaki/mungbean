@@ -23,20 +23,20 @@ import mungbean.protocol.bson.MapBSONCoders;
 
 public class MapDBCollection extends AbstractDBCollection<Map<String, Object>> {
 
-	public MapDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
-		super(executor, dbName, collectionName, new MapBSONCoders(), new MapBSONCoders());
-	}
+    public MapDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
+        super(executor, dbName, collectionName, new MapBSONCoders(), new MapBSONCoders());
+    }
 
-	@Override
-	public BSONCoder<Map<String, Object>> defaultEncoder() {
-		return new BSONMap();
-	}
+    @Override
+    public BSONCoder<Map<String, Object>> defaultEncoder() {
+        return new BSONMap();
+    }
 
-	@Override
-	protected Map<String, Object> injectId(Map<String, Object> doc) {
-		if (!doc.containsKey("_id")) {
-			doc.put("_id", new ObjectId());
-		}
-		return doc;
-	}
+    @Override
+    protected Map<String, Object> injectId(Map<String, Object> doc) {
+        if (!doc.containsKey("_id")) {
+            doc.put("_id", new ObjectId());
+        }
+        return doc;
+    }
 }

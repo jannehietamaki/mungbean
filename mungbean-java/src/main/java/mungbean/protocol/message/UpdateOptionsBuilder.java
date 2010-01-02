@@ -18,30 +18,30 @@ package mungbean.protocol.message;
 import java.util.Map;
 
 public class UpdateOptionsBuilder {
-	private int value;
+    private int value;
 
-	public UpdateOptionsBuilder upsert() {
-		value = value | 1;
-		return this;
-	}
+    public UpdateOptionsBuilder upsert() {
+        value = value | 1;
+        return this;
+    }
 
-	public UpdateOptionsBuilder multiUpdate() {
-		value = value | 2;
-		return this;
-	}
+    public UpdateOptionsBuilder multiUpdate() {
+        value = value | 2;
+        return this;
+    }
 
-	public int value() {
-		return value;
-	}
+    public int value() {
+        return value;
+    }
 
-	public static UpdateOptionsBuilder fromMap(Map<String, Object> updateOptions) {
-		UpdateOptionsBuilder returnValue = new UpdateOptionsBuilder();
-		if (updateOptions.containsKey("upsert")) {
-			returnValue.upsert();
-		}
-		if (updateOptions.containsKey("multiUpdate")) {
-			returnValue.multiUpdate();
-		}
-		return returnValue;
-	}
+    public static UpdateOptionsBuilder fromMap(Map<String, Object> updateOptions) {
+        UpdateOptionsBuilder returnValue = new UpdateOptionsBuilder();
+        if (updateOptions.containsKey("upsert")) {
+            returnValue.upsert();
+        }
+        if (updateOptions.containsKey("multiUpdate")) {
+            returnValue.multiUpdate();
+        }
+        return returnValue;
+    }
 }

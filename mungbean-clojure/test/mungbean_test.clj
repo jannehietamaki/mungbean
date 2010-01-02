@@ -1,7 +1,7 @@
 (ns mungbean_test
   (:use [clojure.test])
   (:require [mungbean :as mongo]
-  	        [mungbean.aggregation :as aggregation] 
+  	        [mungbean.aggregation :as aggregation]
   )   
 )
 
@@ -24,7 +24,7 @@
 
 (deftest save-item-read-back-and-delete
    (with-mungo "foo"
-       (let [id ((mongo/insert coll {:foo "bar"}) :_id)]
+       (let [id (mongo/get-id (mongo/insert coll {:foo "bar"}))]
            (is (= ((mongo/find-one coll id) :foo) "bar"))
 	       (mongo/delete coll id)
        )

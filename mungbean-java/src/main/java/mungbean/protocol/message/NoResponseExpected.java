@@ -18,8 +18,8 @@ package mungbean.protocol.message;
 
 public class NoResponseExpected implements Response {
 
-	@Override
-	public int responseTo() {
-		return -1;
-	}
+    @Override
+    public int responseTo() {
+        return -1;
+    }
 }

@@ -24,61 +24,61 @@ import java.util.Map;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 
 public class UpdateField extends DslField implements UpdateBuilder {
-	private final Update update;
+    private final Update update;
 
-	public UpdateField(Update update, Map<String, Object> result, String key) {
-		super(key, result);
-		this.update = update;
-	}
+    public UpdateField(Update update, Map<String, Object> result, String key) {
+        super(key, result);
+        this.update = update;
+    }
 
-	public UpdateField increment(Number value) {
-		put("$inc", map(key(), value));
-		return this;
-	}
+    public UpdateField increment(Number value) {
+        put("$inc", map(key(), value));
+        return this;
+    }
 
-	public UpdateField set(Object value) {
-		put("$set", map(key(), value));
-		return this;
-	}
+    public UpdateField set(Object value) {
+        put("$set", map(key(), value));
+        return this;
+    }
 
-	public UpdateField unset() {
-		put("$unset", map(key(), 1D));
-		return this;
-	}
+    public UpdateField unset() {
+        put("$unset", map(key(), 1D));
+        return this;
+    }
 
-	public UpdateField push(Object value) {
-		put("$push", map(key(), value));
-		return this;
-	}
+    public UpdateField push(Object value) {
+        put("$push", map(key(), value));
+        return this;
+    }
 
-	public UpdateField push(Object... value) {
-		put("$pushAll", map(key(), Arrays.asList(value)));
-		return this;
-	}
+    public UpdateField push(Object... value) {
+        put("$pushAll", map(key(), Arrays.asList(value)));
+        return this;
+    }
 
-	public UpdateField popLast() {
-		put("$pop", map(key(), 1D));
-		return this;
-	}
+    public UpdateField popLast() {
+        put("$pop", map(key(), 1D));
+        return this;
+    }
 
-	public UpdateField popFirst() {
-		put("$pop", map(key(), -1D));
-		return this;
-	}
+    public UpdateField popFirst() {
+        put("$pop", map(key(), -1D));
+        return this;
+    }
 
-	public UpdateField pull(Object item) {
-		put("$pull", map(key(), item));
-		return this;
-	}
+    public UpdateField pull(Object item) {
+        put("$pull", map(key(), item));
+        return this;
+    }
 
-	public UpdateField pull(Object... items) {
-		put("$pullAll", map(key(), Arrays.asList(items)));
-		return this;
-	}
+    public UpdateField pull(Object... items) {
+        put("$pullAll", map(key(), Arrays.asList(items)));
+        return this;
+    }
 
-	@Override
-	public UpdateOptionsBuilder options() {
-		return update.options();
-	}
+    @Override
+    public UpdateOptionsBuilder options() {
+        return update.options();
+    }
 
 }

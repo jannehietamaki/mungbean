@@ -16,18 +16,18 @@
 package mungbean.protocol.bson;
 
 public class BSON {
-	private final byte[] data;
+    private final byte[] data;
 
-	public BSON(byte[] data) {
-		this.data = data;
-	}
+    public BSON(byte[] data) {
+        this.data = data;
+    }
 
-	public int length() {
-		return data.length;
-	}
+    public int length() {
+        return data.length;
+    }
 
-	public byte[] bytes() {
-		return data;
-	}
+    public byte[] bytes() {
+        return data;
+    }
 
 }

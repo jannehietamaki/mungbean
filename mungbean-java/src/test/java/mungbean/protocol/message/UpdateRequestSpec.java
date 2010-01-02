@@ -29,39 +29,37 @@ import mungbean.query.QueryBuilder;
 
 import org.junit.runner.RunWith;
 
-import sun.misc.HexDumpEncoder;
-
 @RunWith(JDaveRunner.class)
 public class UpdateRequestSpec extends Specification<DBTransaction<NoResponseExpected>> {
-	public class WithValidRequest {
-		public DBTransaction<NoResponseExpected> create() {
-			QueryBuilder selector = new Query().field("foo").is("bar");
-			Map<String, Object> document = map("zoo", 5);
-			return new DBTransaction<NoResponseExpected>(new UpdateRequest<Map<String, Object>>("foozbar.foo", selector, new UpdateOptionsBuilder(), document, new MapBSONCoders(), new MapBSONCoders()), 126);
-		}
+    public class WithValidRequest {
+        public DBTransaction<NoResponseExpected> create() {
+            QueryBuilder selector = new Query().field("foo").is("bar");
+            Map<String, Object> document = map("zoo", 5);
+            return new DBTransaction<NoResponseExpected>(new UpdateRequest<Map<String, Object>>("foozbar.foo", selector, new UpdateOptionsBuilder(), document, new MapBSONCoders(), new MapBSONCoders()), 126);
+        }
 
-		public void updateRequestCanBeSerializedToByteStream() {
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			context.sendRequest(output);
-			specify(output.toByteArray(), does.containExactly(new byte[] { 68, 0, 0, 0, // message_lenght
-					126, 0, 0, 0, // requestId
-					-1, -1, -1, -1, // responseTo
-					-47, 7, 0, 0, // opCode
-					0, 0, 0, 0, // RESERVED
-					'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // collectionName
-					0, 0, 0, 0, // flags
-					18, 0, 0, 0, // element_size
-					2, // element_type = string
-					'f', 'o', 'o', 0, // name
-					4, 0, 0, 0, // item_length
-					'b', 'a', 'r', 0, // value
-					0, // eoo
-					14, 0, 0, 0, // element_size
-					16, // element_type = int32
-					'z', 'o', 'o', 0, // name
-					5, 0, 0, 0, // value
-					0 // eoo
-					}));
-		}
-	}
+        public void updateRequestCanBeSerializedToByteStream() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            specify(output.toByteArray(), does.containExactly(new byte[] { 68, 0, 0, 0, // message_lenght
+                    126, 0, 0, 0, // requestId
+                    -1, -1, -1, -1, // responseTo
+                    -47, 7, 0, 0, // opCode
+                    0, 0, 0, 0, // RESERVED
+                    'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // collectionName
+                    0, 0, 0, 0, // flags
+                    18, 0, 0, 0, // element_size
+                    2, // element_type = string
+                    'f', 'o', 'o', 0, // name
+                    4, 0, 0, 0, // item_length
+                    'b', 'a', 'r', 0, // value
+                    0, // eoo
+                    14, 0, 0, 0, // element_size
+                    16, // element_type = int32
+                    'z', 'o', 'o', 0, // name
+                    5, 0, 0, 0, // value
+                    0 // eoo
+                    }));
+        }
+    }
 }

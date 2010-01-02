@@ -20,40 +20,40 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Pool<T> {
-	private final Queue<T> objects;
+    private final Queue<T> objects;
 
-	public Pool() {
-		objects = new ConcurrentLinkedQueue<T>();
-	}
+    public Pool() {
+        objects = new ConcurrentLinkedQueue<T>();
+    }
 
-	protected abstract T createNew();
+    protected abstract T createNew();
 
-	protected abstract boolean isValid(T item);
+    protected abstract boolean isValid(T item);
 
-	public Pool(Collection<? extends T> objects) {
-		this.objects = new ConcurrentLinkedQueue<T>(objects);
-	}
+    public Pool(Collection<? extends T> objects) {
+        this.objects = new ConcurrentLinkedQueue<T>(objects);
+    }
 
-	public T borrow() {
-		T t;
-		if ((t = poll()) == null) {
-			t = createNew();
-		}
-		return t;
-	}
+    public T borrow() {
+        T t;
+        if ((t = poll()) == null) {
+            t = createNew();
+        }
+        return t;
+    }
 
-	public void giveBack(T object) {
-		if (object != null && isValid(object)) {
-			objects.offer(object);
-		}
-	}
+    public void giveBack(T object) {
+        if (object != null && isValid(object)) {
+            objects.offer(object);
+        }
+    }
 
-	protected T poll() {
-		T item;
-		do {
-			item = objects.poll();
-		} while (item != null && !isValid(item));
-		return item;
-	}
+    protected T poll() {
+        T item;
+        do {
+            item = objects.poll();
+        } while (item != null && !isValid(item));
+        return item;
+    }
 
 }

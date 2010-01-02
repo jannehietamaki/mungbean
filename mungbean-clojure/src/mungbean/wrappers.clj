@@ -10,3 +10,10 @@
 (defn wrap-update [updates multiple]
      (new mungbean.clojure.ClojureUpdate updates multiple)
 )
+
+(defn string-to-id [id] 
+    (if-not (instance? mungbean.ObjectId id) 
+        (new mungbean.ObjectId id)
+        id
+    )    
+)

@@ -22,18 +22,18 @@ import java.io.OutputStream;
 import mungbean.protocol.DBConnection;
 
 public class TestDbOperationExecutor extends SingleNodeDbOperationExecutor {
-	private final InputStream input;
-	private final OutputStream output;
+    private final InputStream input;
+    private final OutputStream output;
 
-	public TestDbOperationExecutor(InputStream input, OutputStream output) {
-		super(new Server(null, 0));
-		this.input = input;
-		this.output = output;
-	}
+    public TestDbOperationExecutor(InputStream input, OutputStream output) {
+        super(new Server(null, 0));
+        this.input = input;
+        this.output = output;
+    }
 
-	@Override
-	public <T> T execute(DBConversation<T> conversation) {
-		return conversation.execute(new DBConnection(input, output));
-	}
+    @Override
+    public <T> T execute(DBConversation<T> conversation) {
+        return conversation.execute(new DBConnection(input, output));
+    }
 
 }

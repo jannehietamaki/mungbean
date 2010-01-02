@@ -19,17 +19,17 @@ import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
 public class BSONInteger extends BSONCoder<Integer> {
-	public BSONInteger() {
-		super(16, Integer.class);
-	}
+    public BSONInteger() {
+        super(16, Integer.class);
+    }
 
-	@Override
-	protected Integer decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
-		return reader.readInt();
-	}
+    @Override
+    protected Integer decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+        return reader.readInt();
+    }
 
-	@Override
-	protected void encode(AbstractBSONCoders bson, Integer value, LittleEndianDataWriter writer) {
-		writer.writeInt(value);
-	}
+    @Override
+    protected void encode(AbstractBSONCoders bson, Integer value, LittleEndianDataWriter writer) {
+        writer.writeInt(value);
+    }
 }

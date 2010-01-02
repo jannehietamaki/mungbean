@@ -21,30 +21,30 @@ import java.util.List;
 import java.util.Map;
 
 public class BSONMap extends AbstractBSONMap<Map<String, Object>> {
-	private final static Class<?> typeClass = Map.class;
+    private final static Class<?> typeClass = Map.class;
 
-	@SuppressWarnings("unchecked")
-	public BSONMap() {
-		super((Class<Map<String, Object>>) typeClass);
-	}
+    @SuppressWarnings("unchecked")
+    public BSONMap() {
+        super((Class<Map<String, Object>>) typeClass);
+    }
 
-	@Override
-	protected Map<String, Object> newInstance() {
-		return new HashMap<String, Object>();
-	}
+    @Override
+    protected Map<String, Object> newInstance() {
+        return new HashMap<String, Object>();
+    }
 
-	@Override
-	protected Map<String, Object> setValue(Map<String, Object> item, String key, Object value) {
-		item.put(key, value);
-		return item;
-	}
+    @Override
+    protected Map<String, Object> setValue(Map<String, Object> item, String key, Object value) {
+        item.put(key, value);
+        return item;
+    }
 
-	@Override
-	protected Iterable<KeyValuePair<String, Object>> entriesOf(Map<String, Object> item) {
-		List<KeyValuePair<String, Object>> returnValue = new ArrayList<KeyValuePair<String, Object>>();
-		for (Map.Entry<String, Object> entry : item.entrySet()) {
-			returnValue.add(new KeyValuePair<String, Object>(entry.getKey(), entry.getValue()));
-		}
-		return returnValue;
-	}
+    @Override
+    protected Iterable<KeyValuePair<String, Object>> entriesOf(Map<String, Object> item) {
+        List<KeyValuePair<String, Object>> returnValue = new ArrayList<KeyValuePair<String, Object>>();
+        for (Map.Entry<String, Object> entry : item.entrySet()) {
+            returnValue.add(new KeyValuePair<String, Object>(entry.getKey(), entry.getValue()));
+        }
+        return returnValue;
+    }
 }

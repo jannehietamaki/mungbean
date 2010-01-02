@@ -24,47 +24,47 @@ import mungbean.protocol.message.MongoRequest;
 import mungbean.protocol.message.Response;
 
 public class DBTransaction<T extends Response> {
-	private final MongoRequest<T> message;
-	private final int requestId;
-	private final int responseTo = -1;
+    private final MongoRequest<T> message;
+    private final int requestId;
+    private final int responseTo = -1;
 
-	public DBTransaction(MongoRequest<T> message, int requestId) {
-		this.message = message;
-		this.requestId = requestId;
-	}
+    public DBTransaction(MongoRequest<T> message, int requestId) {
+        this.message = message;
+        this.requestId = requestId;
+    }
 
-	public void sendRequest(OutputStream output) {
-		LittleEndianDataWriter writer = new LittleEndianDataWriter(output);
-		writer.writeInt(message.length() + 4 * 4);
-		writer.writeInt(requestId);
-		writer.writeInt(responseTo);
-		writer.writeInt(message.type().opCode());
-		message.send(writer);
-		try {
-			output.flush();
-		} catch (IOException e) {
-			throw new RuntimeIOException(e);
-		}
-	}
+    public void sendRequest(OutputStream output) {
+        LittleEndianDataWriter writer = new LittleEndianDataWriter(output);
+        writer.writeInt(message.length() + 4 * 4);
+        writer.writeInt(requestId);
+        writer.writeInt(responseTo);
+        writer.writeInt(message.type().opCode());
+        message.send(writer);
+        try {
+            output.flush();
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        }
+    }
 
-	public T readResponse(InputStream inputStream) {
-		return message.readResponse(new LittleEndianDataReader(inputStream));
-	}
+    public T readResponse(InputStream inputStream) {
+        return message.readResponse(new LittleEndianDataReader(inputStream));
+    }
 
-	public T call(OutputStream outputStream, InputStream inputStream) {
-		sendRequest(outputStream);
-		T response = readResponse(inputStream);
-		validateResponse(response);
-		return response;
-	}
+    public T call(OutputStream outputStream, InputStream inputStream) {
+        sendRequest(outputStream);
+        T response = readResponse(inputStream);
+        validateResponse(response);
+        return response;
+    }
 
-	private void validateResponse(T response) {
-		int responseId = response.responseTo();
-		if (responseId != -1) {
-			if (responseId != requestId) {
-				throw new MongoException("Received response to unexpected request " + requestId + "!=" + responseId);
-			}
-		}
-	}
+    private void validateResponse(T response) {
+        int responseId = response.responseTo();
+        if (responseId != -1) {
+            if (responseId != requestId) {
+                throw new MongoException("Received response to unexpected request " + requestId + "!=" + responseId);
+            }
+        }
+    }
 
 }

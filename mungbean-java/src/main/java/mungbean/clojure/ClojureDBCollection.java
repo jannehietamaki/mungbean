@@ -26,22 +26,22 @@ import clojure.lang.Symbol;
 
 public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
 
-	public ClojureDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
-		super(executor, dbName, collectionName, new ClojureBSONCoders(), new ClojureBSONCoders());
-	}
+    public ClojureDBCollection(DBOperationExecutor executor, String dbName, String collectionName) {
+        super(executor, dbName, collectionName, new ClojureBSONCoders(), new ClojureBSONCoders());
+    }
 
-	@Override
-	public BSONCoder<IPersistentMap> defaultEncoder() {
-		return new ClojureBSONMap();
-	}
+    @Override
+    public BSONCoder<IPersistentMap> defaultEncoder() {
+        return new ClojureBSONMap();
+    }
 
-	@Override
-	protected IPersistentMap injectId(IPersistentMap doc) {
-		Keyword keyword = Keyword.intern(Symbol.intern("_id"));
-		if (!doc.containsKey(keyword)) {
-			return doc.assoc(keyword, new ObjectId());
-		}
-		return doc;
-	}
+    @Override
+    protected IPersistentMap injectId(IPersistentMap doc) {
+        Keyword keyword = Keyword.intern(Symbol.intern("_id"));
+        if (!doc.containsKey(keyword)) {
+            return doc.assoc(keyword, new ObjectId());
+        }
+        return doc;
+    }
 
 }

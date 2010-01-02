@@ -21,17 +21,17 @@ import mungbean.SingleNodeDbOperationExecutor;
 import mungbean.Server;
 
 public class ClojureMungbean {
-	private final DBOperationExecutor executor;
+    private final DBOperationExecutor executor;
 
-	public ClojureMungbean(String host, int port) {
-		executor = new SingleNodeDbOperationExecutor(new Server(host, port));
-	}
+    public ClojureMungbean(String host, int port) {
+        executor = new SingleNodeDbOperationExecutor(new Server(host, port));
+    }
 
-	public ClojureDatabase openDatabase(String name) {
-		return new ClojureDatabase(executor, name);
-	}
+    public ClojureDatabase openDatabase(String name) {
+        return new ClojureDatabase(executor, name);
+    }
 
-	public void close() {
-		executor.close();
-	}
+    public void close() {
+        executor.close();
+    }
 }

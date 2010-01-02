@@ -25,101 +25,101 @@ import scala.actors.threadpool.Arrays;
 import static mungbean.CollectionUtil.map;
 
 public class QueryField extends DslField implements QueryBuilder {
-	private final Query query;
-	private final Map<String, Object> orderMap;
+    private final Query query;
+    private final Map<String, Object> orderMap;
 
-	QueryField(Query query, Map<String, Object> result, Map<String, Object> orderMap, String key) {
-		super(key, result);
-		this.query = query;
-		this.orderMap = orderMap;
-	}
+    QueryField(Query query, Map<String, Object> result, Map<String, Object> orderMap, String key) {
+        super(key, result);
+        this.query = query;
+        this.orderMap = orderMap;
+    }
 
-	public QueryField is(Object value) {
-		putResult(value);
-		return this;
-	}
+    public QueryField is(Object value) {
+        putResult(value);
+        return this;
+    }
 
-	public QueryField matches(Pattern pattern) {
-		return is(pattern);
-	}
+    public QueryField matches(Pattern pattern) {
+        return is(pattern);
+    }
 
-	public QueryField lessThan(Object value) {
-		put(map("$lt", value));
-		return this;
-	}
+    public QueryField lessThan(Object value) {
+        put(map("$lt", value));
+        return this;
+    }
 
-	public QueryField greaterThan(Object value) {
-		put(map("$gt", value));
-		return this;
-	}
+    public QueryField greaterThan(Object value) {
+        put(map("$gt", value));
+        return this;
+    }
 
-	public QueryField lessOrEqual(Object value) {
-		put(map("$lte", value));
-		return this;
-	}
+    public QueryField lessOrEqual(Object value) {
+        put(map("$lte", value));
+        return this;
+    }
 
-	public QueryField greaterOrEqual(Object value) {
-		put(map("$gte", value));
-		return this;
-	}
+    public QueryField greaterOrEqual(Object value) {
+        put(map("$gte", value));
+        return this;
+    }
 
-	public QueryField not(Object value) {
-		put(map("$ne", value));
-		return this;
-	}
+    public QueryField not(Object value) {
+        put(map("$ne", value));
+        return this;
+    }
 
-	public QueryField in(Object... values) {
-		put(map("$in", Arrays.asList(values)));
-		return this;
-	}
+    public QueryField in(Object... values) {
+        put(map("$in", Arrays.asList(values)));
+        return this;
+    }
 
-	public QueryField notIn(Object... values) {
-		put(map("$nin", Arrays.asList(values)));
-		return this;
-	}
+    public QueryField notIn(Object... values) {
+        put(map("$nin", Arrays.asList(values)));
+        return this;
+    }
 
-	public QueryField all(Object... values) {
-		put(map("$all", Arrays.asList(values)));
-		return this;
-	}
+    public QueryField all(Object... values) {
+        put(map("$all", Arrays.asList(values)));
+        return this;
+    }
 
-	public QueryField size(int value) {
-		put(map("$size", value));
-		return this;
-	}
+    public QueryField size(int value) {
+        put(map("$size", value));
+        return this;
+    }
 
-	public QueryField exists(boolean value) {
-		put(map("$exists", value));
-		return this;
-	}
+    public QueryField exists(boolean value) {
+        put(map("$exists", value));
+        return this;
+    }
 
-	public QueryField where(String script) {
-		putResult(new Code(script));
-		return this;
-	}
+    public QueryField where(String script) {
+        putResult(new Code(script));
+        return this;
+    }
 
-	public QueryField orderAscending() {
-		orderMap.put(key(), 1D);
-		return this;
-	}
+    public QueryField orderAscending() {
+        orderMap.put(key(), 1D);
+        return this;
+    }
 
-	public QueryField orderDescending() {
-		orderMap.put(key(), -1D);
-		return this;
-	}
+    public QueryField orderDescending() {
+        orderMap.put(key(), -1D);
+        return this;
+    }
 
-	@Override
-	public int limit() {
-		return query.limit();
-	}
+    @Override
+    public int limit() {
+        return query.limit();
+    }
 
-	@Override
-	public int skip() {
-		return query.skip();
-	}
+    @Override
+    public int skip() {
+        return query.skip();
+    }
 
-	@Override
-	public Map<String, Object> order() {
-		return orderMap;
-	}
+    @Override
+    public Map<String, Object> order() {
+        return orderMap;
+    }
 }

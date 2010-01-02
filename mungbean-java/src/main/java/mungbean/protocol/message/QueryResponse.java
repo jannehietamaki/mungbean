@@ -24,41 +24,41 @@ import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.MapBSONCoders;
 
 public class QueryResponse<ResponseType> extends MongoResponse implements Response {
-	private static final AbstractBSONCoders BSON = new MapBSONCoders();
-	private final int responseFlag;
-	private final long cursorId;
-	private final int startingFrom;
-	private final int numberReturned;
-	private final List<ResponseType> values = new ArrayList<ResponseType>();
+    private static final AbstractBSONCoders BSON = new MapBSONCoders();
+    private final int responseFlag;
+    private final long cursorId;
+    private final int startingFrom;
+    private final int numberReturned;
+    private final List<ResponseType> values = new ArrayList<ResponseType>();
 
-	public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder) {
-		super(reader);
-		responseFlag = reader.readInt();
-		cursorId = reader.readLong();
-		startingFrom = reader.readInt();
-		numberReturned = reader.readInt();
-		for (int i = 0; i < numberReturned; i++) {
-			values.add(coder.read(BSON, reader));
-		}
-	}
+    public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder) {
+        super(reader);
+        responseFlag = reader.readInt();
+        cursorId = reader.readLong();
+        startingFrom = reader.readInt();
+        numberReturned = reader.readInt();
+        for (int i = 0; i < numberReturned; i++) {
+            values.add(coder.read(BSON, reader));
+        }
+    }
 
-	public int responseFlag() {
-		return responseFlag;
-	}
+    public int responseFlag() {
+        return responseFlag;
+    }
 
-	public long cursorId() {
-		return cursorId;
-	}
+    public long cursorId() {
+        return cursorId;
+    }
 
-	public int startingFrom() {
-		return startingFrom;
-	}
+    public int startingFrom() {
+        return startingFrom;
+    }
 
-	public int numberReturned() {
-		return numberReturned;
-	}
+    public int numberReturned() {
+        return numberReturned;
+    }
 
-	public List<ResponseType> values() {
-		return values;
-	}
+    public List<ResponseType> values() {
+        return values;
+    }
 }

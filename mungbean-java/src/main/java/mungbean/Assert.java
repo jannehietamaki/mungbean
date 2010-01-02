@@ -16,15 +16,15 @@
 package mungbean;
 
 public class Assert {
-	public static void isTrue(boolean value, String message) {
-		if (!value) {
-			throw new RuntimeException(message);
-		}
-	}
+    public static void isTrue(boolean value, String message) {
+        if (!value) {
+            throw new RuntimeException(message);
+        }
+    }
 
-	public static void notNull(Object value, String message) {
-		if (value == null) {
-			throw new RuntimeException(message);
-		}
-	}
+    public static void notNull(Object value, String message) {
+        if (value == null) {
+            throw new RuntimeException(message);
+        }
+    }
 }

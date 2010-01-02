@@ -24,8 +24,8 @@ import mungbean.query.QueryBuilder;
 
 public abstract class Aggregation<ResponseType> {
 
-	public abstract ResponseType parseResponse(CommandResponse values);
+    public abstract ResponseType parseResponse(CommandResponse values);
 
-	public abstract Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query);
+    public abstract Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query);
 
 }

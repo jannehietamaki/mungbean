@@ -25,48 +25,48 @@ import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.CommandResponse;
 
 public class Authentication {
-	private final String user;
-	private final String password;
-	private final String database;
+    private final String user;
+    private final String password;
+    private final String database;
 
-	public Authentication(String database, String user, String password) {
-		this.user = user;
-		this.password = password;
-		this.database = database;
-	}
+    public Authentication(String database, String user, String password) {
+        this.user = user;
+        this.password = password;
+        this.database = database;
+    }
 
-	public String database() {
-		return database;
-	}
+    public String database() {
+        return database;
+    }
 
-	public String user() {
-		return user;
-	}
+    public String user() {
+        return user;
+    }
 
-	public String password() {
-		return password;
-	}
+    public String password() {
+        return password;
+    }
 
-	public void authenticate(DBConnection connection) {
-		final String nonce = (String) connection.execute(new CommandRequest(database(), "getnonce")).get("nonce");
-		LinkedHashMap<String, Object> authenticationParameters = authenticationRequest(nonce);
-		CommandResponse value = connection.execute(new CommandRequest(database(), authenticationParameters, CommandRequest.DEFAULT_CODERS));
-		if (!value.get("ok").equals(1D)) {
-			throw new MongoException("Authentication failed for database " + database(), value);
-		}
-	}
+    public void authenticate(DBConnection connection) {
+        final String nonce = (String) connection.execute(new CommandRequest(database(), "getnonce")).get("nonce");
+        LinkedHashMap<String, Object> authenticationParameters = authenticationRequest(nonce);
+        CommandResponse value = connection.execute(new CommandRequest(database(), authenticationParameters, CommandRequest.DEFAULT_CODERS));
+        if (!value.get("ok").equals(1D)) {
+            throw new MongoException("Authentication failed for database " + database(), value);
+        }
+    }
 
-	LinkedHashMap<String, Object> authenticationRequest(final String nonce) {
-		final String passwordHash = md5(user() + ":mongo:" + password());
-		final String source = nonce + user() + passwordHash;
-		LinkedHashMap<String, Object> authenticationParameters = new LinkedHashMap<String, Object>() {
-			{
-				put("authenticate", 1D);
-				put("user", user());
-				put("nonce", nonce);
-				put("key", md5(source));
-			}
-		};
-		return authenticationParameters;
-	}
+    LinkedHashMap<String, Object> authenticationRequest(final String nonce) {
+        final String passwordHash = md5(user() + ":mongo:" + password());
+        final String source = nonce + user() + passwordHash;
+        LinkedHashMap<String, Object> authenticationParameters = new LinkedHashMap<String, Object>() {
+            {
+                put("authenticate", 1D);
+                put("user", user());
+                put("nonce", nonce);
+                put("key", md5(source));
+            }
+        };
+        return authenticationParameters;
+    }
 }

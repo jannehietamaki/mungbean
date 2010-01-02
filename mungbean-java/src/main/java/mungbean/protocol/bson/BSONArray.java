@@ -19,30 +19,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BSONArray<T> extends AbstractBSONArray<List<T>, T> {
-	private final static Class<?> typeClass = List.class;
+    private final static Class<?> typeClass = List.class;
 
-	@SuppressWarnings("unchecked")
-	public BSONArray() {
-		super((Class<List<T>>) typeClass);
-	}
+    @SuppressWarnings("unchecked")
+    public BSONArray() {
+        super((Class<List<T>>) typeClass);
+    }
 
-	@Override
-	protected List<T> newInstance() {
-		return new ArrayList<T>();
-	}
+    @Override
+    protected List<T> newInstance() {
+        return new ArrayList<T>();
+    }
 
-	@Override
-	protected List<T> addValue(List<T> ret, T value) {
-		ret.add(value);
-		return ret;
-	}
+    @Override
+    protected List<T> addValue(List<T> ret, T value) {
+        ret.add(value);
+        return ret;
+    }
 
-	@Override
-	protected Iterable<KeyValuePair<Integer, T>> valuesOf(List<T> l) {
-		List<KeyValuePair<Integer, T>> returnValues = new ArrayList<KeyValuePair<Integer, T>>();
-		for (int a = 0; a < l.size(); a++) {
-			returnValues.add(new KeyValuePair<Integer, T>(a, l.get(a)));
-		}
-		return returnValues;
-	}
+    @Override
+    protected Iterable<KeyValuePair<Integer, T>> valuesOf(List<T> l) {
+        List<KeyValuePair<Integer, T>> returnValues = new ArrayList<KeyValuePair<Integer, T>>();
+        for (int a = 0; a < l.size(); a++) {
+            returnValues.add(new KeyValuePair<Integer, T>(a, l.get(a)));
+        }
+        return returnValues;
+    }
 }

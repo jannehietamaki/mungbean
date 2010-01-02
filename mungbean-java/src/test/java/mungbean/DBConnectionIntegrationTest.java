@@ -39,35 +39,35 @@ import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
 public class DBConnectionIntegrationTest extends Specification<DBConnection> {
-	public class WithServer {
-		private final AbstractBSONCoders coders = new MapBSONCoders();
-		BSONMap defaultCoder = new BSONMap();
+    public class WithServer {
+        private final AbstractBSONCoders coders = new MapBSONCoders();
+        BSONMap defaultCoder = new BSONMap();
 
-		public DBConnection create() {
-			return new DBConnection(new Server("localhost", 27017));
-		}
+        public DBConnection create() {
+            return new DBConnection(new Server("localhost", 27017));
+        }
 
-		public void destroy() {
-			context.close();
-		}
+        public void destroy() {
+            context.close();
+        }
 
-		@SuppressWarnings("unchecked")
-		public void itemCanBeInsertedQueriedAndRemoved() {
-			final ObjectId id = new ObjectId();
-			context.execute(new InsertRequest<Map<String, Object>>("foozbar.foo", coders, new HashMap<String, Object>() {
-				{
-					put("foo", "bar");
-					put("_id", id);
-				}
-			}));
-			QueryBuilder idQuery = new Query().field("_id").is(id);
-			QueryResponse<Map<String, Object>> response = context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), idQuery, true, coders, defaultCoder));
-			List<Map<String, Object>> values = response.values();
-			specify(((HashMap<String, Object>) values.get(0)).get("_id"), does.equal(id));
-			context.execute(new UpdateRequest<Map<String, Object>>("foozbar.foo", idQuery, new Update().field("zoo").set(5), coders, coders));
-			specify(((HashMap<String, Object>) context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), idQuery, true, coders, defaultCoder)).values().get(0)).get("zoo"), does.equal(5));
-			context.execute(new DeleteRequest("foozbar.foo", coders, idQuery));
-			specify(context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), idQuery, true, coders, defaultCoder)).values().size(), does.equal(0));
-		}
-	}
+        @SuppressWarnings("unchecked")
+        public void itemCanBeInsertedQueriedAndRemoved() {
+            final ObjectId id = new ObjectId();
+            context.execute(new InsertRequest<Map<String, Object>>("foozbar.foo", coders, new HashMap<String, Object>() {
+                {
+                    put("foo", "bar");
+                    put("_id", id);
+                }
+            }));
+            QueryBuilder idQuery = new Query().field("_id").is(id);
+            QueryResponse<Map<String, Object>> response = context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), idQuery, true, coders, defaultCoder));
+            List<Map<String, Object>> values = response.values();
+            specify(((HashMap<String, Object>) values.get(0)).get("_id"), does.equal(id));
+            context.execute(new UpdateRequest<Map<String, Object>>("foozbar.foo", idQuery, new Update().field("zoo").set(5), coders, coders));
+            specify(((HashMap<String, Object>) context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), idQuery, true, coders, defaultCoder)).values().get(0)).get("zoo"), does.equal(5));
+            context.execute(new DeleteRequest("foozbar.foo", coders, idQuery));
+            specify(context.execute(new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder(), idQuery, true, coders, defaultCoder)).values().size(), does.equal(0));
+        }
+    }
 }

@@ -20,15 +20,15 @@ import java.util.Map;
 import mungbean.pojo.PojoDBCollection;
 
 public class Database extends AbstractDatabase {
-	public Database(DBOperationExecutor executor, String name) {
-		super(executor, name);
-	}
+    public Database(DBOperationExecutor executor, String name) {
+        super(executor, name);
+    }
 
-	public DBCollection<Map<String, Object>> openCollection(String name) {
-		return mapCollection(name);
-	}
+    public DBCollection<Map<String, Object>> openCollection(String name) {
+        return mapCollection(name);
+    }
 
-	public <T> DBCollection<T> openCollection(String name, Class<T> type) {
-		return new PojoDBCollection<T>(executor(), dbName(), name, type);
-	}
+    public <T> DBCollection<T> openCollection(String name, Class<T> type) {
+        return new PojoDBCollection<T>(executor(), dbName(), name, type);
+    }
 }
