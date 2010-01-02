@@ -46,6 +46,14 @@
 )
 
 
+(deftest generate-items-and-get-distinct
+   (with-mungo "foo"
+       (insert-test-data 10 "foo" "bar" "zoo")
+       (is (= ["bar" "foo" "zoo"] (mongo/query coll :operation (aggregation/get-distinct :foo))))
+   )
+)
+
+
 (deftest more-advanced-query
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)       
