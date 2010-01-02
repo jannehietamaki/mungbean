@@ -16,6 +16,13 @@
 
 package mungbean.clojure;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import clojure.lang.IPersistentMap;
+import clojure.lang.Keyword;
+import clojure.lang.Symbol;
+import mungbean.Authentication;
 import mungbean.DBOperationExecutor;
 import mungbean.SingleNodeDbOperationExecutor;
 import mungbean.Server;
@@ -23,8 +30,17 @@ import mungbean.Server;
 public class ClojureMungbean {
     private final DBOperationExecutor executor;
 
-    public ClojureMungbean(String host, int port) {
-        executor = new SingleNodeDbOperationExecutor(new Server(host, port));
+    public ClojureMungbean(String host, int port, IPersistentMap... authentications) {
+        List<Authentication> auths = new ArrayList<Authentication>();
+        for (IPersistentMap authentication : authentications) {
+            String database = get(authentication, "database");
+            String user = get(authentication, "user");
+            String password = get(authentication, "password");
+            if (database != null) {
+                auths.add(new Authentication(database, user, password));
+            }
+        }
+        executor = new SingleNodeDbOperationExecutor(new Server(host, port, auths.toArray(new Authentication[auths.size()])));
     }
 
     public ClojureDatabase openDatabase(String name) {
@@ -34,4 +50,13 @@ public class ClojureMungbean {
     public void close() {
         executor.close();
     }
+
+    private String get(IPersistentMap map, String key) {
+        Object value = map.valAt(Keyword.intern(Symbol.create(key)));
+        if (value == null) {
+            return null;
+        }
+        return String.valueOf(value);
+    }
+
 }

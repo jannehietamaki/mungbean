@@ -4,7 +4,7 @@
 	)
 )
             
-(defnk get-db [name :host "localhost" :port 27017] (.openDatabase (new mungbean.clojure.ClojureMungbean host port) name))
+(defnk get-db [name :host "localhost" :port 27017 :authenticate [{}]] (.openDatabase (new mungbean.clojure.ClojureMungbean host port (into-array authenticate)) name))
 
 (defn get-collection [db name] (.openCollection db name))
 
@@ -24,5 +24,4 @@
 )
 
 (defn find-one [collection id] (.find collection (string-to-id id)))
-
 (defn get-id [item] (.toHex (item :_id)))
