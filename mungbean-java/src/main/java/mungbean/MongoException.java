@@ -18,8 +18,8 @@ package mungbean;
 
 import java.util.Map;
 
+import mungbean.protocol.DBTransaction;
 import mungbean.protocol.message.CommandResponse;
-import mungbean.protocol.message.MongoRequest;
 
 public class MongoException extends RuntimeException {
     public MongoException(String message) {
@@ -30,8 +30,8 @@ public class MongoException extends RuntimeException {
         super(message, reason);
     }
 
-    public MongoException(String message, Throwable reason, MongoRequest<?> request) {
-        this(message + request.debugInfo(), reason);
+    public MongoException(String message, Throwable reason, DBTransaction<?> transaction) {
+        this(message + transaction.debugInfo(), reason);
     }
 
     public MongoException(String message, Map<String, Object> response) {

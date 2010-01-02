@@ -15,9 +15,6 @@
  */
 package mungbean.protocol.message;
 
-import java.io.ByteArrayOutputStream;
-
-import sun.misc.HexDumpEncoder;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 
@@ -31,9 +28,4 @@ public abstract class MongoRequest<ResponseType extends Response> {
 
     public abstract int length();
 
-    public String debugInfo() {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        send(new LittleEndianDataWriter(output));
-        return "[MongoRequest: opCode= " + type() + " data:\n" + new HexDumpEncoder().encode(output.toByteArray()) + "]";
-    }
 }

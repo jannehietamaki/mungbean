@@ -15,6 +15,11 @@
  */
 package mungbean;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
+import sun.misc.HexDumpEncoder;
+
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.RuntimeIOException;
 import mungbean.protocol.message.CommandRequest;
@@ -45,7 +50,14 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
             connection = borrow();
             return conversation.execute(connection);
         } finally {
-            giveBack(connection);
+            try {
+                giveBack(connection);
+            } catch (Exception e) {
+                // If server closes connection because the request was invalid,
+                // we're getting information about it on this point because the
+                // connection tests breaks here
+                throw new RuntimeException("Connection state invalid, operation was " + generateRequestDebug(conversation));
+            }
         }
     }
 
@@ -67,17 +79,12 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
             return execute(new DBConversation<Boolean>() {
                 @Override
                 public Boolean execute(DBConnection connection) {
-                    return doIsAlive(connection);
+                    return isValid(connection);
                 }
             });
         } catch (RuntimeIOException e) {
             return false;
         }
-    }
-
-    private boolean doIsAlive(DBConnection connection) {
-        connection.execute(new CommandRequest("ismaster"));
-        return true;
     }
 
     public boolean isMaster() {
@@ -99,7 +106,17 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
     }
 
     @Override
-    protected boolean isValid(DBConnection item) {
-        return doIsAlive(item);
+    protected boolean isValid(DBConnection connection) {
+        connection.execute(new CommandRequest("ismaster"));
+        return true;
+    }
+
+    private static String generateRequestDebug(DBConversation<?> conversation) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            conversation.execute(new DBConnection(new ByteArrayInputStream(new byte[0]), output));
+        } catch (Exception e) {
+        }
+        return new HexDumpEncoder().encode(output.toByteArray());
     }
 }

@@ -18,6 +18,10 @@ package mungbean.protocol;
 import java.io.IOException;
 
 public class RuntimeIOException extends RuntimeException {
+    public RuntimeIOException(String message) {
+        super(message);
+    }
+
     public RuntimeIOException(IOException cause) {
         super(cause);
     }

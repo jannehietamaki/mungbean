@@ -22,9 +22,8 @@ import java.util.Map;
 
 import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
-import mungbean.protocol.message.NoResponseExpected;
 
-public class Command extends AbstractCommand<NoResponseExpected> {
+public class Command extends AbstractCommand<Map<String, Object>> {
     private final String command;
 
     public Command(String command) {
@@ -37,7 +36,7 @@ public class Command extends AbstractCommand<NoResponseExpected> {
     }
 
     @Override
-    public NoResponseExpected parseResponse(CommandResponse values) {
-        return new NoResponseExpected();
+    public Map<String, Object> parseResponse(CommandResponse values) {
+        return values.values();
     }
 }

@@ -23,16 +23,17 @@ public abstract class Pool<T> {
     private final Queue<T> objects;
 
     public Pool() {
+        // TODO add possibility to set maximum amount of open connections
         objects = new ConcurrentLinkedQueue<T>();
+    }
+
+    public Pool(Collection<? extends T> objects) {
+        this.objects = new ConcurrentLinkedQueue<T>(objects);
     }
 
     protected abstract T createNew();
 
     protected abstract boolean isValid(T item);
-
-    public Pool(Collection<? extends T> objects) {
-        this.objects = new ConcurrentLinkedQueue<T>(objects);
-    }
 
     public T borrow() {
         T t;

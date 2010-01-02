@@ -15,9 +15,12 @@
  */
 package mungbean.protocol;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import sun.misc.HexDumpEncoder;
 
 import mungbean.MongoException;
 import mungbean.protocol.message.MongoRequest;
@@ -40,6 +43,8 @@ public class DBTransaction<T extends Response> {
         writer.writeInt(responseTo);
         writer.writeInt(message.type().opCode());
         message.send(writer);
+        // TODO no need to flush until end of the transaction when operation
+        // does not expect immediate response from the server
         try {
             output.flush();
         } catch (IOException e) {
@@ -67,4 +72,9 @@ public class DBTransaction<T extends Response> {
         }
     }
 
+    public String debugInfo() {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        sendRequest(output);
+        return "[" + getClass().getName() + ": opCode= " + message.type() + " data:\n" + new HexDumpEncoder().encode(output.toByteArray()) + "]";
+    }
 }

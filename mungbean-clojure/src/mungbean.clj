@@ -23,5 +23,7 @@
 	)
 )
 
+(defnk query-one [collection where] (first (query collection :where where :items 1)))
+
 (defn find-one [collection id] (.find collection (string-to-id id)))
 (defn get-id [item] (.toHex (item :_id)))

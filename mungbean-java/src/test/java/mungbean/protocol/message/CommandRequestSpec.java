@@ -50,4 +50,32 @@ public class CommandRequestSpec extends Specification<DBTransaction<CommandRespo
         }
     }
 
+    public class WithValidCommandQueryWithoutDatabase {
+        public DBTransaction<CommandResponse> create() {
+            return new DBTransaction<CommandResponse>(new CommandRequest("ismaster"), 123);
+        }
+
+        public void commandQueryCanBeSerialized() {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            context.sendRequest(output);
+            byte[] bytes = new byte[] { //
+            56, 0, 0, 0, // message_lenght
+                    123, 0, 0, 0, // requestID
+                    -1, -1, -1, -1, // responseTo
+                    -44, 7, 0, 0, // opCode
+                    0, 0, 0, 0, // opts
+                    '$', 'c', 'm', 'd', 0, // fullCollectionName
+                    0, 0, 0, 0, // numberToSkip
+                    -1, -1, -1, -1, // NumberToReturn
+                    23, 0, 0, 0, // ObjSize
+                    01, // data_type = number
+                    'i', 's', 'm', 'a', 's', 't', 'e', 'r', 0, // command
+                    0, 0, 0, 0, 0, 0, -16, 63, // value == 1 (double)
+                    0 // EOO
+            };
+            specify(bytes.length, does.equal(bytes[0]));
+            specify(output.toByteArray(), does.containExactly(bytes));
+        }
+    }
+
 }
