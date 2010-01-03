@@ -39,6 +39,36 @@ public class Update implements UpdateBuilder {
         return new UpdateField(this, map, key);
     }
 
+    public Update increment(Map<String, Object> values) {
+        put("$inc", values);
+        return this;
+    }
+
+    public Update set(Map<String, Object> values) {
+        put("$set", values);
+        return this;
+    }
+
+    public Update unset(String... keys) {
+        put("$unset", makeMap(keys, 1D));
+        return this;
+    }
+
+    public Update push(Map<String, Object> values) {
+        put("$push", values);
+        return this;
+    }
+
+    public Update popLast(String... keys) {
+        put("$pop", makeMap(keys, 1D));
+        return this;
+    }
+
+    public Update popFirst(String... keys) {
+        put("$pop", makeMap(keys, -1D));
+        return this;
+    }
+
     public Map<String, Object> build() {
         return map;
     }
@@ -46,5 +76,17 @@ public class Update implements UpdateBuilder {
     @Override
     public UpdateOptionsBuilder options() {
         return options;
+    }
+
+    private Map<String, Object> makeMap(String[] keys, Object value) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        for (String key : keys) {
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    protected void put(String mapKey, Map<String, Object> value) {
+        DslField.put(map, mapKey, value);
     }
 }

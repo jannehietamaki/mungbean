@@ -36,12 +36,16 @@ public class DslField {
     }
 
     protected void put(Map<String, Object> value) {
-        put(key, value);
+        put(result, key, value);
+    }
+
+    public void put(String mapKey, Map<String, Object> value) {
+        put(result, mapKey, value);
     }
 
     @SuppressWarnings("unchecked")
-    protected void put(String mapKey, Map<String, Object> value) {
-        Object val = result.get(mapKey);
+    public static void put(Map<String, Object> target, String mapKey, Map<String, Object> value) {
+        Object val = target.get(mapKey);
         if (val != null) {
             if (!(val instanceof Map)) {
                 throw new IllegalArgumentException("Invalid combination of arguments");
@@ -49,7 +53,7 @@ public class DslField {
             Map<String, Object> valueMap = (Map<String, Object>) val;
             valueMap.putAll(value);
         } else {
-            result.put(mapKey, value);
+            target.put(mapKey, value);
         }
     }
 
