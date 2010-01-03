@@ -18,6 +18,7 @@ package mungbean.protocol.message;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import mungbean.Assert;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
@@ -36,26 +37,25 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
     private final BSONCoder<ResponseType> coder;
 
     public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, boolean closeCursor, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
-        super(collectionName);
-        this.builder = builder;
-        this.numberToSkip = query.skip();
-        this.numberToReturn = query.limit();
-        this.closeCursor = closeCursor;
-        this.query = buildQuery(coders, query.build(), query.order());
-        this.coder = coder;
+        this(collectionName, builder, query.build(), query.order(), coders, coder, closeCursor, query.skip(), query.limit());
     }
 
     public QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+        this(collectionName, builder, params, orders, coders, coder, true, 0, 1);
+    }
+
+    private QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder, boolean closeCursor, int numberToSkip, int numberToReturn) {
         super(collectionName);
         this.builder = builder;
-        this.numberToSkip = 0;
-        this.numberToReturn = 1;
-        this.closeCursor = true;
+        this.numberToSkip = numberToSkip;
+        this.numberToReturn = numberToReturn;
+        this.closeCursor = closeCursor;
         this.query = buildQuery(coders, params, orders);
         this.coder = coder;
     }
 
     private BSON buildQuery(AbstractBSONCoders coders, final Map<String, Object> query, final Map<String, Object> order) {
+        Assert.notNull(query, "Query can not be null");
         if (order == null || order.isEmpty()) {
             return coders.forValue(query).write(coders, query);
         }
