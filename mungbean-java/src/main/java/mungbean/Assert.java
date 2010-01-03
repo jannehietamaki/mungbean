@@ -26,5 +26,5 @@ public class Assert {
         if (value == null) {
             throw new RuntimeException(message);
         }
-    }
+    }    
 }

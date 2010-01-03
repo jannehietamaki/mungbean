@@ -17,11 +17,10 @@
 package mungbean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import scala.actors.threadpool.Arrays;
 
 public class CollectionUtil {
 
@@ -39,7 +38,6 @@ public class CollectionUtil {
         return ret;
     }
 
-    @SuppressWarnings("unchecked")
     public static List<Object> list(Object... items) {
         return Arrays.asList(items);
     }

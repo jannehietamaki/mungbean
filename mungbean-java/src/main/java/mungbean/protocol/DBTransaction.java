@@ -77,7 +77,3 @@ public class DBTransaction<T extends Response> {
         return "[" + getClass().getName() + ": opCode= " + message.type() + " data:\n" + Utils.hexDump(output.toByteArray()) + "]";
     }
 }
-
-
-
-

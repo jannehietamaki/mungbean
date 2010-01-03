@@ -42,16 +42,12 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 
     @Override
     protected DBConnection createNew() {
-        if (shuttingDown) {
-            throw new IllegalStateException("Db connection is shut down.");
-        }
+        checkPoolStatus();
         return new DBConnection(server);
     }
 
     public <T> T execute(DBConversation<T> conversation) {
-        if (shuttingDown) {
-            throw new IllegalStateException("Db connection is shut down.");
-        }
+        checkPoolStatus();
         DBConnection connection = null;
         try {
             connection = borrow();
@@ -115,6 +111,12 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
     protected boolean isValid(DBConnection connection) {
         connection.execute(new CommandRequest("ismaster"));
         return true;
+    }
+
+    private void checkPoolStatus() {
+        if (shuttingDown) {
+            throw new IllegalStateException("Db connection is shut down.");
+        }
     }
 
     @Override

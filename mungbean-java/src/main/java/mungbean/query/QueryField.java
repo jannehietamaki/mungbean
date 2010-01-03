@@ -16,12 +16,12 @@
 
 package mungbean.query;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import mungbean.protocol.bson.Code;
 
-import scala.actors.threadpool.Arrays;
 import static mungbean.CollectionUtil.map;
 
 public class QueryField extends DslField implements QueryBuilder {
