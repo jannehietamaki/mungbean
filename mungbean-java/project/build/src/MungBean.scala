@@ -1,6 +1,7 @@
 import sbt._
 
 class MongoDriver(info: ProjectInfo) extends DefaultProject(info) {
+      override def compileOrder = CompileOrder.JavaThenScala
       override def testFrameworks = super.testFrameworks ++ List(new TestFramework("com.novocode.junit.JUnitFrameworkNoMarker"))
       override def includeTest(test: String) = test.matches(".*Spec|.*IntegrationTest")
 

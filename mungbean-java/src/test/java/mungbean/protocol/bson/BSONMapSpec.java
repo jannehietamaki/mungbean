@@ -17,12 +17,11 @@ package mungbean.protocol.bson;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.runner.RunWith;
-
-import scala.actors.threadpool.Arrays;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
