@@ -1,2 +1,2 @@
 #!/bin/bash
-java -XX:MaxPermSize=256m -Xmx256M -jar `dirname $0`/xsbt-launch-0.6.8.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
+java -XX:MaxPermSize=256m -Xmx256M -jar `dirname $0`/xsbt-launch-0.6.9.jar $1 $2 $3 $4 $5 $6 $7 $8 $9

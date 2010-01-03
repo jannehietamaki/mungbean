@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="project/boot/scala-2.7.7/lib/scala-compiler.jar"/>
 	<classpathentry kind="lib" path="project/boot/scala-2.7.7/lib/scala-library.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/compile/clojure-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/compile/junit-4.7.jar"/>
 	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/compile/junit-interface-0.3.jar"/>
 	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/compile/objenesis-1.2.jar"/>
@@ -19,5 +18,6 @@
 	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/test/jmock-legacy-2.4.0.jar"/>
 	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/test/junit-4.7.jar"/>
 	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/test/junit-dep-4.4.jar"/>
+	<classpathentry kind="lib" path="lib_managed/scala_2.7.7/compile/clojure-1.1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -64,7 +64,7 @@ public class MongoPerformanceTest extends Specification<Database> {
                 });
             }
             executor.shutdown();
-            executor.awaitTermination(10, TimeUnit.SECONDS);
+            executor.awaitTermination(10, TimeUnit.SECONDS);            
             long time = timer.millisecondsSinceStart();
             System.out.println("Insert+delete time for " + total + " items was " + time + "ms -> " + (total / (time / 1000)) + " operations per second.");
         }

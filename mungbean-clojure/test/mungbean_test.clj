@@ -64,7 +64,8 @@
 (deftest update-in-place
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)
-       (mongo/update coll {:$inc {:foo 3}} :multiple true)
+       (mongo/update coll {:$inc {:foo 3}, :$set {:bar "zoo"}} :multiple true)
        (is (= 3 (count (mongo/query coll :where {:foo 8}))))
+       (is (= 10 (count (mongo/query coll :where {:bar "zoo"}))))
    )
 )

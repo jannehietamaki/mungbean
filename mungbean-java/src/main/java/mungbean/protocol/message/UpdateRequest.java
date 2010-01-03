@@ -61,5 +61,4 @@ public class UpdateRequest<Type> extends CollectionRequest<NoResponseExpected> {
     public RequestOpCode type() {
         return RequestOpCode.OP_UPDATE;
     }
-
 }
