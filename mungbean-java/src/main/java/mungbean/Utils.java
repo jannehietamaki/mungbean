@@ -18,6 +18,8 @@ package mungbean;
 
 import java.nio.charset.Charset;
 
+import sun.misc.HexDumpEncoder;
+
 public class Utils {
 
     public static final Charset UTF8 = Charset.forName("UTF-8");
@@ -37,5 +39,9 @@ public class Utils {
             data[i / 2] = (byte) ((Character.digit(input.charAt(i), 16) << 4) + Character.digit(input.charAt(i + 1), 16));
         }
         return data;
+    }
+
+    public static String hexDump(byte[] bytes) {
+        return new HexDumpEncoder().encode(bytes);
     }
 }

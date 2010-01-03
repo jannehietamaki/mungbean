@@ -20,9 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import sun.misc.HexDumpEncoder;
-
 import mungbean.MongoException;
+import mungbean.Utils;
 import mungbean.protocol.message.MongoRequest;
 import mungbean.protocol.message.Response;
 
@@ -75,6 +74,10 @@ public class DBTransaction<T extends Response> {
     public String debugInfo() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         sendRequest(output);
-        return "[" + getClass().getName() + ": opCode= " + message.type() + " data:\n" + new HexDumpEncoder().encode(output.toByteArray()) + "]";
+        return "[" + getClass().getName() + ": opCode= " + message.type() + " data:\n" + Utils.hexDump(output.toByteArray()) + "]";
     }
 }
+
+
+
+

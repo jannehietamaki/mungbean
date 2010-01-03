@@ -45,7 +45,7 @@ public class MongoPerformanceTest extends Specification<Database> {
         public void databaseCanBeAccessed() throws InterruptedException {
             final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
             collection.save(map("foo", "bar"));
-            ExecutorService executor = Executors.newFixedThreadPool(10);
+            ExecutorService executor = Executors.newFixedThreadPool(20);
             StopWatch timer = new StopWatch();
             long total = 500000;
             for (int a = 0; a < total; a++) {

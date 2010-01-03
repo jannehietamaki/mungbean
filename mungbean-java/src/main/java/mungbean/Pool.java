@@ -15,46 +15,74 @@
  */
 package mungbean;
 
-import java.util.Collection;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class Pool<T> {
-    private final Queue<T> objects;
+    private final BlockingQueue<T> allObjects;
+    private final BlockingQueue<T> availableObjects;
+    private int maxOpenConnections;
 
-    public Pool() {
-        // TODO add possibility to set maximum amount of open connections
-        objects = new ConcurrentLinkedQueue<T>();
-    }
-
-    public Pool(Collection<? extends T> objects) {
-        this.objects = new ConcurrentLinkedQueue<T>(objects);
+    public Pool(int maxOpenConnections) {
+        this.maxOpenConnections = maxOpenConnections;
+        allObjects = new LinkedBlockingQueue<T>(maxOpenConnections);
+        availableObjects = new LinkedBlockingQueue<T>();
     }
 
     protected abstract T createNew();
 
+    protected abstract void close(T object);
+
     protected abstract boolean isValid(T item);
 
-    public T borrow() {
-        T t;
-        if ((t = poll()) == null) {
-            t = createNew();
-        }
-        return t;
-    }
-
     public void giveBack(T object) {
-        if (object != null && isValid(object)) {
-            objects.offer(object);
+        try {
+            if (object != null && isValid(object)) {
+                availableObjects.add(object);
+                return;
+            }
+        } catch (RuntimeException e) {
+            // isValid threw an exception - object is no longer valid and
+            // can be thrown away
+            allObjects.remove(object);
+            try {
+                close(object);
+            } catch (Exception ex) {
+            }
+            throw e;
         }
     }
 
-    protected T poll() {
+    public T borrow() {
+        return getNext(true);
+    }
+
+    protected T getNext(boolean createNewIfRequired) {
         T item;
         do {
-            item = objects.poll();
-        } while (item != null && !isValid(item));
+            item = availableObjects.poll();
+            if (item == null) {
+                if (allObjects.size() >= maxOpenConnections) {
+                    try {
+                        item = availableObjects.take();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException("Received an interrput while waiting for available connection", e);
+                    }
+                } else {
+                    if (createNewIfRequired) {
+                        item = newItem();
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        } while (!isValid(item));
         return item;
     }
 
+    protected T newItem() {
+        T item = createNew();
+        allObjects.add(item);
+        return item;
+    }
 }
