@@ -29,6 +29,8 @@ import mungbean.protocol.command.Command;
 import mungbean.protocol.command.Count;
 import mungbean.protocol.command.Distinct;
 import mungbean.protocol.command.Group;
+import mungbean.protocol.command.MapReduce;
+import mungbean.protocol.command.MapReduceResult;
 import mungbean.protocol.command.admin.IndexOptionsBuilder;
 import mungbean.query.Query;
 import mungbean.query.QueryBuilder;
@@ -129,6 +131,17 @@ public class MongoIntegrationTest extends Specification<Database> {
 
             collection.update(new Query().field("foo").greaterThan(3), new Update().increment(map("foo", 5)));
             specify(collection.query(new Query().field("foo").is(9)).size(), does.equal(2));
+        }
+
+        protected void mapReduceOperationCanBeExecuted() {
+            final DBCollection<Map<String, Object>> collection = context.openCollection("foo2");
+            for (int a = 0; a < 10; a++) {
+                collection.save(newDoc(new ObjectId(), a));
+            }
+            MapReduce mapReduce = new MapReduce("function(){emit(this.foo%2==0?\"even\":\"odd\",1); }", "function(k, vals){ var sum=0; for(var i in vals) sum += vals[i]; return sum;}");
+            mapReduce.setVerbose(true);
+            MapReduceResult result = collection.query(mapReduce, new Query());
+            specify(result.wasOk());
         }
 
     }

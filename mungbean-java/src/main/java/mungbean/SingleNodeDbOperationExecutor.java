@@ -58,7 +58,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
             } catch (RuntimeException e) {
                 // If the connection is no more valid we're getting an exception
                 // here
-                throw new RuntimeException("Connection state invalid, operation was " + generateRequestDebug(conversation));
+                throw new RuntimeException("Connection state invalid, operation was " + generateRequestDebug(conversation), e);
             }
         }
     }

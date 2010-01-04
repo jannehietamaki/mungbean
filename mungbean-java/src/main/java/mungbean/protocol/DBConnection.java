@@ -63,8 +63,8 @@ public class DBConnection {
             transaction = new DBTransaction<T>(message, incrementAndGetCounter());
             return transaction.call(outputStream, inputStream);
         } catch (Exception e) {
-            // TODO We should probably close this connection as it's state might
-            // be invalid
+            // Close this connection as it's probably invalid
+            close();
             throw new MongoException("Error communicating with server", e, transaction);
         }
     }

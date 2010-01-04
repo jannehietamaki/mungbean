@@ -33,6 +33,14 @@ public class CommandResponse implements Response {
         return map.get(key);
     }
 
+    public String getString(String key) {
+        Object value = get(key);
+        if (value != null) {
+            return String.valueOf(value);
+        }
+        return null;
+    }
+
     public Map<String, Object> values() {
         return map;
     }
@@ -41,4 +49,5 @@ public class CommandResponse implements Response {
     public int responseTo() {
         return -1;
     }
+
 }
