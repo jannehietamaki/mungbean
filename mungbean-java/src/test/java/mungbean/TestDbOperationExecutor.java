@@ -21,12 +21,11 @@ import java.io.OutputStream;
 
 import mungbean.protocol.DBConnection;
 
-public class TestDbOperationExecutor extends SingleNodeDbOperationExecutor {
+public class TestDbOperationExecutor implements DBOperationExecutor {
     private final InputStream input;
     private final OutputStream output;
 
     public TestDbOperationExecutor(InputStream input, OutputStream output) {
-        super(new Server(null, 0));
         this.input = input;
         this.output = output;
     }
@@ -34,6 +33,15 @@ public class TestDbOperationExecutor extends SingleNodeDbOperationExecutor {
     @Override
     public <T> T execute(DBConversation<T> conversation) {
         return conversation.execute(new DBConnection(input, output));
+    }
+
+    @Override
+    public void close() {
+    }
+
+    @Override
+    public <T> T executeWrite(DBConversation<T> conversation) {
+        return executeWrite(conversation);
     }
 
 }
