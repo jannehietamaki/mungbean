@@ -26,6 +26,7 @@ public class MapBSONCoders extends AbstractBSONCoders {
         addEncoder(new BSONString());
         addEncoder(new BSONMap());
         addEncoder(new BSONOid());
+        addEncoder(new BSONBinary());
         addEncoder(new BSONPattern());
         addEncoder(new BSONDate());
         addEncoder(new BSONBoolean());

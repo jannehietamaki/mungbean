@@ -19,9 +19,10 @@ package mungbean.protocol.command.admin;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class IndexOptionsBuilder {
+public class IndexOptionsBuilder implements IndexOptions {
     private boolean unique = false;
     private boolean dropDups = false;
+    private final Map<String, Double> indices = new LinkedHashMap<String, Double>();
 
     public IndexOptionsBuilder unique() {
         unique = true;
@@ -40,5 +41,28 @@ public class IndexOptionsBuilder {
                 put("dropDups", dropDups);
             }
         };
+    }
+
+    public IndexOptions field(String key) {
+        return new IndexOptionsField(this, indices, key);
+    }
+
+    public Map<String, Double> fields() {
+        return indices;
+    }
+
+    public String name() {
+        StringBuilder ret = new StringBuilder();
+        boolean first = true;
+        for (Map.Entry<String, Double> entry : indices.entrySet()) {
+            if (!first) {
+                ret.append("-");
+            }
+            ret.append(entry.getKey());
+            ret.append("_");
+            ret.append(entry.getValue());
+            first = false;
+        }
+        return ret.toString();
     }
 }

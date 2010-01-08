@@ -38,7 +38,7 @@ public class CollectionAdminSpec extends Specification<CollectionAdmin> {
         }
 
         public void messageIsSerializedToByteStream() {
-            context.ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().dropDups().unique());
+            context.ensureIndex(new IndexOptionsBuilder().dropDups().unique().field("foo"));
             specify(output.toByteArray().length, does.equal(153));
         }
     }

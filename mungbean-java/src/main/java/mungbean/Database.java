@@ -17,7 +17,11 @@ package mungbean;
 
 import java.util.Map;
 
+import mungbean.gridfs.GridFsChunk;
+import mungbean.gridfs.GridFsFile;
+import mungbean.gridfs.GridFsStorage;
 import mungbean.pojo.PojoDBCollection;
+import mungbean.protocol.command.admin.IndexOptionsBuilder;
 
 public class Database extends AbstractDatabase {
     public Database(DBOperationExecutor executor, String name) {
@@ -30,5 +34,16 @@ public class Database extends AbstractDatabase {
 
     public <T> DBCollection<T> openCollection(String name, Class<T> type) {
         return new PojoDBCollection<T>(executor(), dbName(), name, type);
+    }
+
+    public <T> DBCollection<T> openStorageCollection(String name, Class<T> type) {
+        return new PojoDBCollection<T>(executor(), dbName(), name, type);
+    }
+
+    public GridFsStorage openStorage(String name) {
+        DBCollection<GridFsFile> storageCollection = openStorageCollection(name + ".files", GridFsFile.class);
+        storageCollection.collectionAdmin().ensureIndex(new IndexOptionsBuilder().field("files_id").field("n"));
+        GridFsStorage storage = new GridFsStorage(storageCollection, openStorageCollection(name + ".chunks", GridFsChunk.class));
+        return storage;
     }
 }

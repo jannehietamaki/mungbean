@@ -19,18 +19,32 @@ package mungbean;
 import java.security.MessageDigest;
 
 public class Md5 {
-    private Md5() {
+    private final MessageDigest algorithm;
 
-    }
-
-    public static String md5(String source) {
+    public Md5() {
         try {
-            MessageDigest algorithm = MessageDigest.getInstance("MD5");
+            algorithm = MessageDigest.getInstance("MD5");
             algorithm.reset();
-            algorithm.update(source.getBytes(Utils.UTF8));
-            return Utils.toHex(algorithm.digest());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String md5(String source) {
+        return new Md5().update(source.getBytes(Utils.UTF8)).toHex();
+    }
+
+    public String toHex() {
+        return Utils.toHex(algorithm.digest());
+    }
+
+    public Md5 update(byte[] bytes) {
+        algorithm.update(bytes);
+        return this;
+    }
+
+    public Md5 update(byte[] bytes, int start, int length) {
+        algorithm.update(bytes, start, length);
+        return this;
     }
 }

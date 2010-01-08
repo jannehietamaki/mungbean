@@ -21,7 +21,7 @@ import java.util.Map;
 
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.bson.MapBSONCoders;
-import mungbean.protocol.command.admin.IndexOptionsBuilder;
+import mungbean.protocol.command.admin.IndexOptions;
 import mungbean.protocol.message.InsertRequest;
 
 public class CollectionAdmin {
@@ -31,23 +31,12 @@ public class CollectionAdmin {
         this.collection = collection;
     }
 
-    public void ensureIndex(String[] fields, IndexOptionsBuilder builder) {
+    public void ensureIndex(IndexOptions options) {
         final Map<String, Object> doc = new LinkedHashMap<String, Object>();
-        final Map<String, Object> key = new LinkedHashMap<String, Object>();
         doc.put("ns", collection.dbName());
-        doc.put("key", key);
-        StringBuilder name = new StringBuilder();
-        double value = 1D;
-        for (String field : fields) {
-            key.put(field, value);
-            if (name.length() > 0) {
-                name.append("_");
-            }
-            name.append(field + "_" + value);
-            value = -1D;
-        }
-        doc.put("name", name.toString());
-        doc.putAll(builder.build());
+        doc.put("key", options.fields());
+        doc.put("name", options.name());
+        doc.putAll(options.build());
         collection.execute(new DBConversation<Void>() {
             @SuppressWarnings("unchecked")
             @Override

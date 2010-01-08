@@ -111,12 +111,13 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
     public List<T> query(final QueryBuilder query) {
         final QueryOptionsBuilder options = new QueryOptionsBuilder();
-        return execute(new DBConversation<List<T>>() {
+        List<T> result = execute(new DBConversation<List<T>>() {
             @Override
             public List<T> execute(DBConnection connection) {
                 return connection.execute(new QueryRequest<T>(dbName(), options, query, true, queryCoders, defaultEncoder())).values();
             };
         });
+        return result;
     }
 
     public <ReturnType> ReturnType query(Aggregation<ReturnType> aggregation, QueryBuilder query) {

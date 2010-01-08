@@ -48,4 +48,9 @@ public class FieldDefinition {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "[Field: name=" + name() + "]";
+    }
 }

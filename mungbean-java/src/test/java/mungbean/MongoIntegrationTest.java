@@ -89,7 +89,7 @@ public class MongoIntegrationTest extends Specification<Database> {
 
         public void violationOfUniqueIndexThrowsAnException() {
             final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-            collection.collectionAdmin().ensureIndex(new String[] { "foo" }, new IndexOptionsBuilder().unique());
+            collection.collectionAdmin().ensureIndex(new IndexOptionsBuilder().unique().field("foo"));
             collection.save(newDoc(new ObjectId(), "bar"));
             specify(new Block() {
                 @Override
