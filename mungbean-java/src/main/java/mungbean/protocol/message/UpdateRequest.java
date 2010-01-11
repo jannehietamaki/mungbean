@@ -44,11 +44,6 @@ public class UpdateRequest<Type> extends CollectionRequest<NoResponseExpected> {
     }
 
     @Override
-    public NoResponseExpected readResponse(LittleEndianDataReader reader) {
-        return new NoResponseExpected();
-    }
-
-    @Override
     public void send(LittleEndianDataWriter writer) {
         writer.writeInt(0); // RESERVED
         writeCollectionName(writer);
@@ -60,5 +55,10 @@ public class UpdateRequest<Type> extends CollectionRequest<NoResponseExpected> {
     @Override
     public RequestOpCode type() {
         return RequestOpCode.OP_UPDATE;
+    }
+
+    @Override
+    public NoResponseExpected readResponse(LittleEndianDataReader reader) {
+        return new NoResponseExpected();
     }
 }

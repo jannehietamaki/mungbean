@@ -23,6 +23,7 @@ import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
+import mungbean.ListQueryCallback;
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.BSONMap;
 import mungbean.protocol.bson.MapBSONCoders;
@@ -101,8 +102,10 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
                     0 // eoo
                     });
             QueryResponse<Map<String, Object>> response = context.readResponse(input);
+            ListQueryCallback<Map<String, Object>> callback = new ListQueryCallback<Map<String, Object>>();
+            response.readResponse(callback);
             specify(response.opCode(), does.equal(RequestOpCode.OP_REPLY));
-            specify(response.values().get(0), does.equal(map("foo", "bar")));
+            specify(callback.values().get(0), does.equal(map("foo", "bar")));
         }
     }
 }

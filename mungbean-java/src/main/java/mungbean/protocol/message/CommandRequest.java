@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mungbean.ListQueryCallback;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
 import mungbean.protocol.bson.AbstractBSONCoders;
@@ -33,6 +34,7 @@ public class CommandRequest extends MongoRequest<CommandResponse> {
     public static final AbstractBSONCoders DEFAULT_CODERS = new MapBSONCoders();
     private static final BSONMap RESPONSE_CODER = new BSONMap();
     private final QueryRequest<Map<String, Object>> query;
+    private final ListQueryCallback<Map<String, Object>> v = new ListQueryCallback<Map<String, Object>>();
 
     public CommandRequest(String dbName, Map<String, Object> params, AbstractBSONCoders coders) {
         HashMap<String, Object> orders = new HashMap<String, Object>();
@@ -54,7 +56,9 @@ public class CommandRequest extends MongoRequest<CommandResponse> {
 
     @Override
     public CommandResponse readResponse(LittleEndianDataReader reader) {
-        List<Map<String, Object>> values = query.readResponse(reader).values();
+        QueryResponse<Map<String, Object>> response = query.readResponse(reader);
+        response.readResponse(v);
+        List<Map<String, Object>> values = v.values();
         if (values.isEmpty()) {
             return new CommandResponse(new HashMap<String, Object>());
         }

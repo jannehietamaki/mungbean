@@ -32,6 +32,7 @@ import mungbean.protocol.message.DeleteRequest;
 import mungbean.protocol.message.InsertRequest;
 import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
+import mungbean.protocol.message.QueryResponse;
 import mungbean.protocol.message.UpdateOptionsBuilder;
 import mungbean.protocol.message.UpdateRequest;
 import mungbean.query.Query;
@@ -110,14 +111,20 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
     }
 
     public List<T> query(final QueryBuilder query) {
-        final QueryOptionsBuilder options = new QueryOptionsBuilder();
-        List<T> result = execute(new DBConversation<List<T>>() {
+        ListQueryCallback<T> callback = new ListQueryCallback<T>();
+        query(query, callback);
+        return callback.values();
+    }
+
+    public void query(final QueryBuilder query, final QueryCallback<T> callback) {
+        execute(new DBConversation<Void>() {
             @Override
-            public List<T> execute(DBConnection connection) {
-                return connection.execute(new QueryRequest<T>(dbName(), options, query, true, queryCoders, defaultEncoder())).values();
+            public Void execute(DBConnection connection) {
+                QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, true, queryCoders, defaultEncoder()));
+                response.readResponse(callback);
+                return null;
             };
         });
-        return result;
     }
 
     public <ReturnType> ReturnType query(Aggregation<ReturnType> aggregation, QueryBuilder query) {

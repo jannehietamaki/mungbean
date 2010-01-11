@@ -16,19 +16,21 @@
 package mungbean.protocol.message;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
+import mungbean.ListQueryCallback;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.bson.BSONMap;
 
 import org.junit.runner.RunWith;
 
 @RunWith(JDaveRunner.class)
-public class QueryResponseSpec extends Specification<QueryResponse<Map<String, Object>>> {
+public class QueryResponseSpec extends Specification<List<Map<String, Object>>> {
     public class WithCommandResponse {
-        public QueryResponse<Map<String, Object>> create() {
+        public List<Map<String, Object>> create() {
             byte[] bytes = new byte[] { //
             65, 0, 0, 0, // length
                     70, 71, 94, 07,// reqid
@@ -49,12 +51,15 @@ public class QueryResponseSpec extends Specification<QueryResponse<Map<String, O
                     0, 0, 0, 0, 0, 0, -16, 63, // 1
                     0 // eoo
             };
-            return new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap());
+            ListQueryCallback<Map<String, Object>> callback = new ListQueryCallback<Map<String, Object>>();
+            QueryResponse<Map<String, Object>> response = new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap());
+            response.readResponse(callback);
+            return callback.values();
         }
 
         public void responseCanBeParsed() {
-            specify(context.values().size(), does.equal(1));
-            Map<String, Object> obj = context.values().get(0);
+            specify(context.size(), does.equal(1));
+            Map<String, Object> obj = context.get(0);
             specify(obj.get("err"), does.equal(null));
             specify(obj.get("n"), does.equal(0));
             specify(obj.get("ok"), does.equal(1D));

@@ -35,6 +35,8 @@ public interface DBCollection<T> {
 
     List<T> query(QueryBuilder query);
 
+    void query(QueryBuilder query, QueryCallback<T> callback);
+
     <ResponseType> ResponseType query(Aggregation<ResponseType> aggregation, QueryBuilder query);
 
     T find(ObjectId id);

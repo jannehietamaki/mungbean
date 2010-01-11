@@ -15,31 +15,32 @@
  */
 package mungbean.protocol.message;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import mungbean.QueryCallback;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 import mungbean.protocol.bson.MapBSONCoders;
 
-public class QueryResponse<ResponseType> extends MongoResponse implements Response {
+public class QueryResponse<ResponseType> extends MongoResponse {
     private static final AbstractBSONCoders BSON = new MapBSONCoders();
     private final int responseFlag;
     private final long cursorId;
     private final int startingFrom;
     private final int numberReturned;
-    private final List<ResponseType> values = new ArrayList<ResponseType>();
+    private final BSONCoder<ResponseType> coder;
+    private final LittleEndianDataReader reader;
 
     public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder) {
         super(reader);
+        this.reader = reader;
+        this.coder = coder;
         responseFlag = reader.readInt();
         cursorId = reader.readLong();
+        if (cursorId != 0) {
+            // TODO store cursorId if set
+        }
         startingFrom = reader.readInt();
         numberReturned = reader.readInt();
-        for (int i = 0; i < numberReturned; i++) {
-            values.add(coder.read(BSON, reader));
-        }
     }
 
     public int responseFlag() {
@@ -58,7 +59,9 @@ public class QueryResponse<ResponseType> extends MongoResponse implements Respon
         return numberReturned;
     }
 
-    public List<ResponseType> values() {
-        return values;
+    public void readResponse(QueryCallback<ResponseType> callback) {
+        for (int i = 0; i < numberReturned; i++) {
+            callback.process(coder.read(BSON, reader));
+        }
     }
 }
