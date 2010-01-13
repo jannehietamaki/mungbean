@@ -22,4 +22,9 @@ public class NoResponseExpected implements Response {
     public int responseTo() {
         return -1;
     }
+
+    @Override
+    public long cursorId() {
+        return 0;
+    }
 }

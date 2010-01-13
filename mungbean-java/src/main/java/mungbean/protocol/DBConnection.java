@@ -29,7 +29,7 @@ import mungbean.Server;
 import mungbean.protocol.message.MongoRequest;
 import mungbean.protocol.message.Response;
 
-public class DBConnection {
+public class DBConnection implements Connection {
 
     private static final int CONNECTION_TIMEOUT = 5000;
     private int requestIdCounter = 0;

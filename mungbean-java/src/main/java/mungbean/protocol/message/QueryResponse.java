@@ -36,9 +36,6 @@ public class QueryResponse<ResponseType> extends MongoResponse {
         this.coder = coder;
         responseFlag = reader.readInt();
         cursorId = reader.readLong();
-        if (cursorId != 0) {
-            // TODO store cursorId if set
-        }
         startingFrom = reader.readInt();
         numberReturned = reader.readInt();
     }

@@ -18,12 +18,13 @@ package mungbean;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import mungbean.protocol.Connection;
 import mungbean.protocol.DBConnection;
 import mungbean.protocol.RuntimeIOException;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.CommandResponse;
 
-public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements DBOperationExecutor {
+public class SingleNodeDbOperationExecutor extends Pool<Connection> implements DBOperationExecutor {
     private boolean shuttingDown = false;
     private final Server server;
 
@@ -48,7 +49,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 
     public <T> T execute(DBConversation<T> conversation) {
         checkPoolStatus();
-        DBConnection connection = null;
+        Connection connection = null;
         try {
             connection = borrow();
             return conversation.execute(connection);
@@ -70,7 +71,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
 
     public void close() {
         shuttingDown = true;
-        DBConnection connection;
+        Connection connection;
         while ((connection = getNext(false)) != null) {
             connection.close();
         }
@@ -80,7 +81,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
         try {
             return execute(new DBConversation<Boolean>() {
                 @Override
-                public Boolean execute(DBConnection connection) {
+                public Boolean doExecute(Connection connection) {
                     return isValid(connection);
                 }
             });
@@ -93,7 +94,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
         try {
             return execute(new DBConversation<Boolean>() {
                 @Override
-                public Boolean execute(DBConnection connection) {
+                public Boolean doExecute(Connection connection) {
                     CommandResponse response = connection.execute(new CommandRequest("$cmd", "ismaster"));
                     return response.getLong("ismaster") == 1;
                 }
@@ -108,7 +109,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
     }
 
     @Override
-    protected boolean isValid(DBConnection connection) {
+    protected boolean isValid(Connection connection) {
         connection.execute(new CommandRequest("ismaster"));
         return true;
     }
@@ -120,7 +121,7 @@ public class SingleNodeDbOperationExecutor extends Pool<DBConnection> implements
     }
 
     @Override
-    protected void close(DBConnection conn) {
+    protected void close(Connection conn) {
         conn.close();
     }
 

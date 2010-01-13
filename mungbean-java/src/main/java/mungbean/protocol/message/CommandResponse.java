@@ -50,4 +50,9 @@ public class CommandResponse implements Response {
         return -1;
     }
 
+    @Override
+    public long cursorId() {
+        return 0;
+    }
+
 }

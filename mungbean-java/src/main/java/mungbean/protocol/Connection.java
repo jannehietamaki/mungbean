@@ -1,5 +1,5 @@
 /*
-   Copyright 2009 Janne Hietamäki
+   Copyright 2009-2010 Janne Hietamäki
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package mungbean;
 
-import mungbean.protocol.Connection;
+package mungbean.protocol;
 
-public abstract class DBConversation<T> {
+import mungbean.protocol.message.MongoRequest;
+import mungbean.protocol.message.Response;
 
-    public abstract T doExecute(Connection connection);
+public interface Connection {
+    <T extends Response> T execute(MongoRequest<T> message);
 
-    public final T execute(Connection connection) {
-        CursorClosingConnectionWrapper conn = new CursorClosingConnectionWrapper(connection);
-        T result = doExecute(conn);
-        conn.closeCursors();
-        return result;
-    }
+    void close();
 }

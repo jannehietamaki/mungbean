@@ -19,7 +19,7 @@ package mungbean;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import mungbean.protocol.DBConnection;
+import mungbean.protocol.Connection;
 import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.protocol.command.admin.IndexOptions;
 import mungbean.protocol.message.InsertRequest;
@@ -40,7 +40,7 @@ public class CollectionAdmin {
         collection.execute(new DBConversation<Void>() {
             @SuppressWarnings("unchecked")
             @Override
-            public Void execute(DBConnection connection) {
+            public Void doExecute(Connection connection) {
                 connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new MapBSONCoders(), doc));
                 return null;
             }
