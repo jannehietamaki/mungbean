@@ -20,15 +20,19 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
+import mungbean.protocol.command.Count;
+import mungbean.query.Query;
 
 import org.junit.runner.RunWith;
-import static mungbean.CollectionUtil.map;
 
 @RunWith(JDaveRunner.class)
 public class MongoPerformanceTest extends Specification<Database> {
+    private final static String contentString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac mi urna, sit amet iaculis ligula. Vestibulum malesuada tortor ut quam posuere nec tempor eros interdum. Nullam massa nulla, ultrices in ultricies id, pellentesque sed quam. Mauris at adipiscing elit. Maecenas facilisis justo et tortor tristique faucibus. Proin tincidunt lacinia nunc quis egestas. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla orci quam, hendrerit non tempus eu, lacinia eu felis. Donec dictum adipiscing odio et aliquam. Proin nec porta ante. Fusce ac massa tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur pretium, ante ac porttitor aliquam, eros mauris porta tortor, non dictum dui leo ac tellus. Ut in lorem magna. Ut placerat convallis mi non pellentesque. Aliquam feugiat, mauris suscipit interdum consectetur, mauris arcu tincidunt lorem, condimentum adipiscing felis erat quis lorem. Curabitur dui nulla, elementum eu eleifend id, tempus ut sapien. Donec suscipit est id enim facilisis aliquam. Aliquam eros urna, ornare eget semper sit amet, posuere sit amet dolor. Etiam tellus lectus, dignissim non sollicitudin vitae, iaculis at neque. Curabitur nec sem vel felis iaculis iaculis quis nec massa. Suspendisse et lorem orci. Ut ut nunc lectus. Duis dignissim, massa pharetra cursus rutrum, quam ligula ullamcorper libero, sed tincidunt erat nulla ullamcorper sapien. In malesuada rhoncus massa id egestas. Suspendisse in nisi nec nunc vestibulum molestie sed in turpis.";
+
     public class WithDatabase {
         Mungbean db;
 
@@ -44,29 +48,51 @@ public class MongoPerformanceTest extends Specification<Database> {
 
         public void databaseCanBeAccessed() throws InterruptedException {
             final DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-            collection.save(map("foo", "bar"));
             ExecutorService executor = Executors.newFixedThreadPool(20);
             StopWatch timer = new StopWatch();
             long total = 500000;
-            for (int a = 0; a < total; a++) {
+            for (int a = 0; a < total / 100; a++) {
                 executor.submit(new Runnable() {
+                    @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
-                        final ObjectId id = new ObjectId();
-                        collection.save(new HashMap<String, Object>() {
-                            {
-                                put("foo", "bar");
-                                put("_id", id);
-                            }
-                        });
-                        collection.delete(id);
+                        Map<String, Object> docs[] = new Map[100];
+                        for (int a = 0; a < 100; a++) {
+                            docs[a] = new HashMap<String, Object>() {
+                                {
+                                    put("foo", "bar");
+                                    put("content", contentString);
+
+                                }
+                            };
+                        }
+                        collection.save(docs);
                     }
                 });
             }
             executor.shutdown();
-            executor.awaitTermination(10, TimeUnit.SECONDS);            
+            executor.awaitTermination(5, TimeUnit.MINUTES);
+            if (false) {
+                specify(collection.query(new Count(), new Query()), does.equal(total));
+            }
             long time = timer.millisecondsSinceStart();
-            System.out.println("Insert+delete time for " + total + " items was " + time + "ms -> " + (total / (time / 1000)) + " operations per second.");
+            System.out.println("Insert time for " + total + " items was " + time + "ms -> " + (total / (time / 1000)) + " operations per second.");
+
+            timer = new StopWatch();
+            final AtomicInteger count = new AtomicInteger(0);
+            collection.query(new Query(), new QueryCallback<Map<String, Object>>() {
+                @Override
+                public void process(Map<String, Object> item) {
+                    if ("bar".equals(item.get("foo"))) {
+                        count.incrementAndGet();
+                    } else {
+                        throw new IllegalStateException("Invalid item: " + item);
+                    }
+                }
+            });
+            specify(count.get(), does.equal(total));
+            long iterateTime = timer.millisecondsSinceStart();
+            System.out.println("Iterate " + total + " items in " + iterateTime + "ms");
         }
     }
 }

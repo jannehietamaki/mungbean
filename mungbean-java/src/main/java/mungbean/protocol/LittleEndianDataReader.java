@@ -33,7 +33,7 @@ public class LittleEndianDataReader {
     public int readInt() {
         byte[] buf = new byte[4];
         readBuffer(buf);
-        int value = ((((((buf[3] & 0xFF) << 24) | (buf[2] & 0xFF)) << 16) | (buf[1] & 0xFF)) << 8) | (buf[0] & 0xFF);
+        int value = ((buf[3] & 0xFF) << 24) | ((buf[2] & 0xFF) << 16) | ((buf[1] & 0xFF) << 8) | (buf[0] & 0xFF);
         return value;
     }
 
@@ -42,6 +42,9 @@ public class LittleEndianDataReader {
             int items = in.read(buf);
             if (items == -1) {
                 throw new RuntimeIOException("Remote end has closed the connection");
+            }
+            if (items != buf.length) {
+                throw new RuntimeIOException("Enough data was not available");
             }
         } catch (IOException e) {
             throw new RuntimeIOException(e);

@@ -29,6 +29,8 @@ public interface DBCollection<T> {
 
     T save(T doc);
 
+    void save(T... docs);
+
     void update(ObjectId id, T doc);
 
     void update(QueryBuilder query, UpdateBuilder update);

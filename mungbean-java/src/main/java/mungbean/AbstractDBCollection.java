@@ -29,6 +29,7 @@ import mungbean.protocol.command.LastError;
 import mungbean.protocol.message.CommandRequest;
 import mungbean.protocol.message.CommandResponse;
 import mungbean.protocol.message.DeleteRequest;
+import mungbean.protocol.message.GetMoreRequest;
 import mungbean.protocol.message.InsertRequest;
 import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
@@ -67,13 +68,29 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
     protected abstract BSONCoder<T> defaultEncoder();
 
     public T save(final T doc) {
+        final T newDoc = injectId(doc);
         return executeWrite(new ErrorCheckingDBConversation() {
             @SuppressWarnings("unchecked")
             @Override
             public T doExecuteWithErrorChecking(Connection connection) {
-                T newDoc = injectId(doc);
                 connection.execute(new InsertRequest<T>(dbName(), documentCoders, newDoc));
                 return newDoc;
+            }
+        });
+
+    }
+
+    public void save(final T... docs) {
+        for (T doc : docs) {
+            injectId(doc);
+        }
+        executeWrite(new ErrorCheckingDBConversation() {
+            @Override
+            public T doExecuteWithErrorChecking(Connection connection) {
+                // TODO if all docs do not fit into one request -> split into
+                // multiple batches
+                connection.execute(new InsertRequest<T>(dbName(), documentCoders, docs));
+                return null;
             }
         });
     }
@@ -120,8 +137,18 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
         execute(new DBConversation<Void>() {
             @Override
             public Void doExecute(Connection connection) {
-                QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, true, queryCoders, defaultEncoder()));
+                QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, false, queryCoders, defaultEncoder()));
                 response.readResponse(callback);
+
+                if (response.cursorId() != 0) {
+                    long cursorId = response.cursorId();
+                    QueryResponse<T> cursorResponse;
+                    do {
+                        cursorResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder()));
+                        cursorResponse.readResponse(callback);
+                        cursorId = cursorResponse.cursorId();
+                    } while (cursorResponse.cursorId() != 0);
+                }
                 return null;
             };
         });

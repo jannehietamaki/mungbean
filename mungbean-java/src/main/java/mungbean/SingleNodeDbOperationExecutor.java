@@ -31,6 +31,7 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
     // TODO make these configurable
     private final static int maxOpenConnections = 10;
     private final static int initialConnections = 3;
+    private final static boolean validateConnections = false;
 
     public SingleNodeDbOperationExecutor(Server server) {
         super(maxOpenConnections);
@@ -110,7 +111,9 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
 
     @Override
     protected boolean isValid(Connection connection) {
-        connection.execute(new CommandRequest("ismaster"));
+        if (validateConnections) {
+            connection.execute(new CommandRequest("ismaster"));
+        }
         return true;
     }
 
