@@ -23,9 +23,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ObjectId {
     // http://www.mongodb.org/display/DOCS/Object+IDs
     private final static byte[] hardwareAddress = hardwareAddress();
+    private final static AtomicInteger incrementCounter = new AtomicInteger(0);
 
     private final byte[] id;
-    private final static AtomicInteger incrementCounter = new AtomicInteger(0);
 
     public ObjectId(byte[] id) {
         Assert.isTrue(id.length == 12, "Id(" + new String(id) + ") must be 12 bytes");

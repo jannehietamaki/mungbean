@@ -137,7 +137,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
         execute(new DBConversation<Void>() {
             @Override
             public Void doExecute(Connection connection) {
-                QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, false, queryCoders, defaultEncoder()));
+                QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, queryCoders, defaultEncoder()));
                 response.readResponse(callback);
 
                 if (response.cursorId() != 0) {

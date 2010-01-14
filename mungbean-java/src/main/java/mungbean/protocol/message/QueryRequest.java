@@ -33,23 +33,21 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
     private final int numberToSkip;
     private final int numberToReturn;
     private final BSON query;
-    private final boolean closeCursor;
     private final BSONCoder<ResponseType> coder;
 
-    public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, boolean closeCursor, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
-        this(collectionName, builder, query.build(), query.order(), coders, coder, closeCursor, query.skip(), query.limit());
+    public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
+        this(collectionName, builder, query.build(), query.order(), coders, coder, query.skip(), query.limit());
     }
 
     public QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
-        this(collectionName, builder, params, orders, coders, coder, true, 0, 1);
+        this(collectionName, builder, params, orders, coders, coder, 0, 1);
     }
 
-    private QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder, boolean closeCursor, int numberToSkip, int numberToReturn) {
+    private QueryRequest(String collectionName, QueryOptionsBuilder builder, Map<String, Object> params, Map<String, Object> orders, AbstractBSONCoders coders, BSONCoder<ResponseType> coder, int numberToSkip, int numberToReturn) {
         super(collectionName);
         this.builder = builder;
         this.numberToSkip = numberToSkip;
-        this.numberToReturn = numberToReturn;
-        this.closeCursor = closeCursor;
+        this.numberToReturn = Math.abs(numberToReturn);
         this.query = buildQuery(coders, params, orders);
         this.coder = coder;
     }
@@ -82,14 +80,11 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
         writer.writeInt(builder.build());
         writeCollectionName(writer);
         writer.writeInt(numberToSkip);
-        if (closeCursor) {
-            if (numberToReturn > 0) {
-                writer.writeInt(-numberToReturn);
-            } else {
-                writer.writeInt(Integer.MIN_VALUE);
-            }
+        // if limit it set, fetch n number items and close cursor, otherwise fetch 5000 items and leave cursor open
+        if (numberToReturn > 0) {
+            writer.writeInt(-numberToReturn);
         } else {
-            writer.writeInt(numberToReturn);
+            writer.writeInt(5000);
         }
         writer.write(query.bytes());
     }

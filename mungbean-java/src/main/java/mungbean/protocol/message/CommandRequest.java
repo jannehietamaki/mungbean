@@ -46,7 +46,7 @@ public class CommandRequest extends MongoRequest<CommandResponse> {
     }
 
     public CommandRequest(String command) {
-        query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), new Query().setLimit(1).field(command).is(1D), true, DEFAULT_CODERS, RESPONSE_CODER);
+        query = new QueryRequest<Map<String, Object>>("$cmd", new QueryOptionsBuilder(), new Query().setLimit(1).field(command).is(1D), DEFAULT_CODERS, RESPONSE_CODER);
     }
 
     @Override
