@@ -64,7 +64,11 @@ public abstract class Pool<T> {
             if (item == null) {
                 if (allObjects.size() >= maxOpenConnections) {
                     try {
-                        item = availableObjects.take();
+                        if (createNewIfRequired) {
+                            item = availableObjects.take();
+                        } else {
+                            return availableObjects.poll();
+                        }
                     } catch (InterruptedException e) {
                         throw new RuntimeException("Received an interrput while waiting for available connection", e);
                     }
@@ -82,7 +86,7 @@ public abstract class Pool<T> {
 
     protected T newItem() {
         T item = createNew();
-        allObjects.add(item);
+        allObjects.offer(item);
         return item;
     }
 }

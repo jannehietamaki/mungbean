@@ -15,6 +15,16 @@
  */
 package mungbean;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import jdave.Specification;
 import jdave.contract.EqualsHashCodeContract;
 import jdave.junit4.JDaveRunner;
@@ -66,6 +76,44 @@ public class ObjectIdSpec extends Specification<ObjectId> {
 
         public void isNotEqualToOtherOne() {
             specify(context.equals(new ObjectId()), does.equal(false));
+        }
+    }
+
+    public class IdSequence {
+        public void isUnique() {
+            Set<ObjectId> ids = new HashSet<ObjectId>();
+            for (int a = 0; a < 10000; a++) {
+                ObjectId i = new ObjectId();
+                if (ids.contains(i)) {
+                    throw new RuntimeException("ERROR! Duplicate id " + i);
+                }
+                ids.add(i);
+            }
+
+        }
+    }
+
+    public class ConcurrentThreads {
+        public void doNotGeneratedConflictingIds() throws InterruptedException, ExecutionException {
+            ExecutorService executor = Executors.newFixedThreadPool(10);
+            List<Future<ObjectId>> futures = new ArrayList<Future<ObjectId>>(10000);
+            for (int a = 0; a < 10000; a++) {
+                Future<ObjectId> future = executor.submit(new Callable<ObjectId>() {
+                    @Override
+                    public ObjectId call() throws Exception {
+                        return new ObjectId();
+                    }
+                });
+                futures.add(future);
+            }
+            Set<ObjectId> ids = new HashSet<ObjectId>();
+            for (Future<ObjectId> id : futures) {
+                ObjectId i = id.get();
+                if (ids.contains(i)) {
+                    throw new RuntimeException("ERROR! Duplicate id " + i);
+                }
+                ids.add(i);
+            }
         }
     }
 }

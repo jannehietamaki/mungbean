@@ -23,8 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ObjectId {
     // http://www.mongodb.org/display/DOCS/Object+IDs
     private final static byte[] hardwareAddress = hardwareAddress();
+    private final static int pid = Pid.guessPid();
     private final static AtomicInteger incrementCounter = new AtomicInteger(0);
-
     private final byte[] id;
 
     public ObjectId(byte[] id) {
@@ -37,25 +37,30 @@ public class ObjectId {
     }
 
     public ObjectId() {
-        this.id = new byte[12];
-        long time = (TimeSource.instance().currentTimeMillis() - 1200000000000L) >> 4;
+        id = createId();
+    }
+
+    private static byte[] createId() {
+        byte[] id = new byte[12];
+        long time = (TimeSource.instance().currentTimeMillis() - 1200000000000L) >> 8;
         int a = 0;
         for (; a < 4; a++) {
-            this.id[a] = (byte) ((time >> 8 * a) & 0xFF);
+            id[a] = (byte) (time & 0xFF);
+            time = time >> 8;
         }
         for (; a < 7; a++) {
-            this.id[a] = hardwareAddress[a - 1];
+            id[a] = hardwareAddress[a - 1];
         }
-        long pid = TimeSource.instance().startTime();
-        for (; a < 9; a++) {
-            this.id[a] = (byte) (pid & 0xff);
-            pid = pid >> 1;
-        }
-        int counter = incrementCounter.incrementAndGet();
+
+        id[a++] = (byte) (pid & 0xff);
+        id[a++] = (byte) ((pid >> 8) & 0xff);
+
+        int counter = Math.abs(incrementCounter.incrementAndGet());
         for (; a < 12; a++) {
-            this.id[a] = (byte) (counter & 0xff);
-            counter = counter >> 1;
+            id[a] = (byte) (counter & 0xff);
+            counter = counter >> 8;
         }
+        return id;
     }
 
     public byte[] toByteArray() {
