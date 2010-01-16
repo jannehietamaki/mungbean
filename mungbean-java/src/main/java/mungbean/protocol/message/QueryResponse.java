@@ -56,13 +56,18 @@ public class QueryResponse<ResponseType> extends MongoResponse {
         return numberReturned;
     }
 
-    public void readResponse(QueryCallback<ResponseType> callback) {
+    public boolean readResponse(QueryCallback<ResponseType> callback) {
         int numToFetch = numberReturned;
         if (responseFlag > 0) {
             numToFetch = 1;
         }
+        boolean readMore = true;
         for (int i = 0; i < numToFetch; i++) {
-            callback.process(coder.read(BSON, reader));
+            ResponseType item = coder.read(BSON, reader);
+            if (readMore) {
+                readMore = callback.process(item);
+            }
         }
+        return readMore;
     }
 }

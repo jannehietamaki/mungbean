@@ -31,6 +31,7 @@ import mungbean.protocol.message.CommandResponse;
 import mungbean.protocol.message.DeleteRequest;
 import mungbean.protocol.message.GetMoreRequest;
 import mungbean.protocol.message.InsertRequest;
+import mungbean.protocol.message.KillCursorsRequest;
 import mungbean.protocol.message.QueryOptionsBuilder;
 import mungbean.protocol.message.QueryRequest;
 import mungbean.protocol.message.QueryResponse;
@@ -136,18 +137,22 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
     public void query(final QueryBuilder query, final QueryCallback<T> callback) {
         execute(new DBConversation<Void>() {
             @Override
-            public Void doExecute(Connection connection) {
+            public Void execute(Connection connection) {
                 QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, queryCoders, defaultEncoder()));
-                response.readResponse(callback);
+                boolean readMore = response.readResponse(callback);
 
-                if (response.cursorId() != 0) {
-                    long cursorId = response.cursorId();
-                    QueryResponse<T> cursorResponse;
+                long cursorId = response.cursorId();
+                if (cursorId != 0 && readMore) {
+                    QueryResponse<T> queryResponse;
                     do {
-                        cursorResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder()));
-                        cursorResponse.readResponse(callback);
-                        cursorId = cursorResponse.cursorId();
-                    } while (cursorResponse.cursorId() != 0);
+                        // TODO calculate the number of items
+                        queryResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder()));
+                        readMore = queryResponse.readResponse(callback);
+                        cursorId = queryResponse.cursorId();
+                    } while (readMore && cursorId != 0);
+                }
+                if (cursorId != 0) {
+                    connection.execute(new KillCursorsRequest(cursorId));
                 }
                 return null;
             };
@@ -182,7 +187,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
     public <ResponseType> ResponseType command(final AbstractCommand<ResponseType> command) {
         return executeWrite(new DBConversation<ResponseType>() {
             @Override
-            public ResponseType doExecute(Connection connection) {
+            public ResponseType execute(Connection connection) {
                 return executeCommand(command, connection);
             }
         });
@@ -201,7 +206,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
 
     private abstract class ErrorCheckingDBConversation extends DBConversation<T> {
         @Override
-        public final T doExecute(Connection connection) {
+        public final T execute(Connection connection) {
             T value = doExecuteWithErrorChecking(connection);
             Map<String, Object> message = executeCommand(new LastError(), connection);
             if (message.get("err") != null) {

@@ -84,12 +84,13 @@ public class MongoPerformanceTest extends Specification<Database> {
             final AtomicInteger count = new AtomicInteger(0);
             collection.query(new Query(), new QueryCallback<Map<String, Object>>() {
                 @Override
-                public void process(Map<String, Object> item) {
+                public boolean process(Map<String, Object> item) {
                     if ("bar".equals(item.get("foo"))) {
                         count.incrementAndGet();
                     } else {
                         throw new IllegalStateException("Invalid item: " + item);
                     }
+                    return true;
                 }
             });
             specify(count.get(), does.equal(totalNumberOfItems));

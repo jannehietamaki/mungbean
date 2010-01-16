@@ -27,7 +27,8 @@ public class ListQueryCallback<T> implements QueryCallback<T> {
     }
 
     @Override
-    public void process(T item) {
+    public boolean process(T item) {
         values.add(item);
+        return true;
     }
 }

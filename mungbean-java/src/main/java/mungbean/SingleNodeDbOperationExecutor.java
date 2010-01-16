@@ -79,7 +79,7 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
         try {
             return execute(new DBConversation<Boolean>() {
                 @Override
-                public Boolean doExecute(Connection connection) {
+                public Boolean execute(Connection connection) {
                     return isValid(connection);
                 }
             });
@@ -92,7 +92,7 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
         try {
             return execute(new DBConversation<Boolean>() {
                 @Override
-                public Boolean doExecute(Connection connection) {
+                public Boolean execute(Connection connection) {
                     CommandResponse response = connection.execute(new CommandRequest("$cmd", "ismaster"));
                     return response.getLong("ismaster") == 1;
                 }

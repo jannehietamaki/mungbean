@@ -19,12 +19,6 @@ import mungbean.protocol.Connection;
 
 public abstract class DBConversation<T> {
 
-    public abstract T doExecute(Connection connection);
+    public abstract T execute(Connection connection);
 
-    public final T execute(Connection connection) {
-        CursorClosingConnectionWrapper conn = new CursorClosingConnectionWrapper(connection);
-        T result = doExecute(conn);
-        conn.closeCursors();
-        return result;
-    }
 }

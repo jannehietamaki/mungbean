@@ -40,7 +40,7 @@ public class CollectionAdmin {
         collection.execute(new DBConversation<Void>() {
             @SuppressWarnings("unchecked")
             @Override
-            public Void doExecute(Connection connection) {
+            public Void execute(Connection connection) {
                 connection.execute(new InsertRequest<Map<String, Object>>(collection.dbName() + ".system.indexes", new MapBSONCoders(), doc));
                 return null;
             }

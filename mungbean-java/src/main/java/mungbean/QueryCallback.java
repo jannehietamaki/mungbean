@@ -17,5 +17,8 @@
 package mungbean;
 
 public interface QueryCallback<Type> {
-    void process(Type item);
+    /*
+     * @return true if more data should be fetched
+     */
+    boolean process(Type item);
 }
