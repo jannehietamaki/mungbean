@@ -24,16 +24,17 @@ import mungbean.DBConversation;
 import mungbean.DBOperationExecutor;
 import mungbean.MongoException;
 import mungbean.Server;
+import mungbean.Settings;
 import mungbean.SingleNodeDbOperationExecutor;
 
 public class MasterResolverStrategy implements ServerResolverStrategy {
     private final AtomicReference<SingleNodeDbOperationExecutor> currentMaster = new AtomicReference<SingleNodeDbOperationExecutor>();
     private final List<SingleNodeDbOperationExecutor> allServers;
 
-    public MasterResolverStrategy(Server[] servers) {
+    public MasterResolverStrategy(Settings settings, Server[] servers) {
         allServers = new ArrayList<SingleNodeDbOperationExecutor>();
         for (Server server : servers) {
-            allServers.add(new SingleNodeDbOperationExecutor(server));
+            allServers.add(new SingleNodeDbOperationExecutor(settings, server));
         }
         findNewMaster();
     }

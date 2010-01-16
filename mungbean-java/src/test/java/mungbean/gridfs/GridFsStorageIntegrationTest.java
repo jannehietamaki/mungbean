@@ -27,6 +27,7 @@ import jdave.junit4.JDaveRunner;
 import mungbean.Mungbean;
 import mungbean.ObjectId;
 import mungbean.Server;
+import mungbean.Settings;
 
 import org.junit.runner.RunWith;
 
@@ -35,7 +36,7 @@ public class GridFsStorageIntegrationTest extends Specification<GridFsStorage> {
     public class WithStorage {
 
         public GridFsStorage create() {
-            return new Mungbean(new Server("localhost", 27017)).openDatabase(new ObjectId().toHex()).openStorage("foobar");
+            return new Mungbean(new Settings(), new Server("localhost", 27017)).openDatabase(new ObjectId().toHex()).openStorage("foobar");
         }
 
         public void fileCanBeStoredIntoStorage() throws IOException {

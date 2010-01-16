@@ -24,6 +24,7 @@ import mungbean.DBConversation;
 import mungbean.DBOperationExecutor;
 import mungbean.MongoException;
 import mungbean.Server;
+import mungbean.Settings;
 import mungbean.SingleNodeDbOperationExecutor;
 
 public class RoundRobinResolverStrategy implements ServerResolverStrategy {
@@ -31,10 +32,10 @@ public class RoundRobinResolverStrategy implements ServerResolverStrategy {
 
     private final List<SingleNodeDbOperationExecutor> allServers;
 
-    public RoundRobinResolverStrategy(Server[] servers) {
+    public RoundRobinResolverStrategy(Settings settings, Server[] servers) {
         allServers = new ArrayList<SingleNodeDbOperationExecutor>();
         for (Server server : servers) {
-            allServers.add(new SingleNodeDbOperationExecutor(server));
+            allServers.add(new SingleNodeDbOperationExecutor(settings, server));
         }
     }
 

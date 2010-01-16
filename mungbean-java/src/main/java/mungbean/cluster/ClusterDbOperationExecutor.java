@@ -19,6 +19,7 @@ package mungbean.cluster;
 import mungbean.DBConversation;
 import mungbean.DBOperationExecutor;
 import mungbean.Server;
+import mungbean.Settings;
 
 public class ClusterDbOperationExecutor implements DBOperationExecutor {
     // TODO need a mechanism to specify if it's ok to run the query against
@@ -26,8 +27,8 @@ public class ClusterDbOperationExecutor implements DBOperationExecutor {
     private final ServerResolverStrategy writeResolver;
     private final ServerResolverStrategy readResolver;
 
-    public ClusterDbOperationExecutor(Server... servers) {
-        writeResolver = new MasterResolverStrategy(servers);
+    public ClusterDbOperationExecutor(Settings settings, Server... servers) {
+        writeResolver = new MasterResolverStrategy(settings, servers);
         readResolver = writeResolver;
     }
 

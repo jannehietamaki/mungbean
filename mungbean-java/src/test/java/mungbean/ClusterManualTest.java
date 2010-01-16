@@ -30,7 +30,7 @@ import static mungbean.CollectionUtil.*;
 public class ClusterManualTest extends Specification<Void> {
     public class WithCluster {
         public void writeOperationCanBeDone() throws InterruptedException {
-            Mungbean mung = new Mungbean(new Server("localhost", 10000), new Server("localhost", 10001));
+            Mungbean mung = new Mungbean(new Settings(), new Server("localhost", 10000), new Server("localhost", 10001));
             DBCollection<Map<String, Object>> collection = mung.openDatabase(new ObjectId().toHex()).openCollection("bar");
             int counter = 0;
             while (true) {

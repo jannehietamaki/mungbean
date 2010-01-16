@@ -24,6 +24,7 @@ import clojure.lang.Keyword;
 import clojure.lang.Symbol;
 import mungbean.Authentication;
 import mungbean.DBOperationExecutor;
+import mungbean.Settings;
 import mungbean.SingleNodeDbOperationExecutor;
 import mungbean.Server;
 
@@ -40,7 +41,8 @@ public class ClojureMungbean {
                 auths.add(new Authentication(database, user, password));
             }
         }
-        executor = new SingleNodeDbOperationExecutor(new Server(host, port, auths.toArray(new Authentication[auths.size()])));
+        // TODO make settings configurable from clojure
+        executor = new SingleNodeDbOperationExecutor(new Settings(), new Server(host, port, auths.toArray(new Authentication[auths.size()])));
     }
 
     public ClojureDatabase openDatabase(String name) {

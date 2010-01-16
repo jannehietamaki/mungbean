@@ -24,6 +24,7 @@ import mungbean.DBCollection;
 import mungbean.Database;
 import mungbean.Mungbean;
 import mungbean.ObjectId;
+import mungbean.Settings;
 import mungbean.TestObject;
 import mungbean.query.Query;
 
@@ -33,7 +34,7 @@ import org.junit.runner.RunWith;
 public class PojoIntegrationTest extends Specification<Database> {
     public class WithDatabase {
         public Database create() {
-            return new Mungbean("localhost", 27017).openDatabase(new ObjectId().toHex());
+            return new Mungbean(new Settings(), "localhost", 27017).openDatabase(new ObjectId().toHex());
         }
 
         public void destroy() {

@@ -51,7 +51,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
                             0, 0, 0, 0, // opts
                             'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // fullCollectionName
                             00, 00, 00, 00, // numberToSkip
-                            00, 00, 00, -128, // NumberToReturn
+                            00, 00, -120, 19, // NumberToReturn
                             05, 00, 00, 00, // ObjSize
                             00 // EOO
                     }));
@@ -60,7 +60,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
 
     public class WithQueryContaingingRules {
         public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-            QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), new Query().field("foo").is("bar"), new MapBSONCoders(), new BSONMap());
+            QueryRequest<Map<String, Object>> message = new QueryRequest<Map<String, Object>>("foozbar.foo", new QueryOptionsBuilder().slaveOk(), new Query().setLimit(10).field("foo").is("bar"), new MapBSONCoders(), new BSONMap());
             return new DBTransaction<QueryResponse<Map<String, Object>>>(message, 124);
         }
 
@@ -74,7 +74,7 @@ public class QueryRequestSpec extends Specification<DBTransaction<QueryResponse<
                     4, 0, 0, 0, // opts
                     'f', 'o', 'o', 'z', 'b', 'a', 'r', '.', 'f', 'o', 'o', 0, // fullCollectionName
                     0, 0, 0, 0, // numberToSkip
-                    0, 0, 0, 0, // numberToReturn
+                    -10, -1, -1, -1, // NumberToReturn = -10
                     // query BSON
                     18, 0, 0, 0, // obj_size
                     2, // element type = string

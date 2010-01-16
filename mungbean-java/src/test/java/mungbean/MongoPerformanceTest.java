@@ -33,14 +33,14 @@ import org.junit.runner.RunWith;
 public class MongoPerformanceTest extends Specification<Database> {
     private final static String contentString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac mi urna, sit amet iaculis ligula. Vestibulum malesuada tortor ut quam posuere nec tempor eros interdum. Nullam massa nulla, ultrices in ultricies id, pellentesque sed quam. Mauris at adipiscing elit. Maecenas facilisis justo et tortor tristique faucibus. Proin tincidunt lacinia nunc quis egestas. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla orci quam, hendrerit non tempus eu, lacinia eu felis. Donec dictum adipiscing odio et aliquam. Proin nec porta ante. Fusce ac massa tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur pretium, ante ac porttitor aliquam, eros mauris porta tortor, non dictum dui leo ac tellus. Ut in lorem magna. Ut placerat convallis mi non pellentesque. Aliquam feugiat, mauris suscipit interdum consectetur, mauris arcu tincidunt lorem, condimentum adipiscing felis erat quis lorem. Curabitur dui nulla, elementum eu eleifend id, tempus ut sapien. Donec suscipit est id enim facilisis aliquam. Aliquam eros urna, ornare eget semper sit amet, posuere sit amet dolor. Etiam tellus lectus, dignissim non sollicitudin vitae, iaculis at neque. Curabitur nec sem vel felis iaculis iaculis quis nec massa. Suspendisse et lorem orci. Ut ut nunc lectus. Duis dignissim, massa pharetra cursus rutrum, quam ligula ullamcorper libero, sed tincidunt erat nulla ullamcorper sapien. In malesuada rhoncus massa id egestas. Suspendisse in nisi nec nunc vestibulum molestie sed in turpis.";
 
-    long totalNumberOfItems = 500000;
+    long totalNumberOfItems = 50000;
     ExecutorService executor = Executors.newFixedThreadPool(20);
 
     public class WithDatabase {
         Mungbean db;
 
         public Database create() {
-            db = new Mungbean("localhost", 27017);
+            db = new Mungbean(new Settings(), "localhost", 27017);
             return db.openDatabase(new ObjectId().toHex());
         }
 

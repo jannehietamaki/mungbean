@@ -50,9 +50,9 @@ public class MongoIntegrationTest extends Specification<Database> {
 
         public Database create() {
             if (authenticate) {
-                return new Mungbean(new Server("localhost", 27017, new Authentication("projectx", "joe", "passwordForJoe"))).openDatabase("projectx");
+                return new Mungbean(new Settings(), new Server("localhost", 27017, new Authentication("projectx", "joe", "passwordForJoe"))).openDatabase("projectx");
             }
-            return new Mungbean(new Server("localhost", 27017)).openDatabase(new ObjectId().toHex());
+            return new Mungbean(new Settings(), new Server("localhost", 27017)).openDatabase(new ObjectId().toHex());
         }
 
         public void destroy() {

@@ -27,17 +27,14 @@ import mungbean.protocol.message.CommandResponse;
 public class SingleNodeDbOperationExecutor extends Pool<Connection> implements DBOperationExecutor {
     private boolean shuttingDown = false;
     private final Server server;
+    private final Settings settings;
 
-    // TODO make these configurable
-    private final static int maxOpenConnections = 10;
-    private final static int initialConnections = 3;
-    private final static boolean validateConnections = false;
-
-    public SingleNodeDbOperationExecutor(Server server) {
-        super(maxOpenConnections);
+    public SingleNodeDbOperationExecutor(Settings settings, Server server) {
+        super(settings.maximumNumberOfConcurrentConnections());
+        this.settings = settings;
         this.server = server;
-        Assert.isTrue(maxOpenConnections >= initialConnections, "Initial number of collections can not be more than maximum amount of connections");
-        for (int a = 0; a < initialConnections; a++) {
+        Assert.isTrue(settings.maximumNumberOfConcurrentConnections() >= settings.numberOfInitialConnections(), "Initial number of collections can not be more than maximum amount of connections");
+        for (int a = 0; a < settings.numberOfInitialConnections(); a++) {
             giveBack(newItem());
         }
     }
@@ -111,7 +108,7 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
 
     @Override
     protected boolean isValid(Connection connection) {
-        if (validateConnections) {
+        if (settings.validateConnections()) {
             connection.execute(new CommandRequest("ismaster"));
         }
         return true;

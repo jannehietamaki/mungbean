@@ -20,16 +20,16 @@ import mungbean.cluster.ClusterDbOperationExecutor;
 public class Mungbean {
     private final DBOperationExecutor executor;
 
-    public Mungbean(String host, int port) {
-        this(new Server(host, port));
+    public Mungbean(Settings settings, String host, int port) {
+        this(settings, new Server(host, port));
     }
 
-    public Mungbean(Server server) {
-        executor = new SingleNodeDbOperationExecutor(server);
+    public Mungbean(Settings settings, Server server) {
+        executor = new SingleNodeDbOperationExecutor(settings, server);
     }
 
-    public Mungbean(Server... servers) {
-        executor = new ClusterDbOperationExecutor(servers);
+    public Mungbean(Settings settings, Server... servers) {
+        executor = new ClusterDbOperationExecutor(settings, servers);
     }
 
     public Database openDatabase(String name) {
