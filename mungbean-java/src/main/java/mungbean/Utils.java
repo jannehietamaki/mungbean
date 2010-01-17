@@ -17,11 +17,12 @@
 package mungbean;
 
 import java.nio.charset.Charset;
+import java.util.regex.Pattern;
 
 import sun.misc.HexDumpEncoder;
 
 public class Utils {
-
+    private final static Pattern HEX_CHARACTERS = Pattern.compile("^[0-9a-f]+$");
     public static final Charset UTF8 = Charset.forName("UTF-8");
 
     public static String toHex(byte[] content) {
@@ -33,7 +34,10 @@ public class Utils {
     }
 
     public static byte[] hexStringToBytes(String input) {
+        input = input.toLowerCase();
         int len = input.length();
+        Assert.isTrue(len % 2 == 0, "hex string must contain even number of characters");
+        Assert.isTrue(HEX_CHARACTERS.matcher(input).matches(), "Input contains invalid characters: " + input);
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(input.charAt(i), 16) << 4) + Character.digit(input.charAt(i + 1), 16));
