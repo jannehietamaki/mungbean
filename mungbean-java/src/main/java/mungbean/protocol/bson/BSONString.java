@@ -34,5 +34,4 @@ public class BSONString extends BSONCoder<String> {
     protected void encode(AbstractBSONCoders bson, String value, LittleEndianDataWriter writer) {
         writer.writeCStringWithLength(value);
     }
-
 }

@@ -61,6 +61,13 @@
    )
 )
 
+(deftest function-can-be-given-to-iterate-items
+   (with-mungo "foo"
+       (insert-test-data 10 1 3 5)       
+       (is (= [1 5 3 1 5 3 1 5 3 1] (mongo/query coll :function (fn [item] (item :foo)))))
+   )
+)
+
 (deftest update-in-place
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)

@@ -16,12 +16,19 @@
 
 package mungbean.clojure;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import mungbean.AbstractDBCollection;
 import mungbean.DBOperationExecutor;
 import mungbean.ObjectId;
+import mungbean.QueryCallback;
 import mungbean.protocol.bson.BSONCoder;
+import mungbean.query.Query;
+import clojure.lang.IFn;
+import clojure.lang.IPersistentCollection;
 import clojure.lang.IPersistentMap;
 import clojure.lang.Keyword;
+import clojure.lang.PersistentList;
 import clojure.lang.Symbol;
 
 public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
@@ -42,6 +49,22 @@ public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
             return doc.assoc(keyword, new ObjectId());
         }
         return doc;
+    }
+
+    public IPersistentCollection query(Query query, final IFn callback) {
+        final AtomicReference<IPersistentCollection> result = new AtomicReference<IPersistentCollection>(PersistentList.EMPTY);
+        query(query, new QueryCallback<IPersistentMap>() {
+            @Override
+            public boolean process(IPersistentMap item) {
+                try {
+                    result.set(result.get().cons(callback.invoke(item)));
+                    return true;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        return result.get();
     }
 
 }

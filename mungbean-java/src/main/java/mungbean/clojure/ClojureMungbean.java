@@ -41,8 +41,9 @@ public class ClojureMungbean {
                 auths.add(new Authentication(database, user, password));
             }
         }
+        Settings settings = new Settings();
         // TODO make settings configurable from clojure
-        executor = new SingleNodeDbOperationExecutor(new Settings(), new Server(host, port, auths.toArray(new Authentication[auths.size()])));
+        executor = new SingleNodeDbOperationExecutor(settings, new Server(host, port, auths.toArray(new Authentication[auths.size()])));
     }
 
     public ClojureDatabase openDatabase(String name) {
