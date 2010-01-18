@@ -7,8 +7,8 @@
      (new mungbean.clojure.ClojureQuery where first items)
 )
 
-(defn wrap-update [updates multiple]
-     (new mungbean.clojure.ClojureUpdate updates multiple)
+(defn wrap-update [updates multiple upsert]
+     (new mungbean.clojure.ClojureUpdate updates multiple upsert)
 )
 
 (defn string-to-id [id] 
