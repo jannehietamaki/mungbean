@@ -109,7 +109,11 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
     @Override
     protected boolean isValid(Connection connection) {
         if (settings.validateConnections()) {
-            connection.execute(new CommandRequest("ismaster"));
+            try {
+                connection.execute(new CommandRequest("ismaster"));
+            } catch (RuntimeIOException e) {
+                return false;
+            }
         }
         return true;
     }
