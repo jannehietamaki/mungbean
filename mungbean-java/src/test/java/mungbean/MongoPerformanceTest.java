@@ -34,7 +34,7 @@ public class MongoPerformanceTest extends Specification<Database> {
     private final static String contentString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac mi urna, sit amet iaculis ligula. Vestibulum malesuada tortor ut quam posuere nec tempor eros interdum. Nullam massa nulla, ultrices in ultricies id, pellentesque sed quam. Mauris at adipiscing elit. Maecenas facilisis justo et tortor tristique faucibus. Proin tincidunt lacinia nunc quis egestas. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla orci quam, hendrerit non tempus eu, lacinia eu felis. Donec dictum adipiscing odio et aliquam. Proin nec porta ante. Fusce ac massa tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur pretium, ante ac porttitor aliquam, eros mauris porta tortor, non dictum dui leo ac tellus. Ut in lorem magna. Ut placerat convallis mi non pellentesque. Aliquam feugiat, mauris suscipit interdum consectetur, mauris arcu tincidunt lorem, condimentum adipiscing felis erat quis lorem. Curabitur dui nulla, elementum eu eleifend id, tempus ut sapien. Donec suscipit est id enim facilisis aliquam. Aliquam eros urna, ornare eget semper sit amet, posuere sit amet dolor. Etiam tellus lectus, dignissim non sollicitudin vitae, iaculis at neque. Curabitur nec sem vel felis iaculis iaculis quis nec massa. Suspendisse et lorem orci. Ut ut nunc lectus. Duis dignissim, massa pharetra cursus rutrum, quam ligula ullamcorper libero, sed tincidunt erat nulla ullamcorper sapien. In malesuada rhoncus massa id egestas. Suspendisse in nisi nec nunc vestibulum molestie sed in turpis.";
 
     long totalNumberOfItems = 50000;
-    ExecutorService executor = Executors.newFixedThreadPool(20);
+    ExecutorService executor = Executors.newFixedThreadPool(50);
 
     public class WithDatabase {
         Mungbean db;
@@ -78,7 +78,7 @@ public class MongoPerformanceTest extends Specification<Database> {
             executor.awaitTermination(5, TimeUnit.MINUTES);
             specify(collection.query(new Count(), new Query()), does.equal(totalNumberOfItems));
             long time = timer.millisecondsSinceStart();
-            System.out.println("Insert time for " + totalNumberOfItems + " items was " + time + "ms -> " + (totalNumberOfItems / (time / 1000)) + " operations per second.");
+            System.out.println("Insert time for " + totalNumberOfItems + " items was " + time + "ms -> " + (1000 * totalNumberOfItems / time) + " operations per second.");
 
             timer = new StopWatch();
             final AtomicInteger count = new AtomicInteger(0);
@@ -96,6 +96,27 @@ public class MongoPerformanceTest extends Specification<Database> {
             specify(count.get(), does.equal(totalNumberOfItems));
             long iterateTime = timer.millisecondsSinceStart();
             System.out.println("Iterate " + totalNumberOfItems + " items in " + iterateTime + "ms");
+            executor = Executors.newFixedThreadPool(50);
+            timer = new StopWatch();
+            for (int a = 0; a < 10000; a++) {
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        collection.query(new Query().setLimit(10), new QueryCallback<Map<String, Object>>() {
+                            @Override
+                            public boolean process(Map<String, Object> item) {
+                                return true;
+                            }
+                        });
+                    }
+                });
+            }
+            executor.shutdown();
+            executor.awaitTermination(5, TimeUnit.MINUTES);
+
+            long queryTime = timer.millisecondsSinceStart();
+            System.out.println("Query " + totalNumberOfItems + " times in " + queryTime + "ms -> " + (1000 * totalNumberOfItems / queryTime) + " queries per sec");
+
         }
     }
 }

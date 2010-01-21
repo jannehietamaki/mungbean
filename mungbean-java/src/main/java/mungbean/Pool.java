@@ -36,20 +36,9 @@ public abstract class Pool<T> {
     protected abstract boolean isValid(T item);
 
     public void giveBack(T object) {
-        try {
-            if (object != null && isValid(object)) {
-                availableObjects.add(object);
-                return;
-            }
-        } catch (RuntimeException e) {
-            // isValid threw an exception - object is no longer valid and
-            // can be thrown away
-            allObjects.remove(object);
-            try {
-                close(object);
-            } catch (Exception ex) {
-            }
-            throw e;
+        if (object != null) {
+            availableObjects.add(object);
+            return;
         }
     }
 
