@@ -10,7 +10,8 @@
 
 (defn insert [collection doc] (.save collection doc))
 
-(defn delete [collection id] (.delete collection (string-to-id id)))
+(defn delete-one [collection id] (.delete collection (string-to-id id)))
+(defn delete [collection query] (.delete collection (wrap-query query)))
 
 (defnk update [collection updates :where {} :multiple false :upsert false] (.update collection (wrap-query where) (wrap-update updates multiple upsert)))
 

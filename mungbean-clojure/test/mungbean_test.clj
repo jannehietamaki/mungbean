@@ -22,11 +22,21 @@
 	)
 )
 
+
+(defstruct teststruct :name :age :city :country)
+
+(deftest save-and-load-struct
+   (with-mungo "struct"
+      (mongo/insert coll (struct teststruct "James Bond" 42  "London" "UK"))
+      (is (= "James Bond" ((mongo/query-one coll {:name "James Bond"}) :name)))
+   )
+)
+
 (deftest save-item-read-back-and-delete
    (with-mungo "foo"
        (let [id (mongo/get-id (mongo/insert coll {:foo "bar"}))]
            (is (= ((mongo/find-one coll id) :foo) "bar"))
-	       (mongo/delete coll id)
+	       (mongo/delete-one coll id)
        )
    )
 )
