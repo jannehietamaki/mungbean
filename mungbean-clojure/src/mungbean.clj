@@ -15,18 +15,25 @@
 
 (defnk update [collection updates :where {} :multiple false :upsert false] (.update collection (wrap-query where) (wrap-update updates multiple upsert)))
 
+
 (defnk query [collection :operation nil :where {} :first 0 :items 1000 :order {} :function nil]
+  (defn- wrap-query-response [response]
+    (if (coll? response)
+      (reverse response)
+      response
+    )
+  )
+
 	(let [query (wrap-query where :first first :items items :order order)]
-	    (if-not (nil? function)
+	    (wrap-query-response (if-not (nil? function)
 	        (.query collection query function)	    	   
     	    (if-not (nil? operation)
-			    (.query collection operation query)
-			    (.query collection query)
-			)	
-    	)
+			       (.query collection operation query)
+			       (.query collection query)
+			    )	
+    	))
 	)
 )
-
 (defn query-one [collection where] (first (query collection :where where :items 1)))
 
 (defn find-one [collection id] (.find collection (string-to-id id)))

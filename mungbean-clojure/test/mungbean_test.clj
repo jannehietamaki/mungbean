@@ -59,7 +59,7 @@
 (deftest generate-items-and-get-distinct
    (with-mungo "foo"
        (insert-test-data 10 "foo" "bar" "zoo")
-       (is (= ["bar" "foo" "zoo"] (mongo/query coll :operation (aggregation/get-distinct :foo))))
+       (is (= ["bar" "foo" "zoo"] (mongo/query coll :operation (aggregation/get-distinct :foo) :order {:foo :asc} )))
    )
 )
 
@@ -80,12 +80,13 @@
 (deftest function-can-be-given-to-iterate-items
    (with-mungo "foo"
        (insert-test-data 10 1 3 5)       
-       (is (= [1 5 3 1 5 3 1 5 3 1] (mongo/query coll :function (fn [item] (item :foo)))))
+       (is (= [1 1 1 1 3 3 3 5 5 5] (mongo/query coll :order {:foo :asc} :function (fn [item] (item :foo)))))
    )
 )
 
 (deftest ordered-items-can-be-queried
    (with-mungo "foo"
+       (admin/ensure-index coll [:foo])
        (insert-test-data 10 1 3 5)       
        (is (= [1 1 1 1 3 3 3 5 5 5] (mongo/query coll :order {:foo :asc} :function (fn [item] (item :foo)))))
        (is (= [5 5 5 3 3 3 1 1 1 1] (mongo/query coll :order {:foo :desc} :function (fn [item] (item :foo)))))
