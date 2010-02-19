@@ -2,9 +2,8 @@
 	(:use [clojure.contrib.def :only [defnk]])	
 )
 
-(defnk wrap-query [where :first 0 :items 1000 :order {}]
-; TODO support ordering
-     (new mungbean.clojure.ClojureQuery where first items)
+(defnk wrap-query [where :skip 0 :items 1000 :order {}]
+     (new mungbean.clojure.ClojureQuery where skip items order)
 )
 
 (defn wrap-update [updates multiple upsert]

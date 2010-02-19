@@ -16,7 +16,7 @@
 (defnk update [collection updates :where {} :multiple false :upsert false] (.update collection (wrap-query where) (wrap-update updates multiple upsert)))
 
 (defnk query [collection :operation nil :where {} :first 0 :items 1000 :order {} :function nil]
-	(let [query (wrap-query where :first first :items items :order {})]
+	(let [query (wrap-query where :first first :items items :order order)]
 	    (if-not (nil? function)
 	        (.query collection query function)	    	   
     	    (if-not (nil? operation)

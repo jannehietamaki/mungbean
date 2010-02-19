@@ -19,6 +19,7 @@ package mungbean.clojure;
 import java.util.concurrent.atomic.AtomicReference;
 
 import mungbean.AbstractDBCollection;
+import mungbean.CollectionAdmin;
 import mungbean.DBOperationExecutor;
 import mungbean.ObjectId;
 import mungbean.QueryCallback;
@@ -37,6 +38,11 @@ public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
         super(executor, dbName, collectionName, new ClojureBSONCoders(), new ClojureBSONCoders());
     }
 
+    @Override
+    public CollectionAdmin collectionAdmin() {
+        return new ClojureCollectionAdmin(this);
+    }
+    
     @Override
     public BSONCoder<IPersistentMap> defaultEncoder() {
         return new ClojureBSONMap();
@@ -66,5 +72,4 @@ public class ClojureDBCollection extends AbstractDBCollection<IPersistentMap> {
         });
         return result.get();
     }
-
 }

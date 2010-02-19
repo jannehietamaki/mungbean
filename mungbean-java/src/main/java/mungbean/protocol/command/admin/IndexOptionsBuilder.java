@@ -43,7 +43,7 @@ public class IndexOptionsBuilder implements IndexOptions {
         };
     }
 
-    public IndexOptions field(String key) {
+    public IndexOptionsField field(String key) {
         return new IndexOptionsField(this, indices, key);
     }
 

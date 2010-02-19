@@ -80,7 +80,8 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
         writer.writeInt(builder.build());
         writeCollectionName(writer);
         writer.writeInt(numberToSkip);
-        // if limit it set, fetch n number items and close cursor, otherwise fetch 5000 items and leave cursor open
+        // if limit it set, fetch n number items and close cursor, otherwise
+        // fetch 5000 items and leave cursor open
         if (numberToReturn > 0) {
             writer.writeInt(-numberToReturn);
         } else {

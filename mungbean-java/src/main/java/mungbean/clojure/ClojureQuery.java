@@ -16,12 +16,37 @@
 
 package mungbean.clojure;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import mungbean.query.Query;
+import clojure.lang.IPersistentMap;
+import clojure.lang.Keyword;
+import clojure.lang.MapEntry;
+import clojure.lang.Symbol;
 
 public class ClojureQuery extends Query {
-    public ClojureQuery(Map<String, Object> query, int skip, int limit) {
+    private static final Keyword DESC = Keyword.intern(Symbol.intern("desc"));
+
+    @SuppressWarnings("unchecked")
+    public ClojureQuery(Map<String, Object> query, int skip, int limit, IPersistentMap order) {
         super(query, skip, limit);
+        Iterator<MapEntry> i = order.iterator();
+        while (i.hasNext()) {
+            MapEntry entry = i.next();
+            if (entry.val().equals(DESC)) {
+                field(toString(entry.key())).orderDescending();
+            } else {
+                field(toString(entry.key())).orderAscending();
+            }
+        }
+    }
+
+    private String toString(Object key) {
+        if (key instanceof Keyword) {
+            Keyword kw = (Keyword) key;
+            return kw.getName();
+        }
+        return key.toString();
     }
 }
