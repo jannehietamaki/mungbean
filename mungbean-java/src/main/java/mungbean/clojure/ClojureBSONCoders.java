@@ -22,6 +22,7 @@ import mungbean.protocol.bson.BSONBoolean;
 import mungbean.protocol.bson.BSONDate;
 import mungbean.protocol.bson.BSONEndMarker;
 import mungbean.protocol.bson.BSONInteger;
+import mungbean.protocol.bson.BSONLong;
 import mungbean.protocol.bson.BSONMap;
 import mungbean.protocol.bson.BSONNull;
 import mungbean.protocol.bson.BSONNumber;
@@ -36,6 +37,7 @@ public class ClojureBSONCoders extends AbstractBSONCoders {
         addEncoder(new ClojureBSONSeq<Object>());
         addEncoder(new BSONArray<Object>());
         addEncoder(new BSONInteger());
+        addEncoder(new BSONLong());
         addEncoder(new BSONNumber());
         addEncoder(new BSONString());
         addEncoder(new ClojureBSONMap());

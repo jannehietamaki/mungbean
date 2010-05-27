@@ -15,22 +15,21 @@
  */
 package mungbean.protocol.bson;
 
-public class MapBSONCoders extends AbstractBSONCoders {
+import mungbean.protocol.LittleEndianDataReader;
+import mungbean.protocol.LittleEndianDataWriter;
 
-    public MapBSONCoders() {
-        addEncoder(new BSONEndMarker());
-        addEncoder(new BSONNull());
-        addEncoder(new BSONArray<Object>());
-        addEncoder(new BSONInteger());
-        addEncoder(new BSONLong());
-        addEncoder(new BSONNumber());
-        addEncoder(new BSONString());
-        addEncoder(new BSONMap());
-        addEncoder(new BSONOid());
-        addEncoder(new BSONBinary());
-        addEncoder(new BSONPattern());
-        addEncoder(new BSONDate());
-        addEncoder(new BSONBoolean());
-        addEncoder(new BSONCode());
-    }
+public class BSONLong extends BSONCoder<Long> {
+	public BSONLong() {
+		super(18, Long.class);
+	}
+
+	@Override
+	protected Long decode(AbstractBSONCoders bson, LittleEndianDataReader reader) {
+		return reader.readLong();
+	}
+
+	@Override
+	protected void encode(AbstractBSONCoders bson, Long value, LittleEndianDataWriter writer) {
+		writer.writeLong(value);
+	}
 }
