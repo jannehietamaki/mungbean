@@ -57,7 +57,7 @@ public abstract class AbstractBSONArray<Type, ItemType> extends BSONCoder<Type> 
             bson.forValue(value).write(bson, String.valueOf(pair.key()), value, out);
         }
         byte[] bytes = byteOut.toByteArray();
-        writer.writeInt(bytes.length + 4);
+        writer.writeInt(bytes.length + 4 + 1);
         writer.write(bytes);
         writer.writeByte(BSONEndMarker.instance().type());
     }

@@ -86,7 +86,7 @@ public class BSONMapSpec extends Specification<BSONMap> {
                 2, 0, 0, 0, // value=2
                 4, // type = array
                 'b', 'r', 'r', 0, // 'brr'
-                46, 0, 0, 0, // content size
+                47, 0, 0, 0, // content size
                 16, // data_int
                 '0', 0, // '0'
                 1, 0, 0, 0, // 1

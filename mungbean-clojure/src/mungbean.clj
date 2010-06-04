@@ -25,7 +25,7 @@
   )
 
 	(let [query (wrap-query where :first first :items items :order order)]
-	    (wrap-query-response (if-not (nil? function)
+	    (wrap-query-response (if-not (nil? function) ; todo use cond
 	        (.query collection query function)	    	   
     	    (if-not (nil? operation)
 			       (.query collection operation query)
@@ -37,4 +37,5 @@
 (defn query-one [collection where] (first (query collection :where where :items 1)))
 
 (defn find-one [collection id] (.find collection (string-to-id id)))
-(defn get-id [item] (.toHex (item :_id)))
+(defn get-id [item] (.toHex (item :_id))) ;TODO: if _id is not UniqueId, return .toString
+(defn new-id [] (.toHex (new mungbean.ObjectId)))

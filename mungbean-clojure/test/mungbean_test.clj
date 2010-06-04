@@ -101,3 +101,19 @@
        (is (= 10 (count (mongo/query coll :where {:bar "zoo"}))))
    )
 )
+
+(deftest do-upsert
+   (with-mungo "foo"
+       (mongo/update coll {:$set {:bar "zoo"}} :where {:zoo 1} :upsert true)
+       (is (= 1 (count (mongo/query coll :where {:zoo 1, :bar "zoo"}))))
+   )
+)
+
+
+(deftest insert-structured-object
+  (with-mungo "foo"
+      (mongo/insert coll {"id" "123"})
+      (mongo/update coll {"id" "123", "zzz" [1,2]} :where {"id" "123"})
+      (is (= 1 (count (mongo/query coll :where {"id" "123"}))))
+   )  
+)

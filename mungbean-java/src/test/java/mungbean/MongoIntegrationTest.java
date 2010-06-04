@@ -16,6 +16,7 @@
 package mungbean;
 
 import static mungbean.CollectionUtil.map;
+import static mungbean.CollectionUtil.list;
 import static mungbean.CollectionUtil.merge;
 
 import java.util.HashMap;
@@ -122,6 +123,14 @@ public class MongoIntegrationTest extends Specification<Database> {
             collection.update(new Query().field("foo").greaterThan(3), new Update().field("foo").increment(5));
             specify(collection.query(new Query().field("foo").is(9)).size(), does.equal(2));
         }
+        
+        public void structuralUpdatesCanBeDone() {
+            final DBCollection<Map<String, Object>> collection = context.openCollection("foo2");
+            collection.save(newDoc(new ObjectId(), 1));
+            collection.update(new Query().field("foo").is(1), new Update().field("list").set(list("1","2","3")));
+            specify(collection.query(new Query().field("list").is(list("1","2","3"))).size(), does.equal(1));
+        }
+
 
         public void massUpdatesCanBeDoneWithTheDsl() {
             final DBCollection<Map<String, Object>> collection = context.openCollection("foo2");
@@ -148,5 +157,5 @@ public class MongoIntegrationTest extends Specification<Database> {
 
     private Map<String, Object> newDoc(final ObjectId id, final Object value) {
         return merge(map("foo", value), map("_id", id));
-    }
+    }    
 }
