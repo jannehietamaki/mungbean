@@ -17,18 +17,21 @@ package mungbean.protocol.message;
 
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.LittleEndianDataWriter;
+import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 
 public class GetMoreRequest<ResponseType> extends CollectionRequest<QueryResponse<ResponseType>> {
     private final long cursorId;
     private final int numberToReturn;
     private final BSONCoder<ResponseType> coder;
-
-    public GetMoreRequest(String collectionName, long cursorId, int numberToReturn, BSONCoder<ResponseType> coder) {
+    private final AbstractBSONCoders coders;
+    
+    public GetMoreRequest(String collectionName, long cursorId, int numberToReturn, BSONCoder<ResponseType> coder, AbstractBSONCoders coders) {
         super(collectionName);
         this.cursorId = cursorId;
         this.numberToReturn = numberToReturn;
         this.coder = coder;
+        this.coders = coders;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class GetMoreRequest<ResponseType> extends CollectionRequest<QueryRespons
 
     @Override
     public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
-        return new QueryResponse<ResponseType>(reader, coder);
+        return new QueryResponse<ResponseType>(reader, coder, coders);
     }
 
     @Override

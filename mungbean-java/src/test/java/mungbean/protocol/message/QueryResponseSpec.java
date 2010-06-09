@@ -24,6 +24,7 @@ import jdave.junit4.JDaveRunner;
 import mungbean.ListQueryCallback;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.bson.BSONMap;
+import mungbean.protocol.bson.MapBSONCoders;
 
 import org.junit.runner.RunWith;
 
@@ -52,7 +53,7 @@ public class QueryResponseSpec extends Specification<List<Map<String, Object>>> 
                     0 // eoo
             };
             ListQueryCallback<Map<String, Object>> callback = new ListQueryCallback<Map<String, Object>>();
-            QueryResponse<Map<String, Object>> response = new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap());
+            QueryResponse<Map<String, Object>> response = new QueryResponse<Map<String, Object>>(new LittleEndianDataReader(new ByteArrayInputStream(bytes)), new BSONMap(), new MapBSONCoders());
             response.readResponse(callback);
             return callback.values();
         }

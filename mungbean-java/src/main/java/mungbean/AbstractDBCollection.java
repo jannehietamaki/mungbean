@@ -146,7 +146,7 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
                     QueryResponse<T> queryResponse;
                     do {
                         // TODO calculate the number of items
-                        queryResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder()));
+                        queryResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder(), documentCoders));
                         readMore = queryResponse.readResponse(callback);
                         cursorId = queryResponse.cursorId();
                     } while (readMore && cursorId != 0);

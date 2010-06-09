@@ -19,10 +19,9 @@ import mungbean.QueryCallback;
 import mungbean.protocol.LittleEndianDataReader;
 import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
-import mungbean.protocol.bson.MapBSONCoders;
 
 public class QueryResponse<ResponseType> extends MongoResponse {
-    private static final AbstractBSONCoders BSON = new MapBSONCoders();
+    private final AbstractBSONCoders coders;
     private final int responseFlag;
     private final long cursorId;
     private final int startingFrom;
@@ -30,7 +29,7 @@ public class QueryResponse<ResponseType> extends MongoResponse {
     private final BSONCoder<ResponseType> coder;
     private final LittleEndianDataReader reader;
 
-    public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder) {
+    public QueryResponse(LittleEndianDataReader reader, BSONCoder<ResponseType> coder, AbstractBSONCoders coders) {
         super(reader);
         this.reader = reader;
         this.coder = coder;
@@ -38,6 +37,7 @@ public class QueryResponse<ResponseType> extends MongoResponse {
         cursorId = reader.readLong();
         startingFrom = reader.readInt();
         numberReturned = reader.readInt();
+        this.coders = coders;
     }
 
     public int responseFlag() {
@@ -63,7 +63,7 @@ public class QueryResponse<ResponseType> extends MongoResponse {
         }
         boolean readMore = true;
         for (int i = 0; i < numToFetch; i++) {
-            ResponseType item = coder.read(BSON, reader);
+            ResponseType item = coder.read(coders, reader);
             if (readMore) {
                 readMore = callback.process(item);
             }

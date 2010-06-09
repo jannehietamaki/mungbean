@@ -34,7 +34,8 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
     private final int numberToReturn;
     private final BSON query;
     private final BSONCoder<ResponseType> coder;
-
+    private final AbstractBSONCoders coders;
+    
     public QueryRequest(String collectionName, QueryOptionsBuilder builder, QueryBuilder query, AbstractBSONCoders coders, BSONCoder<ResponseType> coder) {
         this(collectionName, builder, query.build(), query.order(), coders, coder, query.skip(), query.limit());
     }
@@ -50,6 +51,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
         this.numberToReturn = Math.abs(numberToReturn);
         this.query = buildQuery(coders, params, orders);
         this.coder = coder;
+        this.coders = coders;
     }
 
     private BSON buildQuery(AbstractBSONCoders coders, final Map<String, Object> query, final Map<String, Object> order) {
@@ -72,7 +74,7 @@ public class QueryRequest<ResponseType> extends CollectionRequest<QueryResponse<
 
     @Override
     public QueryResponse<ResponseType> readResponse(LittleEndianDataReader reader) {
-        return new QueryResponse<ResponseType>(reader, coder);
+        return new QueryResponse<ResponseType>(reader, coder, coders);
     }
 
     @Override

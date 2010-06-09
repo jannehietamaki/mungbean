@@ -19,7 +19,7 @@ package mungbean;
 public class Settings {
     private int maxOpenConnections = 10;
     private int initialConnections = 3;
-    private boolean validateConnections = true;
+    private boolean validateConnections = false;
 
     public int numberOfInitialConnections() {
         return initialConnections;

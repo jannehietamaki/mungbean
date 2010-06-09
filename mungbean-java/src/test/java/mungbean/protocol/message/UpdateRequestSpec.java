@@ -24,7 +24,6 @@ import java.util.Map;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
-import mungbean.Utils;
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.MapBSONCoders;
 import mungbean.query.Query;

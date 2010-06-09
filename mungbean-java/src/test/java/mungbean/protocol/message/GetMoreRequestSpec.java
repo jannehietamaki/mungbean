@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 
 import mungbean.protocol.DBTransaction;
 import mungbean.protocol.bson.BSONMap;
+import mungbean.protocol.bson.MapBSONCoders;
 
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
@@ -30,7 +31,7 @@ import jdave.junit4.JDaveRunner;
 public class GetMoreRequestSpec extends Specification<DBTransaction<QueryResponse<Map<String, Object>>>> {
     public class WithValidRequest {
         public DBTransaction<QueryResponse<Map<String, Object>>> create() {
-            return new DBTransaction<QueryResponse<Map<String, Object>>>(new GetMoreRequest<Map<String, Object>>("foozbar.foo", 123123L, 0, new BSONMap()), 127);
+            return new DBTransaction<QueryResponse<Map<String, Object>>>(new GetMoreRequest<Map<String, Object>>("foozbar.foo", 123123L, 0, new BSONMap(), new MapBSONCoders()), 127);
         }
 
         public void requestCanBeSerialized() {
