@@ -16,33 +16,19 @@
 
 package mungbean.protocol.command;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import mungbean.DBCollection;
 import mungbean.protocol.message.CommandResponse;
-import mungbean.query.QueryBuilder;
 
-public class Distinct extends Aggregation<List<Object>> {
-    private final String field;
+public class Distinct<ResultType> extends AbstractDistinct<List<ResultType>> {
 
-    public Distinct(String field) {
-        this.field = field;
-    }
+	public Distinct(String field) {
+		super(field);
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Object> parseResponse(CommandResponse values) {
-        return (List<Object>) values.get("values");
-    }
-
-    @Override
-    public Map<String, Object> requestMap(DBCollection<?> collection, QueryBuilder query) {
-        Map<String, Object> map = new LinkedHashMap<String, Object>();
-        map.put("distinct", collection.collectionName());
-        map.put("key", field);
-        map.put("query", query.build());
-        return map;
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResultType> parseResponse(CommandResponse values) {
+		return (List<ResultType>) values.get("values");
+	}
 }

@@ -71,7 +71,7 @@ public class MongoIntegrationTest extends Specification<Database> {
             List<Map<String, Object>> results = collection.query(idQuery);
             specify(results.size(), does.equal(1));
             specify(results.get(0).get("foo"), does.equal("bar"));
-            collection.query(new Distinct("foo"), new Query()).contains("bar");
+            collection.query(new Distinct<List<Object>>("foo"), new Query()).contains("bar");
             specify(collection.query(new Count(), new Query()), does.equal(initialCount + 1));
             runGroup(collection);
             specify(collection.query(new Count(), idQuery), does.equal(1));
@@ -106,7 +106,7 @@ public class MongoIntegrationTest extends Specification<Database> {
                 collection.save(newDoc(new ObjectId(), a));
             }
 
-            specify(collection.query(new Distinct("foo"), new Query().field("foo").greaterThan(5)), containsExactly(6, 7, 8, 9));
+            specify(collection.query(new Distinct<List<Object>>("foo"), new Query().field("foo").greaterThan(5)), containsExactly(6, 7, 8, 9));
 
             List<Map<String, Object>> values = collection.query(new Query().field("foo").orderDescending().greaterThan(3).lessThan(8));
             specify(values.size(), does.equal(4));

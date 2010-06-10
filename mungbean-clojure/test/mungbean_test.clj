@@ -36,7 +36,7 @@
 (deftest save-and-load-structural-map
    (with-mungo "foo"
       (mongo/insert coll {:foo {:bar 2, :zoo 3}, :name "James Bond"})
-      (is (= 2 (((mongo/query-one coll {:name "James Bond"}) :foo) :bar)))
+      (is (= {:foo {:bar 2, :zoo 3}, :name "James Bond"} (dissoc (mongo/query-one coll {:name "James Bond"}) :_id)))
    )
 )
 
@@ -64,12 +64,12 @@
 )
 
 
-;(deftest generate-items-and-get-distinct
-;   (with-mungo "foo"
-;       (insert-test-data 10 "foo" "bar" "zoo")
-;       (is (= ["bar" "foo" "zoo"] (mongo/query coll :operation (aggregation/get-distinct :foo) :order {:foo :asc} )))
-;   )
-;)
+(deftest generate-items-and-get-distinct
+   (with-mungo "foo"
+       (insert-test-data 10 "foo" "bar" "zoo")
+       (is (= ["bar" "foo" "zoo"] (mongo/query coll :operation (aggregation/get-distinct :foo) :order {:foo :asc} )))
+   )
+)
 
 
 (deftest more-advanced-query
