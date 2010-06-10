@@ -32,7 +32,7 @@ public class ClojureBSONSeq<T> extends AbstractBSONArray<ISeq, T> {
 
     @Override
     protected ISeq addValue(ISeq ret, T value) {
-        return ret.cons(ret);
+        return ret.cons(value);
     }
 
     @Override
