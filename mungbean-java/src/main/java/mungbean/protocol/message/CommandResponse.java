@@ -55,4 +55,7 @@ public class CommandResponse implements Response {
         return 0;
     }
 
+    public String toString(){
+        return values().toString();
+    }    
 }

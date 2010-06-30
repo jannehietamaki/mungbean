@@ -198,7 +198,8 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
         if (response == null) {
             throw new NotFoundException("Value not returned for command: " + command);
         }
-        if (!response.get("ok").equals(1D)) {
+        Object result = response.get("ok");
+        if (!result.equals(1D) && !result.equals(Boolean.TRUE)) {
             throw new MongoException("Command execution failed", response);
         }
         return command.parseResponse(response);
