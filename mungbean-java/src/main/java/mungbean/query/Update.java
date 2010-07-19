@@ -35,6 +35,11 @@ public class Update implements UpdateBuilder {
         this.options = new UpdateOptionsBuilder();
     }
 
+    protected Update(Map<String, Object> updates, Map<String, Object> options) {
+        this.map = updates;
+        this.options = UpdateOptionsBuilder.fromMap(options);
+    }
+
     public UpdateField field(String key) {
         return new UpdateField(this, map, key);
     }

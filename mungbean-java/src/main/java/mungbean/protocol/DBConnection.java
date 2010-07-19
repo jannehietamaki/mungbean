@@ -32,7 +32,7 @@ import mungbean.protocol.message.Response;
 public class DBConnection implements Connection {
 
     private static final int CONNECTION_TIMEOUT = 5000;
-    private static final int READ_TIMEOUT = 5000;
+    //private static final int READ_TIMEOUT = 5000;
     private int requestIdCounter = 0;
     private final Socket socket;
     private final InputStream inputStream;
@@ -42,7 +42,7 @@ public class DBConnection implements Connection {
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(server.host(), server.port()), CONNECTION_TIMEOUT);
-            socket.setSoTimeout(READ_TIMEOUT);
+            //socket.setSoTimeout(READ_TIMEOUT);
             inputStream = new BufferedInputStream(socket.getInputStream());
             outputStream = new BufferedOutputStream(socket.getOutputStream());
             for (Authentication authentication : server.authentication()) {

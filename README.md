@@ -4,7 +4,6 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 
 ### Java
 
-
 #### Features
 
 * Basic operations: query, save, update, remove, ensureIndex, findOne, limit, sort [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/main/java/mungbean/DBCollection.java)
@@ -12,7 +11,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 * Typesafe [API](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-java/src/test/java/mungbean/pojo/PojoWithIdIntegrationTest.java) for mapping POJOs to Mongo documents and back
 * DSLs for conditional operators, sorting, aggregation and updates
 * administration API (partial), authentication, cursors
-* Failover/replica pairs
+* Failover/replica pairs (partial)
 
 #### Code examples
 

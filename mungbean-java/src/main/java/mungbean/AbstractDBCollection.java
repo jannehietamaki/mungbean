@@ -139,22 +139,25 @@ public abstract class AbstractDBCollection<T> implements DBCollection<T> {
             @Override
             public Void execute(Connection connection) {
                 QueryResponse<T> response = connection.execute(new QueryRequest<T>(dbName(), new QueryOptionsBuilder(), query, queryCoders, defaultEncoder()));
+                // TODO Check response.responseFlag for errors
                 boolean readMore = response.readResponse(callback);
-
                 long cursorId = response.cursorId();
-                if (cursorId != 0 && readMore) {
-                    QueryResponse<T> queryResponse;
-                    do {
-                        // TODO calculate the number of items
-                        queryResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder(), documentCoders));
-                        readMore = queryResponse.readResponse(callback);
-                        cursorId = queryResponse.cursorId();
-                    } while (readMore && cursorId != 0);
+                try {
+                    if (cursorId != 0 && readMore) {
+                        QueryResponse<T> queryResponse;
+                        do {
+                            // TODO calculate the number of items
+                            queryResponse = connection.execute(new GetMoreRequest<T>(dbName(), cursorId, 0, defaultEncoder(), documentCoders));
+                            readMore = queryResponse.readResponse(callback);
+                            cursorId = queryResponse.cursorId();
+                        } while (readMore && cursorId != 0);
+                    }
+                    return null;
+                } finally {
+                    if (cursorId != 0) {
+                        connection.execute(new KillCursorsRequest(cursorId));
+                    }
                 }
-                if (cursorId != 0) {
-                    connection.execute(new KillCursorsRequest(cursorId));
-                }
-                return null;
             };
         });
     }

@@ -21,6 +21,11 @@ import mungbean.protocol.bson.AbstractBSONCoders;
 import mungbean.protocol.bson.BSONCoder;
 
 public class QueryResponse<ResponseType> extends MongoResponse {
+    public final int CURSOR_NOT_FOUND = 1;
+    public final int QUERY_FAILURE = 2;
+    public final int SHARD_CONFIG_STALE = 4;
+    public final int AWAIT_CAPABLE = 8;
+
     private final AbstractBSONCoders coders;
     private final int responseFlag;
     private final long cursorId;
@@ -58,9 +63,6 @@ public class QueryResponse<ResponseType> extends MongoResponse {
 
     public boolean readResponse(QueryCallback<ResponseType> callback) {
         int numToFetch = numberReturned;
-        if (responseFlag > 0) {
-            numToFetch = 1;
-        }
         boolean readMore = true;
         for (int i = 0; i < numToFetch; i++) {
             ResponseType item = coder.read(coders, reader);
