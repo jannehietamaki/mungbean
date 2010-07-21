@@ -44,6 +44,7 @@ public class MasterResolverStrategy implements ServerResolverStrategy {
         try {
             return getWriteTarget().execute(conversation);
         } catch (Exception e) {
+            // TODO only try to find new master when error indicates this node is not a master
             return findNewMaster().execute(conversation);
         }
     }
