@@ -36,11 +36,13 @@ public class UpdateOptionsBuilder {
 
     public static UpdateOptionsBuilder fromMap(Map<String, Object> updateOptions) {
         UpdateOptionsBuilder returnValue = new UpdateOptionsBuilder();
-        if (updateOptions.containsKey("upsert")) {
-            returnValue.upsert();
-        }
-        if (updateOptions.containsKey("multiUpdate")) {
-            returnValue.multiUpdate();
+        if (updateOptions != null) {
+            if (updateOptions.containsKey("upsert")) {
+                returnValue.upsert();
+            }
+            if (updateOptions.containsKey("multiUpdate")) {
+                returnValue.multiUpdate();
+            }
         }
         return returnValue;
     }
