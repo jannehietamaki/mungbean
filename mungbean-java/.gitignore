@@ -1,1 +1,4 @@
+clojure-contrib-src.jar
+clojure-contrib.jar
+lib_managed/
 target
