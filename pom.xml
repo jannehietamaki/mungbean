@@ -1,0 +1,14 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>mungbean</groupId>
+  <artifactId>mungbean</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>Mungbean - The alternative MongoDB driver for JVM based languagest</name>
+  <packaging>pom</packaging>
+  <build>
+  </build>
+  <modules>
+    <module>mungbean-java</module>
+    <module>mungbean-clojure</module>
+  </modules>
+</project>
