@@ -3,7 +3,7 @@
   <groupId>mungbean</groupId>
   <artifactId>mungbean</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Mungbean - The alternative MongoDB driver for JVM based languagest</name>
+  <name>Mungbean - The alternative MongoDB driver for JVM based languages</name>
   <packaging>pom</packaging>
   <build>
   </build>

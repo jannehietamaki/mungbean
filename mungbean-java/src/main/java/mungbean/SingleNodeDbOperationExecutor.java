@@ -94,7 +94,8 @@ public class SingleNodeDbOperationExecutor extends Pool<Connection> implements D
                 @Override
                 public Boolean execute(Connection connection) {
                     CommandResponse response = connection.execute(new CommandRequest("$cmd", "ismaster"));
-                    return response.getLong("ismaster") == 1;
+                    Object value = response.get("ismaster");
+                    return value.equals(1L) || Boolean.TRUE.equals(value);
                 }
             });
         } catch (RuntimeIOException e) {

@@ -15,8 +15,8 @@
  */
 package mungbean;
 
-import static mungbean.CollectionUtil.map;
 import static mungbean.CollectionUtil.list;
+import static mungbean.CollectionUtil.map;
 import static mungbean.CollectionUtil.merge;
 
 import java.util.HashMap;
@@ -64,7 +64,6 @@ public class MongoIntegrationTest extends Specification<Database> {
 
         public void databaseTests() {
             DBCollection<Map<String, Object>> collection = context.openCollection("foo");
-            specify(collection.command(new Command("ismaster")).get("ismaster"), does.equal(1));
             long initialCount = collection.query(new Count(), new Query());
             collection.save(doc);
 

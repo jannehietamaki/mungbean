@@ -1,7 +1,1 @@
-mungbean-clojure-*
-pom-generated.xml
-Manifest.txt
-mungbean-clojure.jar
-lib
-classes
-bin
+target
