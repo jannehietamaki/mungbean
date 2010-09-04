@@ -38,10 +38,6 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 * Basic operations: query, save, update, remove, limit, sort, aggregation
 * [Working example](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-clojure/test/mungbean_test.clj)
 
-## Building
-
-Just run ./boot.sh to fetch all dependencies and Leingingen binaries and after that ./build.sh can be used to build everything.
-
 ## License
 
 ASL 2.0
