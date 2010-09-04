@@ -6,5 +6,5 @@
   )
 
 (defn collection-names [db]
-  (.collectionNames (.dbAdmin db))
+  (.getCollectionNames (.dbAdmin db))
 )
