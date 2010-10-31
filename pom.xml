@@ -10,5 +10,6 @@
   <modules>
     <module>mungbean-java</module>
     <module>mungbean-clojure</module>
+    <module>mungbean-rhino</module>
   </modules>
 </project>
