@@ -49,7 +49,9 @@ public class ObjectId {
             time = time >> 8;
         }
         for (; a < 7; a++) {
-            id[a] = hardwareAddress[a - 1];
+			if(a-1 < hardwareAddress.length) {
+				id[a] = hardwareAddress[a - 1];
+			}
         }
 
         id[a++] = (byte) (pid & 0xff);
