@@ -36,7 +36,7 @@ Mongbean is an alternative MongoDB (http://www.mongodb.org) driver for languages
 ### Clojure
 
 * Basic operations: query, save, update, remove, limit, sort, aggregation
-* [Working example](http://github.com/jannehietamaki/mungbean/blob/master/mungbean-clojure/test/mungbean_test.clj)
+* [Working example](https://github.com/jannehietamaki/mungbean/blob/master/mungbean-clojure/src/test/clojure/mungbean_test.clj)
 
 ## License
 
