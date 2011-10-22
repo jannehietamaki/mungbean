@@ -67,7 +67,7 @@
 (deftest generate-items-and-get-distinct
    (with-mungo "foo"
        (insert-test-data 10 "foo" "bar" "zoo")
-       (is (= ["bar" "foo" "zoo"] (mongo/query coll :operation (aggregation/get-distinct :foo) :order {:foo :asc} )))
+       (is (= ["bar" "foo" "zoo"] (sort (mongo/query coll :operation (aggregation/get-distinct :foo)))))
    )
 )
 
