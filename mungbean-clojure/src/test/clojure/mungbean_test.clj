@@ -6,7 +6,7 @@
   )   
 )
 
-(declare coll)
+(declare ^:dynamic coll)
 
 (defn insert-test-data [count & values] 
    (doseq [n (take count (cycle values))] (mongo/insert coll {:foo n}))
